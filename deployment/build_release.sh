@@ -10,4 +10,6 @@ git rebase master
 gulp client-build-release
 git add .
 
-git commit -m "Version update: " + $(node -p -e "require('./package.json').version")
+PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+DESCRIPTION="Version update: $PACKAGE_VERSION"
+git commit -m "$DESCRIPTION"
