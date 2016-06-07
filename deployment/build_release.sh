@@ -1,3 +1,6 @@
+git add .
+git commit -m "Config update"
+
 git checkout master
 git pull origin master
 
