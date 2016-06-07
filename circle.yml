@@ -10,7 +10,7 @@ test:
 
 ## Customize deployment
 deployment:
-  develop:
+  staging:
     branch: develop
     commands:
-      - ./deploy_master.sh
+      - ./push_to_master.sh
