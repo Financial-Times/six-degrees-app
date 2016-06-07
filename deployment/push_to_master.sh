@@ -1,4 +1,7 @@
 git add .
 git commit -m "Version update"
-git pull origin master
-git push origin develop:master
+
+git checkout master
+git merge develop
+
+git push origin master
