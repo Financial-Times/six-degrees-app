@@ -1,7 +1,7 @@
 ## Customize the test machine
 machine:
   node:
-    version: 4.3.0
+    version: 5.11.0
 
 ## Customize test commands
 test:
@@ -10,7 +10,7 @@ test:
 
 ## Customize deployment
 deployment:
-  test:
-    branch: master
+  develop:
+    branch: develop
     commands:
       - ./deploy_master.sh

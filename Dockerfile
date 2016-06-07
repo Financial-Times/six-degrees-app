@@ -1,4 +1,4 @@
-FROM node:4.3.0
+FROM node:5.11.0
 
 # Create app directory
 RUN mkdir -p /usr/src/six-degrees
