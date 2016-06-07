@@ -3,6 +3,11 @@ machine:
   node:
     version: 5.11.0
 
+checkout:
+  post:
+    - ./deployment/configure_github.sh
+
+
 ## Customize test commands
 test:
   override:
@@ -13,4 +18,5 @@ deployment:
   staging:
     branch: develop
     commands:
-      - ./push_to_master.sh
+      - ./deployment/build_release.sh
+      - ./deployment/push_to_master.sh
