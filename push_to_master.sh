@@ -1,1 +1,1 @@
-git push origin head:master
+git push origin develop:master
