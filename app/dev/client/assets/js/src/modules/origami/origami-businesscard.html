@@ -1,0 +1,25 @@
+<template>
+    <div data-o-component="o-business-card" class="o-business-card" itemscope="" itemtype="http://schema.org/Person" style="padding: 14px">
+        <img src.bind="imageUrl" alt="${fullName}" class="o-business-card__image--right" itemprop="image"></img>
+        <p>
+            <a href="${ftComment}" alt="${fullName}" class="o-business-card__name" itemprop="url"><span itemprop="name">${fullName}</span></a>
+        </p>
+        <p>
+            <a href="mailto:${email}" class="o-business-card__email" itemprop="email">${email}</a>
+        </p>
+        <p>
+            <a href="${twitterUrl}" class="o-business-card__twitter" itemprop="sameAs">${twitterId}</a>
+        </p>
+        <p class="o-business-card__age">
+            <span class="o-business-card__subtitle">Age: </span>${age}
+        </p>
+        <p class="o-business-card__nationality">
+            <span class="o-business-card__subtitle">Nationality: </span>
+            <span itemprop="nationality">${nationality}</span>
+        </p>
+        <p class="o-business-card__background">
+            <span class="o-business-card__subtitle">Background: </span>
+            <span itemprop="description">${background}</span>
+        </p>
+    </div>
+</template>

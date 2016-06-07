@@ -1,0 +1,185 @@
+(function () {
+    'use strict';
+
+    const CONFIG = require('./config').get(),
+        request = require('request'),
+        moment = require('moment'),
+        responsesCache = {
+            people: {},
+            connections: {}
+        },
+        badRequestParams = {
+            'status': 400,
+            'type': 'text/plain'
+        };
+
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
+
+    function handleCache(id) {
+        if (!responsesCache[id].start) {
+            responsesCache[id].start = moment();
+        } else {
+            if (moment().isAfter(responsesCache[id].start, 'day')) {
+                responsesCache[id] = {};
+            }
+        }
+    }
+
+    function sendResponseToClient(response, params) {
+        if (params.status === 200) {
+            console.log('[' + CONFIG.APP + '] Sending JSON response to client.');
+            response.json(params.data);
+        } else {
+            response.writeHead(params.status, {
+                'Content-Type': 'text/plain'
+            });
+            console.log('[' + CONFIG.APP + '] Sending text response to client.');
+            response.end(params.error);
+        }
+        console.log('[' + CONFIG.APP + '] Client response ended.');
+    }
+
+    function badRequestHandler(clientResponse) {
+        sendResponseToClient(clientResponse, badRequestParams);
+    }
+
+    function handleTestCall(clientResponse) {
+        sendResponseToClient(clientResponse, {
+            status: 200,
+            data: {
+                result: true
+            }
+        });
+    }
+
+    function handleConnectionsCall(uuid, clientResponse) {
+        let responseSent = false;
+
+        const todayDate = moment().format('YYYYMMDD');
+
+        handleCache('connections');
+
+        if (responsesCache.connections[todayDate] && responsesCache.connections[todayDate][uuid]) {
+
+            console.log('[' + CONFIG.APP + '] Serving response from cache.');
+            sendResponseToClient(clientResponse, {
+                status: 200,
+                data: JSON.parse(responsesCache.connections[todayDate][uuid])
+            });
+
+        } else {
+
+            const timeout = setTimeout(function () {
+                console.log('[' + CONFIG.APP + '] No answer for 5 secs: https://sixdegrees-demo.in.ft.com/sixdegrees/mostMentionedPeople');
+                sendResponseToClient(clientResponse, {
+                    status: 504
+                });
+                responseSent = true;
+            }, 2000);
+
+
+            request('https://sixdegrees-demo.in.ft.com/sixdegrees/connectedPeople?minimumConnections=2&limit=50&uuid=' + uuid, function (error, response, body) {
+                if (!responseSent && response.statusCode === 200) {
+                    responsesCache.connections[todayDate] = responsesCache.connections[todayDate] || {};
+                    responsesCache.connections[todayDate][uuid] = body;
+                    clearTimeout(timeout);
+                    sendResponseToClient(clientResponse, {
+                        status: 200,
+                        data: JSON.parse(body)
+                    });
+                } else if (!responseSent) {
+                    sendResponseToClient(clientResponse, {
+                        status: 502
+                    });
+                }
+            });
+        }
+
+    }
+
+    function handleMostMentionedCall(clientResponse) {
+        const todayDate = moment().format('YYYYMMDD');
+        let responseSent = false;
+
+        handleCache('people');
+
+        if (responsesCache.people[todayDate]) {
+            console.log('[' + CONFIG.APP + '] Serving response from cache.');
+            sendResponseToClient(clientResponse, {
+                status: 200,
+                data: JSON.parse(responsesCache.people[todayDate])
+            });
+        } else {
+
+            const timeout = setTimeout(function () {
+                console.log('[' + CONFIG.APP + '] No answer for 5 secs: https://sixdegrees-demo.in.ft.com/sixdegrees/mostMentionedPeople');
+                sendResponseToClient(clientResponse, {
+                    status: 504
+                });
+                responseSent = true;
+            }, 5000);
+
+            request('https://sixdegrees-demo.in.ft.com/sixdegrees/mostMentionedPeople', function (error, response, body) {
+                if (!responseSent && response.statusCode === 200) {
+                    responsesCache.people[todayDate] = body;
+                    clearTimeout(timeout);
+                    sendResponseToClient(clientResponse, {
+                        status: 200,
+                        data: JSON.parse(body)
+                    });
+                } else if (!responseSent) {
+                    sendResponseToClient(clientResponse, {
+                        status: 502
+                    });
+                }
+            });
+        }
+
+    }
+
+    function handleGet(clientRequest, clientResponse) {
+        const params = clientRequest.url.replace('/api/', '').split('/');
+
+        if (params.length && params[0] !== '') {
+            console.log('[' + CONFIG.APP + '] Parsing URL -> params', params);
+
+            switch (params[0]) {
+            case 'test':
+                handleTestCall(clientResponse);
+                break;
+            case 'mentioned':
+                handleMostMentionedCall(clientResponse);
+                break;
+            default:
+                badRequestHandler(clientResponse);
+                break;
+            }
+
+        } else {
+            badRequestHandler(clientResponse);
+        }
+    }
+
+    function handlePost(clientRequest, clientResponse) {
+        const route = clientRequest.url.replace('/api/', ''),
+            headers = clientRequest.headers;
+
+        switch (route) {
+        case 'test': (function () {
+            return;
+        }());
+            break;
+        case 'connections':
+            handleConnectionsCall(headers['x-uuid'], clientResponse);
+            break;
+        default: (function () {
+            badRequestHandler(clientResponse);
+        }());
+            break;
+        }
+
+    }
+
+    exports.handleGet = handleGet;
+    exports.handlePost = handlePost;
+}());

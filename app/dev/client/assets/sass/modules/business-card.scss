@@ -1,0 +1,53 @@
+business-card {
+    display: block;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    background: white;
+    width: 100px;
+    margin-top: 12px;
+    clear: both;
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1;
+
+    .card-top {
+        background: #936971;
+        height: 40px;
+        text-align: center;
+        color: white;
+        i {
+            display: block;
+            font-size: 2em;
+            line-height: 40px;
+        }
+    }
+
+    .card-bottom {
+        text-align: center;
+        position: relative;
+        padding: 12px 6px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        i {
+            position: absolute;
+            top: -12px;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            color: #936971;
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+        }
+
+        strong {
+            font-weight: normal;
+            display: block;
+        }
+    }
+}

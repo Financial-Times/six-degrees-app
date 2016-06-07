@@ -1,0 +1,50 @@
+[
+  {
+    "count": 12,
+    "person": {
+      "id": "boris-johnson-id-123456789",
+      "apiUrl": "http://api.ft.com/people/d3276f0f-4e2f-392c-98da-4288c4444bc4",
+      "prefLabel": "Boris Johnson"
+    }
+  },
+  {
+    "count": 1,
+    "person": {
+      "id": "mao-zedong-id-123456789",
+      "apiUrl": "http://api.ft.com/people/ad60f5b2-4306-349d-92d8-cf9d9572a6f6",
+      "prefLabel": "Mao Zedong"
+    }
+  },
+  {
+    "count": 1,
+    "person": {
+      "id": "jin-ping-xi-id-123456789",
+      "apiUrl": "http://api.ft.com/people/ad60f5b2-4306-349d-92d8-cf9d9572a6f6",
+      "prefLabel": "Jin Ping Xi"
+    }
+  },
+  {
+    "count": 1,
+    "person": {
+      "id": "christine-lagarde-id-123456789",
+      "apiUrl": "http://api.ft.com/people/ad60f5b2-4306-349d-92d8-cf9d9572a6f6",
+      "prefLabel": "Christine Lagarde"
+    }
+  },
+  {
+    "count": 1,
+    "person": {
+      "id": "michael-james-wallace-ashley-id-123456789",
+      "apiUrl": "http://api.ft.com/people/ad60f5b2-4306-349d-92d8-cf9d9572a6f6",
+      "prefLabel": "Michael James Wallace Ashley"
+    }
+  },
+  {
+    "count": 1,
+    "person": {
+      "id": "benigno-simeon-cojuangco-aquino-id-123456789",
+      "apiUrl": "http://api.ft.com/people/ad60f5b2-4306-349d-92d8-cf9d9572a6f6",
+      "prefLabel": "Benigno Simeon Cojuangco Aquino"
+    }
+  }
+]

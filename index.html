@@ -1,0 +1,29 @@
+<!doctype html>
+<html class="core">
+
+    <head>
+        <title>FT Six Degrees</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="shortcut icon" href="assets/img/favicon.ico" />
+        <!-- build:js assets/js/vendor/d3.min.js -->
+        <script type="text/javascript" src="app/dev/client/assets/js/vendor/d3.min.js"></script>
+        <!-- /build -->
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- build:css assets/css/style.css?v=@version@ -->
+        <link rel="stylesheet" href="app/dev/client/assets/css/style.css?v=@version@" />
+        <!-- /build -->
+        <script src="//polyfill.webservices.ft.com/v1/polyfill.min.js"></script>
+        <script src="jspm_packages/system.js"></script>
+        <script src="config.js"></script>
+    </head>
+
+    <body aurelia-app="configuration">
+        <div class="spinner"></div>
+        <script>
+            System.baseUrl = '/assets/js/';
+            System.import('aurelia-bootstrapper');
+        </script>
+    </body>
+
+</html>

@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+**/*.log
+**/node_modules
+**/jspm_packages
+
+**/app/release
+**/app/dev/client/assets/css
+**/app/dev/client/assets/js/dst
+**/test/coverage-report

@@ -1,0 +1,25 @@
+<template>
+    <div class="spinner" if.bind="!people && !errorMessage"></div>
+    <div class="people-container" if.bind="people">
+        <h1 class.bind="hero.prefLabel ? 'show' : 'hide'">
+            <button class="o-buttons o-buttons--big o-buttons--standout" click.delegate="redirect(hero.id)">
+                ${hero.prefLabel}
+            </button>
+            <span>was the most mentioned person<em>in the Financial Times</em>within given period of time</span>
+        </h1>
+        <ul>
+            <li repeat.for="person of people" if.bind="person.prefLabel !== hero.prefLabel">
+                <button class="o-buttons" click.delegate="redirect(person.id)">
+                    ${person.prefLabel}
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="people-request-error" if.bind="errorMessage">
+        <div class="error-inner">
+            <i class="material-icons">&#xE000;</i>
+            <span>${errorMessage}</span>
+        </div>
+        <button class="o-buttons button-try-again" click.delegate="tryAgain()">try again</button>
+    </div>
+</template>

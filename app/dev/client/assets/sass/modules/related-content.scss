@@ -1,0 +1,63 @@
+.related-content {
+    .related-content-header {
+        background: transparent url("https://next-geebee.ft.com/image/v1/images/raw/http%3a%2f%2fnext-geebee.ft.com%2fassets%2fbackgrounds%2ffront-page-section-header-v2.svg?source=next&format=svg&tint=000000,000000") repeat scroll 0 0;
+        width: 100%;
+        overflow: auto;
+        margin: 24px 0 12px 0;
+    }
+    .article-title {
+        font-size: 16px;
+        display: block;
+        margin-bottom: 6px;
+    }
+    .article-excerpt {
+        font-size: 14px;
+    }
+    .article-details {
+        overflow: auto;
+        background: #e9decf;
+        padding: 6px;
+    }
+    .article-thumbnail {
+        float: left;
+        width: 50px;
+        height: 50px;
+        margin: 6px 6px 0 0;
+        background-size: cover;
+        background-position: -15px center;
+    }
+    h3 {
+        font-weight: normal;
+        color: #416e92;
+        background: #fff1e0;
+        float: left;
+        margin: 0 0 0 12px;
+        padding: 0 12px;
+    }
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: block;
+            padding: 6px 0;
+
+            a:link,
+            a:visited {
+                color: #333333;
+                text-decoration: none;
+            }
+            a:hover,
+            a:active {
+                color: #936971;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .o-buttons.more {
+        float: right;
+        margin-top: 12px;
+    }
+}

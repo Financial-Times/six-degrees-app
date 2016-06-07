@@ -1,0 +1,35 @@
+.connections-module {
+    min-height: 80vh;
+    position: relative;
+}
+
+.connections-graph {
+    text-align: center;
+    background: rgba(255,255,255,0.5);
+    min-height: 80vh;
+    position: absolute;
+    top: 12px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    .connections-people {
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        position: absolute;
+        bottom: 25%;
+    }
+
+    .o-buttons {
+        margin: 6px;
+    }
+}
+
+.button-try-again {
+    clear: both;
+    display: block;
+    margin: 12px auto;
+}

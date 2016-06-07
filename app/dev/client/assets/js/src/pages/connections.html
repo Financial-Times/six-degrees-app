@@ -1,0 +1,38 @@
+<template>
+    <div class="o-grid-container">
+        <div class="o-grid-row">
+            <div data-o-grid-colspan="12 M8 XL8">
+                <div class="connections-module">
+                    <require from="../modules/business-card/business-card"></require>
+                    <business-card></business-card>
+                    <div class="connections-graph">
+                        <require from="../modules/graph-view/graph-view"></require>
+                        <graph-view></graph-view>
+                    </div>
+                </div>
+            </div>
+            <div data-o-grid-colspan="12 M4 XL4">
+                <div class="related-content">
+                    <div class="related-content-header">
+                        <h3>${person.prefLabel}<br />in the FT headlines</h3>
+                    </div>
+                    <div class="related-articles" if.bind="person.relatedContent">
+                        <ul>
+                            <li repeat.for="i of person.maxContentItems">
+                                <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-title">${person.relatedContent[i].title.title}</a>
+                                <div class="article-details">
+                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-thumbnail" style="background-image: url('${person.relatedContent[i].images[0].url}')" alt="" if.bind="person.relatedContent[i].images[0].url"></a>
+                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-excerpt">${person.relatedContent[i].summary.excerpt}</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <a href="#" class="o-buttons more">more</a>
+                    </div>
+                    <div class="related-articles" if.bind="!person.relatedContent">
+                        Nothing to show...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

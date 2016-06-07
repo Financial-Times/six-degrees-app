@@ -1,0 +1,18 @@
+[
+  {
+    "count": 12,
+    "person": {
+      "id": "hiroyuki-yanagi-id-123456789",
+      "apiUrl": "http://api.ft.com/people/d3276f0f-4e2f-392c-98da-4288c4444bc4",
+      "prefLabel": "Hiroyuki Yanagi"
+    }
+  },
+  {
+    "count": 1,
+    "person": {
+      "id": "martha-lane-fox-id-123456789",
+      "apiUrl": "http://api.ft.com/people/ad60f5b2-4306-349d-92d8-cf9d9572a6f6",
+      "prefLabel": "Martha Lane Fox"
+    }
+  }
+]

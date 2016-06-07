@@ -1,0 +1,10 @@
+[
+  {
+    "count": 2,
+    "person": {
+      "id": "boris-johnson-id-123456789",
+      "apiUrl": "http://api.ft.com/people/d3276f0f-4e2f-392c-98da-4288c4444bc4",
+      "prefLabel": "Boris Johnson"
+    }
+  }
+]

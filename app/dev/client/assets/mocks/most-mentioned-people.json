@@ -1,0 +1,82 @@
+[
+   {
+      "id":"http://api.ft.com/things/dc278df2-1c8b-3e44-8ca8-5d255f75f737",
+      "prefLabel":"David William Donald Cameron"
+   },
+   {
+      "id":"http://api.ft.com/things/0a619d71-9af5-3755-90dd-f789b686c67a",
+      "prefLabel":"Barack H. Obama"
+   },
+   {
+      "id":"http://api.ft.com/things/8d9470c9-127e-3fc7-95a0-71804cc5ea9d",
+      "prefLabel":"Hillary Rodham Clinton"
+   },
+   {
+      "id":"http://api.ft.com/things/9421d9ee-7e0f-3f7c-8adc-ded83fabdb92",
+      "prefLabel":"George Gideon Oliver Osborne"
+   },
+   {
+      "id":"http://api.ft.com/things/3ead3886-85d3-36ee-95e3-75ed1dc832b7",
+      "prefLabel":"John Ellis Bush"
+   },
+   {
+      "id":"http://api.ft.com/things/385e9494-1f9d-3040-b47e-a19a199dac92",
+      "prefLabel":"Angela Dorothea Merkel"
+   },
+   {
+      "id":"http://api.ft.com/things/8edf8f98-4696-3516-beef-0b3fe184a273",
+      "prefLabel":"Recep Tayyip Erdogan"
+   },
+   {
+      "id":"http://api.ft.com/things/1fe28761-e3d6-3602-99d3-7bec122b70b4",
+      "prefLabel":"Dennis P. Lockhart"
+   },
+   {
+      "id":"http://api.ft.com/things/d762ca40-75ad-3ca2-8fcd-f803d2f11e1a",
+      "prefLabel":"Janet Louise Yellen"
+   },
+   {
+      "id":"http://api.ft.com/things/39594b1f-96bb-3689-9cf4-7c6603015024",
+      "prefLabel":"Shinzo Abe"
+   },
+   {
+      "id":"http://api.ft.com/things/244ed42e-3a3f-3300-96ec-ca66062dfab7",
+      "prefLabel":"Warren Edward Buffett"
+   },
+   {
+      "id":"http://api.ft.com/things/a3fbc8e9-ea11-354c-8e53-c3bd92e21729",
+      "prefLabel":"Dilma Vana Rousseff"
+   },
+   {
+      "id":"http://api.ft.com/things/9185a2a9-1545-302b-9a16-c63986b67be3",
+      "prefLabel":"Boris Johnson"
+   },
+   {
+      "id":"http://api.ft.com/things/531763b4-e46e-38ce-8bee-032b98597d46",
+      "prefLabel":"Philip Nigel Ross Green"
+   },
+   {
+      "id":"http://api.ft.com/things/d95e15bb-abc0-3b08-8504-7357c56674a4",
+      "prefLabel":"Christopher Bailey"
+   },
+   {
+      "id":"http://api.ft.com/things/050a64b9-98da-354a-8f68-00191cb34906",
+      "prefLabel":"William C. Dudley"
+   },
+   {
+      "id":"http://api.ft.com/things/fc9817ea-41cc-31b3-bfaa-214ae3d57d88",
+      "prefLabel":"Vladimir Vladimirovich Putin"
+   },
+   {
+      "id":"http://api.ft.com/things/6a9ae459-8382-33cd-b10a-ecf3110b4e6c",
+      "prefLabel":"Jin Ping Xi"
+   },
+   {
+      "id":"http://api.ft.com/things/a0ed1fe5-f9f5-3362-b559-fed5ea372da7",
+      "prefLabel":"Xavier Niel"
+   },
+   {
+      "id":"http://api.ft.com/things/fc721edf-674a-38a3-ae64-baac8b60bd49",
+      "prefLabel":"Angela J. Ahrendts"
+   }
+]

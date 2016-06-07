@@ -1,0 +1,16 @@
+## Customize the test machine
+machine:
+  node:
+    version: 4.3.0
+
+## Customize test commands
+test:
+  override:
+    - gulp client-unit-tests
+
+## Customize deployment
+deployment:
+  test:
+    branch: master
+    commands:
+      - ./deploy_master.sh

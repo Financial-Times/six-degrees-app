@@ -1,0 +1,68 @@
+@import 'common/normalize';
+@import 'common/origami';
+@import 'common/components';
+
+@import 'modules/people';
+@import 'modules/connections';
+@import 'modules/business-card';
+@import 'modules/related-content';
+@import 'modules/graph';
+
+body {
+    height: 100vh;
+    position: relative;
+}
+
+router-view {
+   display: block;
+   height: 80%
+}
+
+// Origami specifics
+.core .o--if-js,
+.enhanced .o--if-no-js { display: none !important; }
+.o-header-label {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+
+    &.o-labels--active {
+        left: auto;
+        right: 12px;
+    }
+
+}
+
+.o-grid-container {
+    min-height: 100%;
+}
+
+origami-footer {
+    @media all and (min-height: 320px) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}
+
+.o-footer {
+    margin-top: 0;
+    @media all and (max-width: 1024px) {
+        font-size: 12px;
+
+        .o-footer__copyright {
+            margin: 12px 0;
+        }
+
+        .o-footer__brand {
+            padding: 10px 0;
+        }
+
+        .o-footer__pearson-logo,
+        .o-footer__brand-logo {
+            background-size: 75%;
+            background-position: right center;
+        }
+    }
+}
