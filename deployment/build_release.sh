@@ -8,3 +8,5 @@ git checkout develop
 git rebase master
 
 gulp client-build-release
+git add .
+git commit -m "Version update"
