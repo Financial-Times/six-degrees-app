@@ -16,6 +16,6 @@ COPY . /usr/src/six-degrees
 
 RUN npm install --unsafe-perm=true
 
-yEXPOSE 8080
+EXPOSE 8080
 
 CMD ["npm", "run", "release"]
