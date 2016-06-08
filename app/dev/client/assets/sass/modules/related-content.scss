@@ -22,7 +22,7 @@
         float: left;
         width: 50px;
         height: 50px;
-        margin: 6px 6px 0 0;
+        margin: 0 6px 0 0;
         background-size: cover;
         background-position: -15px center;
     }
@@ -42,16 +42,59 @@
         li {
             display: block;
             padding: 6px 0;
+            border-bottom: solid 1px #e9decf;
+            overflow: auto;
+
+            p {
+                margin: 0;
+
+                a:link,
+                a:visited {
+                    color: #333333;
+                }
+
+                a:hover {
+                    color: #936971
+                }
+            }
 
             a:link,
             a:visited {
-                color: #333333;
                 text-decoration: none;
             }
+
             a:hover,
             a:active {
-                color: #936971;
                 text-decoration: underline;
+            }
+
+            .article-title {
+                color: #333333;
+                padding-left: 6px;
+
+                &:hover {
+                    color: #936971
+                }
+            }
+
+            .article-more {
+                float: right;
+                margin-top: 6px;
+                text-decoration: none;
+            }
+
+            .article-byline {
+                display: block;
+                margin: 0 0 2px 0;
+                line-height: 16px;
+                font-size: 14px;
+                font-style: italic;
+            }
+
+            .article-published {
+                display: block;
+                font-size: 12px;
+                color: #8b572a;
             }
         }
     }

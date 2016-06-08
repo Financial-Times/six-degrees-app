@@ -19,15 +19,17 @@
                     <div class="related-articles" if.bind="person.relatedContent">
                         <ul>
                             <li repeat.for="i of person.maxContentItems">
-                                <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-title">${person.relatedContent[i].title.title}</a>
+                                <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-title">${person.relatedContent[i].title}</a>
                                 <div class="article-details">
-                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-thumbnail" style="background-image: url('${person.relatedContent[i].images[0].url}')" alt="" if.bind="person.relatedContent[i].images[0].url"></a>
-                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-excerpt">${person.relatedContent[i].summary.excerpt}</a>
+                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-thumbnail" style="background-image: url('${person.relatedContent[i].imageUrl}')" alt="" if.bind="person.relatedContent[i].imageUrl"></a>
+                                    <span class="article-byline">by ${person.relatedContent[i].byline}</span>
+                                    <span class="article-published">${person.relatedContent[i].published}</span>
                                 </div>
+                                <a href="${person.relatedContent[i].location.uri}" if.bind="person.relatedContent[i].location.uri" class="o-buttons article-more" target="_blank">more</a>
                             </li>
                         </ul>
-                        <a href="#" class="o-buttons more">more</a>
                     </div>
+                    <div class="spinner-small" if.bind="person.relatedContentLoading"></div>
                     <div class="related-articles" if.bind="!person.relatedContent">
                         Nothing to show...
                     </div>

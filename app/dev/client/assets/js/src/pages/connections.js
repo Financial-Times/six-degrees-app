@@ -30,4 +30,5 @@ export class Connections {
         PeopleData.setActive(id);
         this.person = PeopleData.activePerson;
     }
+
 }

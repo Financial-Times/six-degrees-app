@@ -6,6 +6,47 @@ class PeopleData {
         this.people = {};
     }
 
+    addToContent(response, imageUrl) {
+        this.activePerson.relatedContentLoading = false;
+        this.activePerson.relatedContent.push({
+            title: response.title,
+            imageUrl: imageUrl,
+            byline: response.byline,
+            published: moment(response.publishedDate).format('MMMM DD, YYYY'),
+            location: {
+                uri: response.webUrl
+            }
+        });
+        this.activePerson.maxContentItems = this.activePerson.relatedContent.length > 3 ? 5 : this.activePerson.relatedContent.length;
+    }
+
+    getContent(contentItems) {
+        this.activePerson.relatedContentLoading = true;
+        this.activePerson.relatedContent = this.activePerson.relatedContent || [];
+        contentItems.forEach(item => {
+            Ajax.get({
+                url: 'http://api.ft.com/content/' + item.id + '?apiKey=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+            }).then(response => {
+
+                if (response.mainImage.id) {
+                    Ajax.get({
+                        url: response.mainImage.id + '?apiKey=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+                    }).then(imageResponse => {
+                        if (imageResponse.members) {
+                            Ajax.get({
+                                url: imageResponse.members[0].id + '?apiKey=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+                            }).then(memberResponse => {
+                                this.addToContent(response, memberResponse.binaryUrl);
+                            });
+                        }
+                    });
+                } else {
+                    this.addToContent(response);
+                }
+            });
+        });
+    }
+
     getMentionedMostly() {
         return Ajax.get({
             url: 'api/mentioned'
@@ -23,6 +64,7 @@ class PeopleData {
                 uuid: uuid
             }
         }).then(response => {
+            this.getContent(response[0].content);
             response.forEach(connection => {
                 if (!this.people[connection.person.id]) {
                     this.people[connection.person.id] = connection.person;
@@ -41,34 +83,14 @@ class PeopleData {
     }
 
     setActive(id) {
+
         this.stored.forEach((person, index) => {
 
             if (person.id === id) {
                 this.activePerson = this.stored[index];
-
-                Ajax.post({
-                    url: 'http://test.api.ft.com/content/search/v1?apiKey=wyxefweay4e9vucqkc2fw24s',
-                    data: {
-                        'queryString': 'people: ' + this.activePerson.prefLabel,
-                        'queryContext': {
-                            'curations': [
-                                'ARTICLES'
-                            ]
-                        },
-                        'resultContext': {
-                            'aspects': ['title', 'images', 'location', 'summary'],
-                            'facets': {'names': ['people', 'organisations'], 'maxElements': 20, 'minThreshold': 1}
-                        }
-                    }
-                }).then(response => {
-                    const results = response.results[0].results;
-                    if (results) {
-                        this.activePerson.relatedContent = results;
-                        this.activePerson.maxContentItems = results.length > 3 ? 3 : results.length;
-                    }
-                });
             }
         });
+
     }
 
 }
