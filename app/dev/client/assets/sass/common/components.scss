@@ -6,3 +6,12 @@
     height: 100%;
     min-height: 120px;
 }
+
+.spinner-small {
+    display: inline-block;
+    background: transparent url('../img/components/spinner-small.gif') no-repeat center center;
+    width: 100%;
+    min-width: 48px;
+    height: 48px;
+    margin: 0 auto;
+}

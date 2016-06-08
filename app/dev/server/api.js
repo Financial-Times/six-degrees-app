@@ -55,7 +55,9 @@
     function handleConnectionsCall(uuid, clientResponse) {
         let responseSent = false;
 
-        const todayDate = moment().format('YYYYMMDD');
+        const todayDate = moment().format('YYYYMMDD'),
+            fromDate = moment().add(-7, 'days').format('YYYY-MM-DD'),
+            toDate = moment().format('YYYY-MM-DD');
 
         handleCache('connections');
 
@@ -78,7 +80,7 @@
             }, 2000);
 
 
-            request('https://sixdegrees-demo.in.ft.com/sixdegrees/connectedPeople?minimumConnections=2&limit=50&uuid=' + uuid, function (error, response, body) {
+            request('https://sixdegrees-demo.in.ft.com/sixdegrees/connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&uuid=' + uuid, function (error, response, body) {
                 if (!responseSent && response.statusCode === 200) {
                     responsesCache.connections[todayDate] = responsesCache.connections[todayDate] || {};
                     responsesCache.connections[todayDate][uuid] = body;

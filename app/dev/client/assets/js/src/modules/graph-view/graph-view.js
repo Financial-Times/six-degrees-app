@@ -6,7 +6,7 @@ import {GraphData} from '../../models/services/graph.data.js';
 import PeopleData from '../../models/services/people.data.js';
 
 
-let self;
+let self, drawn;
 
 export class GraphView {
     static inject() {
@@ -32,10 +32,12 @@ export class GraphView {
     goBack() {
         self.clearErrorMessage();
         self.graphData = null;
+        d3.select('#graph .svg-container').remove();
         this.router.navigate('/');
     }
 
     handleData(data) {
+
         self.graphData = data;
 
         const graphElement = document.getElementById('graph'),
@@ -51,6 +53,8 @@ export class GraphView {
         data = graph.fixRootNode(graphElement, graphElement.parentNode.offsetWidth / 2, graphElement.parentNode.offsetHeight / 2);
 
         graph.startAndHandleForce(force, nodes, links);
+
+        drawn = true;
     }
 
     draw() {
@@ -59,20 +63,20 @@ export class GraphView {
         d3.select('#graph .svg-container').remove();
 
         if (self) {
-            console.warn('new person detected', PeopleData.activePerson.prefLabel);
+            if (PeopleData.activePerson && PeopleData.activePerson.prefLabel) {
+                console.log('new person detected', PeopleData.activePerson.prefLabel);
+            }
             new GraphData().fetch(PeopleData.activePerson).then(self.handleData).catch(self.errorHandler);
         }
     }
 
     attached() {
         self = this;
+        self.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(self.draw);
 
-        if (!self.drawnOnce) {
+        if (PeopleData.activePerson && !drawn) {
             self.draw();
-            self.drawnOnce = true;
-            self.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(self.draw);
         }
-
     }
 
 }

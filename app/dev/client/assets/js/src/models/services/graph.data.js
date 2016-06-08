@@ -12,6 +12,8 @@ export class GraphData {
                 'links': []
             };
 
+            let edges = [];
+
             connections.forEach(function (connection, index) {
                 connectionsGraph.nodes.push({
                     id: index + 1,
@@ -20,11 +22,29 @@ export class GraphData {
                     caption: connection.person.prefLabel
                 });
                 connectionsGraph.links.push({
-                    source: 0,
-                    target: index + 1,
+                    source: connectionsGraph.nodes[0].uuid,
+                    target: connectionsGraph.nodes[index + 1].uuid,
                     count: connection.count
                 });
             });
+
+            connectionsGraph.links.forEach(function (edge) {
+
+                const sourceNode = connectionsGraph.nodes.filter(function (node) {
+                        return node.uuid === edge.source;
+                    })[0],
+                    targetNode = connectionsGraph.nodes.filter(function (node) {
+                        return node.uuid === edge.target;
+                    })[0];
+
+                edges.push({
+                    source: sourceNode,
+                    target: targetNode,
+                    count: edge.count
+                });
+            });
+
+            connectionsGraph.links = edges;
 
             return connectionsGraph;
         }
