@@ -3,6 +3,7 @@ import Ajax from '../../models/services/ajax.js';
 class PeopleData {
 
     constructor() {
+        this.elasticSearchPerson = null;
         this.people = {};
     }
 
@@ -25,18 +26,18 @@ class PeopleData {
         this.activePerson.relatedContent = this.activePerson.relatedContent || [];
         contentItems.forEach(item => {
             Ajax.get({
-                url: 'http://api.ft.com/content/' + item.id + '?apiKey=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+                url: 'api/content/' + item.id
             }).then(response => {
 
                 if (response.mainImage.id) {
                     Ajax.get({
-                        url: response.mainImage.id + '?apiKey=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+                        url: 'api/images/' + response.mainImage.id.replace('http://api.ft.com/content/', '')
                     }).then(imageResponse => {
                         if (imageResponse.members) {
                             Ajax.get({
-                                url: imageResponse.members[0].id + '?apiKey=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+                                url: 'api/image/' + imageResponse.members[0].id.replace('http://api.ft.com/content/', '')
                             }).then(memberResponse => {
-                                this.addToContent(response, memberResponse.binaryUrl);
+                                this.addToContent(response, memberResponse.binaryUrl.replace('http', 'https'));
                             });
                         }
                     });
@@ -50,7 +51,6 @@ class PeopleData {
     getMentionedMostly() {
         return Ajax.get({
             url: 'api/mentioned'
-            //url: 'app/dev/client/assets/mocks/most-mentioned-people.json'
         });
     }
 
@@ -64,13 +64,15 @@ class PeopleData {
                 uuid: uuid
             }
         }).then(response => {
-            this.getContent(response[0].content);
-            response.forEach(connection => {
-                if (!this.people[connection.person.id]) {
-                    this.people[connection.person.id] = connection.person;
-                    this.stored.push(connection.person);
-                }
-            });
+            if (response.length) {
+                this.getContent(response[0].content);
+                response.forEach(connection => {
+                    if (!this.people[connection.person.id]) {
+                        this.people[connection.person.id] = connection.person;
+                        this.stored.push(connection.person);
+                    }
+                });
+            }
             return response;
         });
     }
@@ -85,12 +87,15 @@ class PeopleData {
     setActive(id) {
 
         this.stored.forEach((person, index) => {
-
             if (person.id === id) {
                 this.activePerson = this.stored[index];
             }
         });
 
+    }
+
+    acceptedSearchPerson(person) {
+        this.elasticSearchPerson = person;
     }
 
 }

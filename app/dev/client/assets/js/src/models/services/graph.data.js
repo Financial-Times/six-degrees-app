@@ -12,7 +12,7 @@ export class GraphData {
                 'links': []
             };
 
-            let edges = [];
+            let edges = []; //eslint-disable-line prefer-const
 
             connections.forEach(function (connection, index) {
                 connectionsGraph.nodes.push({

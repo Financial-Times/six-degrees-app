@@ -2,6 +2,22 @@
 
     const CONFIG = {
         URL: '127.0.0.1',
+        API_URL: {
+            SIX_DEGREES: {
+                HOST: 'https://sixdegrees-demo.in.ft.com/sixdegrees/'
+            },
+            ELASTIC_SEARCH: 'https://pre-prod-up.ft.com/__elasticsearch/'
+        },
+        AUTH: {
+            API_KEY: {
+                FT: 'vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+            },
+            HEADERS: {
+                ELASTIC_SEARCH: {
+                    BASIC: 'Basic cHJlLXByb2Q6ZWQ4YjkwMzMtNDFhMi00NDJlLWEyMGYtNjFlY2FmZDE3YTU3'
+                }
+            }
+        },
         PORT: process.env.PORT || 8080,
         APP: 'FTSixDegrees',
         VER: 'dev',
