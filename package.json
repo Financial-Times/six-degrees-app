@@ -1,6 +1,7 @@
 {
   "name": "ft-six-degrees",
   "version": "0.1.1",
+  "version": "0.1.2",
   "description": "FT Six Degrees prototype FE App",
   "author": "Tomasz Libich",
   "scripts": {

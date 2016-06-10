@@ -22,10 +22,11 @@
                                 <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-title">${person.relatedContent[i].title}</a>
                                 <div class="article-details">
                                     <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-thumbnail" style="background-image: url('${person.relatedContent[i].imageUrl}')" alt="" if.bind="person.relatedContent[i].imageUrl"></a>
-                                    <span class="article-byline">by ${person.relatedContent[i].byline}</span>
-                                    <span class="article-published">${person.relatedContent[i].published}</span>
+                                    <a href="${person.relatedContent[i].location.uri}" target="_blank">
+                                        <span class="article-byline">by ${person.relatedContent[i].byline}</span>
+                                        <span class="article-published">${person.relatedContent[i].published}</span>
+                                    </a>
                                 </div>
-                                <a href="${person.relatedContent[i].location.uri}" if.bind="person.relatedContent[i].location.uri" class="o-buttons article-more" target="_blank">more</a>
                             </li>
                         </ul>
                     </div>

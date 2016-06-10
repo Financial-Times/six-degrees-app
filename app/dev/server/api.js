@@ -80,7 +80,7 @@
             }, 2000);
 
 
-            request('https://sixdegrees-demo.in.ft.com/sixdegrees/connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&uuid=' + uuid, function (error, response, body) {
+            request(CONFIG.API_URL.SIX_DEGREES.HOST + 'connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&uuid=' + uuid, function (error, response, body) {
                 if (!responseSent && response.statusCode === 200) {
                     responsesCache.connections[todayDate] = responsesCache.connections[todayDate] || {};
                     responsesCache.connections[todayDate][uuid] = body;
@@ -114,14 +114,14 @@
         } else {
 
             const timeout = setTimeout(function () {
-                console.log('[' + CONFIG.APP + '] No answer for 5 secs: https://sixdegrees-demo.in.ft.com/sixdegrees/mostMentionedPeople');
+                console.log('[' + CONFIG.APP + '] No answer for 5 secs:', CONFIG.API_URL.SIX_DEGREES.HOST + 'mostMentionedPeople');
                 sendResponseToClient(clientResponse, {
                     status: 504
                 });
                 responseSent = true;
             }, 5000);
 
-            request('https://sixdegrees-demo.in.ft.com/sixdegrees/mostMentionedPeople', function (error, response, body) {
+            request(CONFIG.API_URL.SIX_DEGREES.HOST + 'mostMentionedPeople', function (error, response, body) {
                 if (!responseSent && response.statusCode === 200) {
                     responsesCache.people[todayDate] = body;
                     clearTimeout(timeout);
@@ -139,6 +139,97 @@
 
     }
 
+    function handleSearchCall(query, clientResponse) {
+        request({
+            url: CONFIG.API_URL.ELASTIC_SEARCH + 'concepts/people/_search?q=' + query,
+            headers: {
+                'Authorization': CONFIG.AUTH.HEADERS.ELASTIC_SEARCH.BASIC
+            }
+        }, function (error, response, body) {
+            if (body) {
+                sendResponseToClient(clientResponse, {
+                    status: 200,
+                    data: JSON.parse(body).hits ? JSON.parse(body).hits.hits : []
+                });
+            } else {
+                sendResponseToClient(clientResponse, {
+                    status: 502
+                });
+            }
+        });
+    }
+
+    function handleLookUpCall(uuid, clientResponse) {
+        request({
+            url: 'https://pre-prod-up.ft.com/__restorage-elasticsearch-concepts/people/' + uuid,
+            headers: {
+                'Authorization': CONFIG.AUTH.HEADERS.ELASTIC_SEARCH.BASIC
+            }
+        }, function (error, response, body) {
+            if (body) {
+                sendResponseToClient(clientResponse, {
+                    status: 200,
+                    data: JSON.parse(body)
+                });
+            } else {
+                sendResponseToClient(clientResponse, {
+                    status: 502
+                });
+            }
+        });
+    }
+
+    function handleContentCall(id, clientResponse) {
+        request({
+            url: 'https://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+        }, function (error, response, body) {
+            if (body) {
+                sendResponseToClient(clientResponse, {
+                    status: 200,
+                    data: JSON.parse(body)
+                });
+            } else {
+                sendResponseToClient(clientResponse, {
+                    status: 502
+                });
+            }
+        });
+    }
+
+    function handleImagesCall(id, clientResponse) {
+        request({
+            url: 'http://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+        }, function (error, response, body) {
+            if (body) {
+                sendResponseToClient(clientResponse, {
+                    status: 200,
+                    data: JSON.parse(body)
+                });
+            } else {
+                sendResponseToClient(clientResponse, {
+                    status: 502
+                });
+            }
+        });
+    }
+
+    function handleImageCall(id, clientResponse) {
+        request({
+            url: 'http://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+        }, function (error, response, body) {
+            if (body) {
+                sendResponseToClient(clientResponse, {
+                    status: 200,
+                    data: JSON.parse(body)
+                });
+            } else {
+                sendResponseToClient(clientResponse, {
+                    status: 502
+                });
+            }
+        });
+    }
+
     function handleGet(clientRequest, clientResponse) {
         const params = clientRequest.url.replace('/api/', '').split('/');
 
@@ -151,6 +242,21 @@
                 break;
             case 'mentioned':
                 handleMostMentionedCall(clientResponse);
+                break;
+            case 'search':
+                handleSearchCall(params[1], clientResponse);
+                break;
+            case 'lookup':
+                handleLookUpCall(params[1], clientResponse);
+                break;
+            case 'content':
+                handleContentCall(params[1], clientResponse);
+                break;
+            case 'images':
+                handleImagesCall(params[1], clientResponse);
+                break;
+            case 'image':
+                handleImageCall(params[1], clientResponse);
                 break;
             default:
                 badRequestHandler(clientResponse);

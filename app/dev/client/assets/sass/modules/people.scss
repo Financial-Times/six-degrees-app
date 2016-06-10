@@ -13,6 +13,14 @@ people-list {
         width: 50%;
     }
 
+    .details {
+        .info {
+            display: inline-block;
+            width: auto;
+            color: #b0b0b0;
+        }
+    }
+
     h1 {
         text-align: center;
         background: #505050;

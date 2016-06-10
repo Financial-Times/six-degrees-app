@@ -61,11 +61,13 @@
             a:link,
             a:visited {
                 text-decoration: none;
+                color: #333333;
             }
 
             a:hover,
             a:active {
                 text-decoration: underline;
+                color: #936971;
             }
 
             .article-title {
@@ -89,6 +91,7 @@
                 line-height: 16px;
                 font-size: 14px;
                 font-style: italic;
+                color: #333333;
             }
 
             .article-published {
