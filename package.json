@@ -1,6 +1,10 @@
 {
   "name": "ft-six-degrees",
-  "version": "0.1.1",
+<<<<<<< 931e2f4469a37185c3a9e9df68af5801e956c115
+  "version": "0.1.2",
+=======
+  "version": "0.1.2",
+>>>>>>> Adding elastic search functionality and moving all tokens from client to server
   "description": "FT Six Degrees prototype FE App",
   "author": "Tomasz Libich",
   "scripts": {

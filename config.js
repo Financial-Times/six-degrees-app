@@ -211,9 +211,7 @@ System.config({
   },
   bundles: {
     "app.min.js": [
-      "configuration.js",
-      "main.html!github:systemjs/plugin-text@0.0.3.js",
-      "main.js"
+      "main.html!github:systemjs/plugin-text@0.0.3.js"
     ],
     "aurelia.min.js": [
       "npm:aurelia-animator-css@1.0.0-beta.1.2.0.js",
@@ -301,11 +299,5 @@ System.config({
       "npm:aurelia-templating@1.0.0-beta.1.2.1/aurelia-templating.js"
     ]
   },
-  depCache: {
-    "configuration.js": [
-      "aurelia-framework",
-      "aurelia-logging-console",
-      "fetch"
-    ]
-  }
+  depCache: {}
 });
