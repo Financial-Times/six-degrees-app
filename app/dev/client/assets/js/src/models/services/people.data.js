@@ -29,7 +29,7 @@ class PeopleData {
                 url: 'api/content/' + item.id
             }).then(response => {
 
-                if (response.mainImage.id) {
+                if (response.mainImage && response.mainImage.id) {
                     Ajax.get({
                         url: 'api/images/' + response.mainImage.id.replace('http://api.ft.com/content/', '')
                     }).then(imageResponse => {
