@@ -15,7 +15,7 @@ test:
 
 ## Customize deployment
 deployment:
-  develop:
-    branch: develop
+  master:
+    branch: master
     commands:
       - ./deployment/build_release.sh

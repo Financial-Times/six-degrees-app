@@ -7,11 +7,12 @@
 #git checkout develop
 #git rebase master
 
-#gulp client-build-release
-#git add .
+gulp client-build-release
+git add .
 
-#PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
-#DESCRIPTION="Version update: $PACKAGE_VERSION"
-#git commit -m "$DESCRIPTION"
-#git tag -a v$PACKAGE_VERSION -m "ver $PACKAGE_VERSION"
-#git push origin v$PACKAGE_VERSION
+PACKAGE_VERSION=$(node -p -e "require('./package.json').version")
+DESCRIPTION="Version update: $PACKAGE_VERSION"
+git commit -m "$DESCRIPTION"
+git tag -a v$PACKAGE_VERSION -m "ver $PACKAGE_VERSION"
+git push origin v$PACKAGE_VERSION
+git push origin master
