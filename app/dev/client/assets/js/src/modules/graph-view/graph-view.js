@@ -43,6 +43,8 @@ export class GraphView {
     }
 
     getGraphData() {
+        self.clearErrorMessage();
+        self.graphData = null;
         pending = true;
         new GraphData().fetch(PeopleData.activePerson).then(self.handleData).catch(self.errorHandler);
     }
