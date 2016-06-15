@@ -1,6 +1,8 @@
 <template>
     <div class="spinner" if.bind="!graphData && !errorMessage"></div>
+
     <div id="graph" style="width: 100%; height: 100%;" class.bind="!graphData ? 'hidden' : ''"></div>
+
     <div class="connections-request-error" if.bind="errorMessage">
         <div class="error-inner">
             <i class="material-icons">&#xE000;</i>
@@ -10,4 +12,9 @@
         <button class="o-buttons o-buttons--standout button-try-again" click.delegate="draw()">try again</button>
     </div>
     <button class="o-buttons button-go-back" click.delegate="goBack()">go back</button>
+
+    <div class="connections-zoom-controls">
+        <a href="/#/connections" class="o-buttons zoom" id="zoom_in">+</a>
+        <a href="/#/connections" class="o-buttons zoom" id="zoom_out" >-</a>
+    </div>
 </template>

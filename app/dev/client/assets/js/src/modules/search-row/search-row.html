@@ -1,9 +1,9 @@
 <template bindable="people">
-    <section class="iftt-search-row-wrapper o-grid-row" data-o-grid-colspan="11 M8 center">
+    <section class="iftt-search-row-wrapper">
         <form submit.trigger="submit()">
             <div class="iftt-search-row-field" id="search-input">
                 <input type="text" placeholder="Search for someone else..." value.bind="searchPhrase" oninput.bind="handleInput" onkeydown.bind="handleKey" />
-                <ul class="iftt-search-hints" id="search-hints" onkeydown.bind="handleKey">
+                <ul class="iftt-search-hints" id="search-hints" onkeydown.bind="handleKey" if.bind="people.length">
                     <li repeat.for="person of people">
                         <a href="#" class.bind="$index === activeIndex ? 'active' : ''" click.delegate="submit($event)">
                             ${person.name}<em if.bind="person.salutation" class="left">, ${person.salutation}</em>

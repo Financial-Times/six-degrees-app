@@ -22,7 +22,7 @@ business-card {
         }
     }
 
-    .card-bottom {
+    .card-middle {
         text-align: center;
         position: relative;
         padding: 12px 6px;
@@ -48,6 +48,19 @@ business-card {
         strong {
             font-weight: normal;
             display: block;
+        }
+    }
+
+    .card-bottom {
+        .connections-number {
+            display: block;
+            text-align: center;
+            font-size: 14px;
+            background: #936971;
+            color: white;
+            padding: 6px 0;
+
+            text-decoration: none;
         }
     }
 }

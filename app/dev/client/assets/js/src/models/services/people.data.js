@@ -8,22 +8,50 @@ class PeopleData {
     }
 
     addToContent(response, imageUrl) {
+        let contains = false;
         this.activePerson.relatedContentLoading = false;
-        this.activePerson.relatedContent.push({
-            title: response.title,
-            imageUrl: imageUrl,
-            byline: response.byline,
-            published: moment(response.publishedDate).format('MMMM DD, YYYY'),
-            location: {
-                uri: response.webUrl
+
+        function compare(a, b) {
+            if (a.publishedTimestamp < b.publishedTimestamp) {
+                return 1;
+            }
+            if (a.publishedTimestamp > b.publishedTimestamp) {
+                return -1;
+            }
+            return 0;
+        }
+
+
+        response.title = response.title.length > 65 ? response.title.substring(0, 65) + '...' : response.title;
+        response.byline = response.byline.length > 70 ? response.byline.substring(0, 70) + '...' : response.byline;
+
+        this.activePerson.relatedContent.forEach(article => {
+            if (article.title === response.title) {
+                contains = true;
             }
         });
-        this.activePerson.maxContentItems = this.activePerson.relatedContent.length > 3 ? 5 : this.activePerson.relatedContent.length;
+
+        if (!contains) {
+            this.activePerson.relatedContent.push({
+                title: response.title,
+                imageUrl: imageUrl,
+                byline: response.byline,
+                published: moment(response.publishedDate).format('MMMM DD, YYYY'),
+                publishedTimestamp: moment(response.publishedDate).unix(),
+                location: {
+                    uri: response.webUrl
+                }
+            });
+        }
+
+        this.activePerson.relatedContent.sort(compare);
+        this.activePerson.maxContentItems = this.activePerson.relatedContent.length > 5 ? 6 : this.activePerson.relatedContent.length;
     }
 
     getContent(contentItems) {
         this.activePerson.relatedContentLoading = true;
         this.activePerson.relatedContent = this.activePerson.relatedContent || [];
+
         contentItems.forEach(item => {
             Ajax.get({
                 url: 'api/content/' + item.id
@@ -65,7 +93,14 @@ class PeopleData {
             }
         }).then(response => {
             if (response.length) {
-                this.getContent(response[0].content);
+                //response contains articles in relation to connected people
+                const content = [];
+                response.forEach(connectionRelatedArticles => {
+                    connectionRelatedArticles.content.forEach(article => {
+                        content.push(article);
+                    });
+                });
+                this.getContent(content);
                 response.forEach(connection => {
                     if (!this.people[connection.person.id]) {
                         this.people[connection.person.id] = connection.person;
@@ -84,14 +119,28 @@ class PeopleData {
         });
     }
 
-    setActive(id) {
+    getAbbreviatedName(prefLabel) {
+        const prefLabelArray = prefLabel.split(' '),
+            max = prefLabelArray.length;
+        return prefLabelArray[0] + ' ' + prefLabelArray[max - 1];
+    }
 
+    setActive(id) {
         this.stored.forEach((person, index) => {
             if (person.id === id) {
                 this.activePerson = this.stored[index];
+                this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
             }
         });
+    }
 
+    setActiveByName(name) {
+        this.stored.forEach((person, index) => {
+            if (person.prefLabel === name) {
+                this.activePerson = this.stored[index];
+                this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
+            }
+        });
     }
 
     acceptedSearchPerson(person) {

@@ -6,7 +6,7 @@ import {GraphData} from '../../models/services/graph.data.js';
 import PeopleData from '../../models/services/people.data.js';
 
 
-let self, drawn;
+let self, pending;
 
 export class GraphView {
     static inject() {
@@ -27,6 +27,7 @@ export class GraphView {
             self.errorMessage = 'Oops, something went wrong...';
             self.errorDetails = '(' + error.status + ' - ' + error.statusText + ')';
         }
+        pending = false;
     }
 
     goBack() {
@@ -37,45 +38,60 @@ export class GraphView {
     }
 
     handleData(data) {
-
-        self.graphData = data;
-
-        const graphElement = document.getElementById('graph'),
-            graph = new Graph(data),
-            svg = graph.createSvg(graphElement),
-            force = graph.createForce(graphElement),
-            links = graph.handleLinks(svg),
-            nodes = graph.handleNodes(svg, force);
-
-        graph.addCaptions(nodes);
-        graph.addCircles(nodes, links);
-
-        data = graph.fixRootNode(graphElement, graphElement.parentNode.offsetWidth / 2, graphElement.parentNode.offsetHeight / 2);
-
-        graph.startAndHandleForce(force, nodes, links);
-
-        drawn = true;
+        pending = false;
+        self.drawGraph(data.nodes, data.links);
     }
 
-    draw() {
-        self.clearErrorMessage();
-        self.graphData = null;
-        d3.select('#graph .svg-container').remove();
+    getGraphData() {
+        pending = true;
+        new GraphData().fetch(PeopleData.activePerson).then(self.handleData).catch(self.errorHandler);
+    }
 
-        if (self) {
-            if (PeopleData.activePerson && PeopleData.activePerson.prefLabel) {
-                console.log('new person detected', PeopleData.activePerson.prefLabel);
-            }
-            new GraphData().fetch(PeopleData.activePerson).then(self.handleData).catch(self.errorHandler);
+    drawGraph(nodes, links) {
+
+        if (!self.graphData) {
+
+            self.graph = new Graph();
+            self.graphData = {
+                nodes: [],
+                links: []
+            };
+
+        } else {
+
+            const oldNodes = self.graphData.nodes;
+            let i;
+
+            oldNodes.forEach(oldNode => {
+                for (i = 0; i < nodes.length; i += 1) {
+                    if (oldNode.caption === nodes[i].caption) {
+                        nodes.splice(i, 1);
+                        break;
+                    }
+                }
+            });
         }
+
+        nodes.forEach(node => {
+            self.graph.addNode(node.caption);
+        });
+
+        links.forEach(link => {
+            self.graph.addLink(link.source.caption, link.target.caption, link.count);
+        });
+
+        self.graphData.nodes = self.graphData.nodes.concat(nodes);
+        self.graphData.links = self.graphData.links.concat(links);
+
+        PeopleData.activePerson.numberOfConnections = links.length;
     }
 
     attached() {
         self = this;
-        self.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(self.draw);
+        self.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(self.getGraphData);
 
-        if (PeopleData.activePerson && !drawn) {
-            self.draw();
+        if (PeopleData.activePerson && !pending) {
+            self.getGraphData();
         }
     }
 

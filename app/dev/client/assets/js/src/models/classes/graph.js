@@ -1,168 +1,253 @@
 import PeopleData from '../../models/services/people.data.js';
 
-let counts;
-
 export class Graph {
-    constructor(data) {
+    constructor() {
 
-        (function init() {
-            counts = 0;
-            data.links.forEach(link => {
-                counts += link.count;
-            });
-        }());
-
-        function determineConnectionStrength(count) {
-            return parseInt(count * 100 / counts, 10) / 10;
-        }
-
-        this.createSvg = function createSvg(element) {
-
-            const width = element.parentNode.offsetWidth,
-                height = element.parentNode.offsetHeight;
-
-            return d3.select('#graph')
+        const zoom = d3.behavior.zoom().scaleExtent([0.5, 2]).on('zoom', zoomed), //eslint-disable-line no-use-before-define
+            force = d3.layout.force(),
+            nodes = force.nodes(),
+            links = force.links(),
+            element = document.getElementById('graph'),
+            width = element.parentNode.offsetWidth,
+            height = element.parentNode.offsetHeight,
+            svg = d3.select('#graph')
                 .append('div')
                 .classed('svg-container', true)
-                .append('svg')
-                .attr('preserveAspectRatio', 'xMinYMin meet')
+                .append('svg:svg')
+                .attr('width', width)
+                .attr('height', height)
+                .attr('id', 'svg')
+                .attr('pointer-events', 'all')
                 .attr('viewBox', '0 0 ' + width + ' ' + height)
-                .classed('svg-content-responsive', true);
-        };
+                .attr('perserveAspectRatio', 'xMinYMid meet')
+                .classed('svg-content-responsive', true)
+                .call(zoom)
+                .append('svg:g');
 
-        this.createForce = function createForce(container) {
-            return d3.layout.force()
-                .gravity(0.05)
-                // .linkDistance(function (link) {
-                //     return 100 - determineConnectionStrength(link.count) * 10;
-                // })
-                .linkDistance(function () {
-                    return 40;
+        function zoomed() {
+            svg.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
+        }
+
+        function zoomByFactor(factor) {
+            const scale = zoom.scale(),
+                extent = zoom.scaleExtent(),
+                newScale = scale * factor;
+
+            if (extent[0] <= newScale && newScale <= extent[1]) {
+                const t = zoom.translate(),
+                    c = [width / 2, height / 2];
+
+                zoom.scale(newScale)
+                    .translate(
+                        [c[0] + (t[0] - c[0]) / scale * newScale,
+                        c[1] + (t[1] - c[1]) / scale * newScale])
+                    .event(svg.transition().duration(350));
+            }
+        }
+
+        function findNode(id) {
+            let i,
+                node = null;
+
+            for (i in nodes) {
+                if (nodes[i].id === id) {
+                    node = nodes[i];
+                }
+            }
+
+            return node;
+        }
+
+        function findNodeIndex(id) {
+            let i, index;
+
+            for (i = 0; i < nodes.length; i += 1) {
+                if (nodes[i].id === id) {
+                    index = i;
+                }
+            }
+            return index;
+        }
+
+        function update() {
+            let link, node, nodeEnter;
+
+            svg.append('g').attr('class', 'links');
+            svg.append('g').attr('class', 'nodes');
+
+            link = svg.select('.links').selectAll('line').data(links, function (d) { //eslint-disable-line prefer-const
+                return d.source.id + '-' + d.target.id;
+            });
+
+            link.enter().append('line')
+                .attr('id', function (d) {
+                    return d.source.id + '-' + d.target.id;
                 })
-                .charge(-2000)
-                .size([container.offsetWidth, container.offsetHeight]);
-        };
-
-        this.handleLinks = function handleLinks(svg) {
-            return svg.selectAll('.link')
-                .data(data.links)
-                .enter().append('line')
-                .style('stroke-width', function (link) {
-                    return 1 + determineConnectionStrength(link.count);
+                .attr('stroke-width', function (d) {
+                    return d.value / 10;
                 })
                 .attr('class', 'link');
-        };
 
-        this.handleNodes = function handleNodes(svg, force) {
-            return svg.selectAll('.node')
-                .data(data.nodes)
-                .enter().append('g')
-                .attr('class', function (node) {
-                    return node.id === 0 ? 'node-root' : 'node';
+            link.append('title')
+                .text(function (d) {
+                    return d.value;
+                });
+
+            link.exit().remove();
+
+            node = svg.select('.nodes').selectAll('g.node').data(nodes, function (d) { //eslint-disable-line prefer-const
+                return d.id;
+            });
+
+            nodeEnter = node.enter().append('g') //eslint-disable-line prefer-const
+                .attr('class', function (d, index) {
+                    return index === 0 ? 'node node-root' : 'node';
                 })
                 .call(force.drag);
-        };
 
-        this.addCaptions = function addCaptions(nodes) {
-            function getBB(selection) {
-                selection.each(function (d) {
-                    d.bbox = this.getBBox();
-                });
-            }
-            nodes.append('text')
-                .text(function (d) {
-                    return d.caption;
-                })
-                .attr('dx', function () {
-                    return '-' + this.getComputedTextLength() / 2;
-                })
-                .attr('dy', function (node) {
-                    return node.id === 0 ? '2.5em' : '2.2em';
-                })
-                .call(getBB);
-        };
-
-        this.onClick = function onClick(nodeElement, nodeData, nodes, links) {
-            // let centerX = data.nodes[0].x,
-            //     centerY = data.nodes[0].y;
-
-            if (d3.event.defaultPrevented) {
-                return;
-            }
-
-            d3.select(nodeElement)
-                .attr('r', 25);
-
-            nodes[0].forEach(function (node, index) {
-                if (index === nodeData.index) {
-                    // data.nodes[0].fixed = false;
-                    // data.nodes[index].fixed = true;
-                    // data.nodes[index].x = centerX;
-                    // data.nodes[index].y = centerY;
-
-                    d3.select(node).attr('class', 'node-active');
-                } else {
-                    d3.select(node).attr('class', 'node-no-text');
-                }
-            });
-
-            nodes.transition().duration(250).attr('transform', function () {
-                return 'translate(' + nodeData.x + ',' + nodeData.y + ')';
-            });
-
-            links.transition().duration(150).style('stroke-width', 0);
-
-            window.setTimeout(function () {
-                PeopleData.setActive(nodeData.personId);
-            }, 300);
-        };
-
-        this.addCircles = function addCircles(nodes, links) {
-            const graph = this;
-
-            nodes.append('circle')
-                .attr('r', function (node) {
-                    return node.id === 0 ? 24 : 20;
+            nodeEnter.append('svg:circle')
+                .attr('r', function (d, index) {
+                    return index === 0 ? 25 : 20;
                 })
                 .on('click', function (nodeData) {
-                    if (nodeData.id !== 0) {
-                        graph.onClick(this, nodeData, nodes, links);
-                    }
-                });
-        };
+                    svg.select('.nodes').selectAll('g.node circle').attr('r', 20);
+                    svg.select('.nodes').selectAll('g.node-root').attr('class', 'node');
 
-        this.startAndHandleForce = function startAndHandleForce(force, nodes, links) {
-            force.nodes(data.nodes).links(data.links).start();
+                    d3.select(this).attr('r', 25);
+                    d3.select(this.parentNode).attr('class', 'node node-root');
+
+                    PeopleData.setActiveByName(nodeData.id);
+                });
+
+            nodeEnter.append('svg:text')
+                .attr('x', function () {
+                    return 0;
+                })
+                .attr('y', function () {
+                    return '1.4em';
+                }).each(function (d) {
+                    const arrayOfWords = d.id.split(' '),
+                        max = arrayOfWords.length;
+
+                    d3.select(this).append('tspan')
+                        .text(arrayOfWords[0])
+                        .attr('x', '0')
+                        .attr('dy', '1em');
+
+                    d3.select(this).append('tspan')
+                        .text(arrayOfWords[max - 1])
+                        .attr('x', '0')
+                        .attr('dy', '1em');
+                });
+
+            node.exit().remove();
 
             force.on('tick', function () {
 
-                links
-                    .attr('x1', function (d) {
-                        return d.source.x;
-                    })
-                    .attr('y1', function (d) {
-                        return d.source.y;
-                    })
-                    .attr('x2', function (d) {
-                        return d.target.x;
-                    })
-                    .attr('y2', function (d) {
-                        return d.target.y;
-                    });
+                node.attr('transform', function (d) {
+                    return 'translate(' + d.x + ',' + d.y + ')';
+                });
 
-                nodes
-                    .attr('transform', function (d) {
-                        return 'translate(' + d.x + ',' + d.y + ')';
-                    });
+                link.attr('x1', function (d) {
+                    return d.source.x;
+                }).attr('y1', function (d) {
+                    return d.source.y;
+                })
+                .attr('x2', function (d) {
+                    return d.target.x;
+                })
+                .attr('y2', function (d) {
+                    return d.target.y;
+                });
             });
 
+            // Restart the force layout.
+            force.gravity(0.05)
+                .charge(-2000)
+                .linkDistance(function (d) {
+                    return d.value * 10;
+                })
+                .size([width, height])
+                .start();
+
+            d3.selectAll('.connections-zoom-controls a').on('click', function () {
+                const factor = (this.id === 'zoom_in') ? 1.2 : (1 / 1.2);
+                d3.event.preventDefault();
+                this.blur();
+                zoomByFactor(factor);
+            });
+
+        }
+
+        this.addNode = function (id) {
+            nodes.push({
+                'id': id
+            });
+
+            update();
         };
 
-        this.fixRootNode = function fixRootNode(container, x, y) {
-            data.nodes[0].fixed = true;
-            data.nodes[0].x = x || container.offsetWidth / 2;
-            data.nodes[0].y = y || container.offsetHeight / 2;
-            return data;
+        this.removeNode = function (id) {
+            const n = findNode(id);
+            let i = 0;
+
+            while (i < links.length) {
+                if ((links[i].source === n) || (links[i].target === n)) {
+                    links.splice(i, 1);
+                } else {
+                    i += 1;
+                }
+            }
+
+            nodes.splice(findNodeIndex(id), 1);
+
+            update();
+        };
+
+        this.removeLink = function (source, target) {
+            let i;
+
+            for (i = 0; i < links.length; i += 1) {
+                if (links[i].source.id === source && links[i].target.id === target) {
+                    links.splice(i, 1);
+                    break;
+                }
+            }
+            update();
+        };
+
+        this.removeallLinks = function () {
+            links.splice(0, links.length);
+            update();
+        };
+
+        this.removeAllNodes = function () {
+            nodes.splice(0, links.length);
+            update();
+        };
+
+        this.addLink = function (source, target, value) {
+            const max = links.length;
+            let x,
+                exists = false;
+
+            for (x = 0; x < max; x += 1) {
+                if (source === links[x].source.id && target === links[x].target.id) {
+                    links[x].value += value;
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                links.push({
+                    'source': findNode(source),
+                    'target': findNode(target),
+                    'value': value
+                });
+                update();
+            }
+
         };
     }
 }

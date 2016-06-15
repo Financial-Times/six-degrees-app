@@ -6,6 +6,11 @@ search-row {
         font-weight: normal;
         color: #936971;
     }
+
+    @media all and (min-width: 1024px) {
+        width: 40%;
+        margin: 0 auto;
+    }
 }
 
 .iftt-search-row-wrapper {
@@ -26,16 +31,21 @@ search-row {
 }
 
 .iftt-search-row-field {
-    margin: 20px 0 0;
+    margin: 20px auto 0 auto;
     position: relative;
+    width: 65%;
+
+    @media all and (min-width: 1024px) {
+        width: 100%;
+    }
 
     input[type=text] {
         width: 94%;
+        padding: 0 3%;
         border: none;
         background: transparent;
         font-size: 1.6em;
         line-height: 46px;
-        padding: 0 3%;
         color: #936971;
         background: white;
         border-radius: 2px;
@@ -65,10 +75,11 @@ search-row {
     border-top-color: transparent;
     border-radius: 2px;
     max-height: 80vh;
-    overflow: scroll;
+    overflow: hidden;
 
     li {
         border-top: solid 1px #dddddd;
+        width: 100%;
         &:first-child {
             border-top: none;
         }

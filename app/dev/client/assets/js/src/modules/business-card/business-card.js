@@ -7,13 +7,19 @@ export class BusinessCard {
     }
 
     constructor(observerLocator) {
-        this.person = PeopleData.activePerson;
+
         this.observerLocator = observerLocator;
+        this.update();
 
         this.onPersonChange = () => {
-            this.person = PeopleData.activePerson;
+            this.update();
         };
 
         this.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(this.onPersonChange);
     }
+
+    update() {
+        this.person = PeopleData.activePerson;
+    }
+
 }

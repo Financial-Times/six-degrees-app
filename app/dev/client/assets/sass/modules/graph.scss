@@ -23,6 +23,8 @@ graph-view {
         text {
             text-shadow: none;
             fill: #936971;
+            white-space: normal;
+            text-anchor: middle;
         }
 
         circle {
@@ -30,6 +32,12 @@ graph-view {
             stroke: #27757b;
             stroke-width: 6;
             cursor: pointer;
+
+            &.root {
+                fill: #27757b;
+                stroke: #2bbbbf;
+                stroke-width: 6;
+            }
         }
     }
 
@@ -43,6 +51,8 @@ graph-view {
             fill: #27757b;
             stroke: #2bbbbf;
             stroke-width: 6;
+
+
         }
     }
 
@@ -110,4 +120,14 @@ graph-view {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.connections-zoom-controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    a {
+        display: block;
+    }
 }

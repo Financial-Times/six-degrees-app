@@ -14,15 +14,18 @@
             <div data-o-grid-colspan="12 M4 XL4">
                 <div class="related-content">
                     <div class="related-content-header">
-                        <h3>${person.prefLabel}<br />in the FT headlines</h3>
+                        <h3>${person.name}<br />in the FT headlines</h3>
                     </div>
                     <div class="related-articles" if.bind="person.relatedContent">
                         <ul>
-                            <li repeat.for="i of person.maxContentItems">
-                                <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-title">${person.relatedContent[i].title}</a>
+                            <li repeat.for="i of person.maxContentItems" if.bind="person.relatedContent[i].title">
                                 <div class="article-details">
-                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-thumbnail" style="background-image: url('${person.relatedContent[i].imageUrl}')" alt="" if.bind="person.relatedContent[i].imageUrl"></a>
+                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-thumbnail" if.bind="person.relatedContent[i].imageUrl">
+                                        <img src="${person.relatedContent[i].imageUrl}" alt="${person.relatedContent[i].title}" />
+                                    </a>
+                                    <span class="article-thumbnail default" if.bind="!person.relatedContent[i].imageUrl"></span>
                                     <a href="${person.relatedContent[i].location.uri}" target="_blank">
+                                        <span class="article-title">${person.relatedContent[i].title}</span>
                                         <span class="article-byline">by ${person.relatedContent[i].byline}</span>
                                         <span class="article-published">${person.relatedContent[i].published}</span>
                                     </a>

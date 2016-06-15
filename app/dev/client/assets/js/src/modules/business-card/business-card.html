@@ -2,8 +2,11 @@
     <div class="card-top">
         <i class="material-icons">person</i>
     </div>
-    <div class="card-bottom">
+    <div class="card-middle">
         <i class="material-icons">play_arrow</i>
-        <strong>${person.prefLabel}</strong>
+        <strong>${person.name}</strong>
+    </div>
+     <div class="card-bottom" if.bind="person.numberOfConnections">
+         <a href="/#/connections" class="connections-number">${person.numberOfConnections} connection<span if.bind="person.numberOfConnections > 1">s</span></a>
     </div>
 </template>

@@ -5,7 +5,6 @@ export class GraphData {
         function parseResponse(activePerson, connections) {
             const connectionsGraph = {
                 'nodes': [{
-                    id: 0,
                     uuid: activePerson.id,
                     caption: activePerson.prefLabel
                 }],
@@ -16,7 +15,6 @@ export class GraphData {
 
             connections.forEach(function (connection, index) {
                 connectionsGraph.nodes.push({
-                    id: index + 1,
                     personId: connection.person.id,
                     uuid: connection.person.id,
                     caption: connection.person.prefLabel
