@@ -21,17 +21,19 @@ class PeopleData {
             return 0;
         }
 
-
         response.title = response.title.length > 65 ? response.title.substring(0, 65) + '...' : response.title;
         response.byline = response.byline.length > 70 ? response.byline.substring(0, 70) + '...' : response.byline;
 
-        this.activePerson.relatedContent.forEach(article => {
-            if (article.title === response.title) {
-                contains = true;
-            }
-        });
+        if (this.activePerson.relatedContent) {
+            this.activePerson.relatedContent.forEach(article => {
+                if (article.title === response.title) {
+                    contains = true;
+                }
+            });
+        }
 
         if (!contains) {
+            this.activePerson.relatedContent = this.activePerson.relatedContent || [];
             this.activePerson.relatedContent.push({
                 title: response.title,
                 imageUrl: imageUrl,
