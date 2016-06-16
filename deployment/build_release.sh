@@ -17,6 +17,6 @@ git commit -m "$DESCRIPTION"
 git tag -a v$PACKAGE_VERSION -m "ver $PACKAGE_VERSION"
 git push origin v$PACKAGE_VERSION
 
-git checkout release
-git merge master
-git push origin release
+git checkout master
+git merge develop
+git push origin master
