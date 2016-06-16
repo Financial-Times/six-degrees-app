@@ -89,6 +89,8 @@ graph-view {
     justify-content: center;
     max-width: 80%;
     margin: 0 auto;
+    position: relative;
+    z-index: 3;
 
     .error-inner {
         display: inline-block;
@@ -125,6 +127,7 @@ graph-view {
     position: absolute;
     top: 0;
     right: 0;
+    z-index: 3;
 }
 
 .connections-zoom-controls {

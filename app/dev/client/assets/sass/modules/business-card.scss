@@ -78,6 +78,9 @@ business-card {
     }
 
     .card-bottom {
+        em {
+            font-style: normal;
+        }
         .connections-number {
             display: block;
             text-align: center;

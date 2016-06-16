@@ -7,7 +7,10 @@
         <strong>${person.name}</strong>
     </div>
      <div class="card-bottom">
-         <a href="/#/connections" class="connections-number" if.bind="person.numberOfConnections">${person.numberOfConnections} connection<span if.bind="person.numberOfConnections > 1">s</span></a>
-         <span class="connections-number connections-lookup" if.bind="!person.numberOfConnections">looking up</span>
+         <a href="/#/connections" class="connections-number" if.bind="person.numberOfConnections">
+            <em if.bind="person.numberOfConnections !== '0'">${person.numberOfConnections} connection<span if.bind="person.numberOfConnections > 1">s</span></em>
+            <em if.bind="person.numberOfConnections === '0'">no connections</em>
+        </a>
+         <span class="connections-number connections-lookup" if.bind="!person.numberOfConnections">searching...</span>
     </div>
 </template>
