@@ -28,6 +28,7 @@ export class GraphView {
             self.errorDetails = '(' + error.status + ' - ' + error.statusText + ')';
         }
         self.pending = false;
+        PeopleData.activePerson.numberOfConnections = '1';
     }
 
     goBack() {
@@ -84,7 +85,7 @@ export class GraphView {
         self.graphData.nodes = self.graphData.nodes.concat(nodes);
         self.graphData.links = self.graphData.links.concat(links);
 
-        PeopleData.activePerson.numberOfConnections = links.length;
+        PeopleData.activePerson.numberOfConnections = links.length.toString();
     }
 
     attached() {
