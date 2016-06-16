@@ -7,6 +7,7 @@
         logger = require('./logger'),
         api = require('./api'),
         cors = require('./cors'),
+        authS3O = require('./vendor/s3o-middleware'),
         server = express();
 
     function updateConfig(version) {
@@ -20,6 +21,7 @@
         updateConfig(version);
         server.use(logger);
         server.use(cors);
+        server.use(authS3O);
         server.use(bodyParser.urlencoded({
             extended: false
         }));

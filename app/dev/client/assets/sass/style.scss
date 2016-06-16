@@ -9,19 +9,23 @@
 @import 'modules/graph';
 @import 'modules/search';
 
+html {
+    height: 100%;
+}
+
 body {
-    height: 100vh;
+    height: 100%;
     position: relative;
 }
 
 origami-header {
     display: block;
-    height: 5vh;
+    height: 5%;
 }
 
 router-view {
    display: block;
-   height: 80vh;
+   height: 80%;
 
     .connections-module,
     .related-content {

@@ -17,10 +17,12 @@
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
+    "ft-poller": "^2.6.0",
     "http": "*",
-    "request": "*",
     "moment": "^2.13.0",
+    "node-rsa": "^0.3.3",
     "q": "^2.0.3",
+    "request": "*",
     "util": "*",
     "whatwg-fetch": "^1.0.0"
   },
