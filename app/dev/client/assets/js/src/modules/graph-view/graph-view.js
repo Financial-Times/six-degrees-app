@@ -6,7 +6,7 @@ import {GraphData} from '../../models/services/graph.data.js';
 import PeopleData from '../../models/services/people.data.js';
 
 
-let self, pending;
+let self;
 
 export class GraphView {
     static inject() {
@@ -27,7 +27,7 @@ export class GraphView {
             self.errorMessage = 'Oops, something went wrong...';
             self.errorDetails = '(' + error.status + ' - ' + error.statusText + ')';
         }
-        pending = false;
+        self.pending = false;
     }
 
     goBack() {
@@ -38,14 +38,13 @@ export class GraphView {
     }
 
     handleData(data) {
-        pending = false;
+        self.pending = false;
         self.drawGraph(data.nodes, data.links);
     }
 
     getGraphData() {
         self.clearErrorMessage();
-        self.graphData = null;
-        pending = true;
+        self.pending = true;
         new GraphData().fetch(PeopleData.activePerson).then(self.handleData).catch(self.errorHandler);
     }
 
@@ -92,7 +91,7 @@ export class GraphView {
         self = this;
         self.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(self.getGraphData);
 
-        if (PeopleData.activePerson && !pending) {
+        if (PeopleData.activePerson && !self.pending) {
             self.getGraphData();
         }
     }
