@@ -1,0 +1,54 @@
+.connections-module {
+    @media all and (max-width: 1035px) and (max-height: 767px) {
+        height: auto;
+    }
+}
+
+origami-header {
+    @media all and (max-width: 1023px) and (max-height: 767px) {
+        height: auto;
+    }
+}
+
+router-view {
+    @media all and (max-height: 767px) {
+        height: auto;
+        margin-bottom: 24px;
+    }
+}
+
+.o-grid-container {
+    @media all and (max-width: 1023px) and (max-height: 767px) {
+        height: auto;
+    }
+}
+
+origami-footer {
+    @media all and (max-width: 1023px) and (max-height: 767px) {
+        height: auto;
+    }
+
+    @media all and (max-height: 767px) {
+        position: static;
+    }
+}
+
+.o-footer {
+    @media all and (max-width: 1024px) {
+        font-size: 12px;
+
+        .o-footer__copyright {
+            margin: 12px 0;
+        }
+
+        .o-footer__brand {
+            padding: 10px 0;
+        }
+
+        .o-footer__pearson-logo,
+        .o-footer__brand-logo {
+            background-size: 75%;
+            background-position: right center;
+        }
+    }
+}

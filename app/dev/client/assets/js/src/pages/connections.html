@@ -6,6 +6,7 @@
                     <require from="../modules/business-card/business-card"></require>
                     <business-card></business-card>
                     <div class="connections-graph">
+                        <div class="connections-graph-overlay" if.bind="!person.numberOfConnections"></div>
                         <require from="../modules/graph-view/graph-view"></require>
                         <graph-view></graph-view>
                     </div>

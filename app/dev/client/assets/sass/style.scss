@@ -14,9 +14,19 @@ body {
     position: relative;
 }
 
+origami-header {
+    display: block;
+    height: 5vh;
+}
+
 router-view {
    display: block;
-   height: 80%
+   height: 80vh;
+
+    .connections-module,
+    .related-content {
+        height: 80vh;
+    }
 }
 
 // Origami specifics
@@ -35,35 +45,18 @@ router-view {
 }
 
 .o-grid-container {
-    min-height: 100%;
+    height: 80vh;
 }
 
 origami-footer {
-    @media all and (min-height: 320px) {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .o-footer {
     margin-top: 0;
-    @media all and (max-width: 1024px) {
-        font-size: 12px;
-
-        .o-footer__copyright {
-            margin: 12px 0;
-        }
-
-        .o-footer__brand {
-            padding: 10px 0;
-        }
-
-        .o-footer__pearson-logo,
-        .o-footer__brand-logo {
-            background-size: 75%;
-            background-position: right center;
-        }
-    }
 }
+
+@import 'mobile';

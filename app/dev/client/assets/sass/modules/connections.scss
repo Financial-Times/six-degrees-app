@@ -1,17 +1,27 @@
 .connections-module {
-    min-height: 80vh;
     position: relative;
 }
 
 .connections-graph {
     text-align: center;
     background: rgba(255,255,255,0.5);
-    min-height: 80vh;
     position: absolute;
     top: 12px;
     bottom: 0;
     left: 0;
     right: 0;
+
+    .connections-graph-overlay {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        bottom: 6px;
+        background: rgba(255, 255, 255, 0.5);
+        z-index: 1;
+        border: solid 1px rgba(39, 117, 123, 0.15);
+        border-radius: 3px;
+    }
 
     .connections-people {
         ul {

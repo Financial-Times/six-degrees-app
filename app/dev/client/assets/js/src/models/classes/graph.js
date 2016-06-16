@@ -24,6 +24,10 @@ export class Graph {
                 .call(zoom)
                 .append('svg:g');
 
+        window.onresize = function () {
+            d3.select('#graph svg:first-child').attr('width', element.parentNode.offsetWidth).attr('height', element.parentNode.offsetHeight);
+        };
+
         function zoomed() {
             svg.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
         }

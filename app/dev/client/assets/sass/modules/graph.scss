@@ -6,6 +6,11 @@ graph-view {
     left: 12px;
     bottom: 12px;
 
+    .spinner {
+        position: relative;
+        z-index: 2;
+    }
+
     #graph {
         width: 100%;
         height: 100%;
@@ -50,7 +55,7 @@ graph-view {
         circle {
             fill: #27757b;
             stroke: #2bbbbf;
-            stroke-width: 6;
+            stroke-width: 6px;
 
 
         }
@@ -64,14 +69,14 @@ graph-view {
         circle {
             fill: #2bbbbf;
             stroke: #27757b;
-            stroke-width: 6;
+            stroke-width: 6px;
         }
     }
 
 
     .link {
         stroke: #cec6b9;
-        stroke-width: 6px;
+        stroke-width: 4px;
     }
 }
 
