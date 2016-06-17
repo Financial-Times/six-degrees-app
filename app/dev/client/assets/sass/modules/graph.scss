@@ -30,6 +30,10 @@ graph-view {
             fill: #936971;
             white-space: normal;
             text-anchor: middle;
+
+            .no-connection-hint {
+                display: none;
+            }
         }
 
         circle {
@@ -37,27 +41,59 @@ graph-view {
             stroke: #27757b;
             stroke-width: 6;
             cursor: pointer;
-
-            &.root {
-                fill: #27757b;
-                stroke: #2bbbbf;
-                stroke-width: 6;
-            }
         }
     }
 
-    .node-root,
-    .node-active {
+    .node-root {
         text {
-            fill: #27757b;
+            fill: #333333;
         }
 
         circle {
-            fill: #27757b;
-            stroke: #2bbbbf;
+            fill: #df9c92;
+            stroke: #b1493f;
             stroke-width: 6px;
+        }
+    }
 
+    .node-no-connection {
+        text {
+            fill: #2e6e9e;
 
+            .name {
+                display: none;
+            }
+            .no-connection-hint {
+                display: block;
+            }
+        }
+
+        circle {
+            fill: #2e6e9e;
+            stroke: #8ab5cd;
+            stroke-width: 6px;
+        }
+    }
+
+    .node-active {
+        text {
+            fill: #b1493f;
+        }
+        circle {
+            fill: #c36256;
+            stroke: #df9c92;
+            stroke-width: 6px;
+        }
+    }
+
+    .node-visited {
+        text {
+            fill: #b1493f;
+        }
+        circle {
+            fill: #b1493f;
+            stroke: #df9c92;
+            stroke-width: 6px;
         }
     }
 
@@ -76,7 +112,20 @@ graph-view {
 
     .link {
         stroke: #cec6b9;
-        stroke-width: 4px;
+        stroke-width: 3px;
+
+        &.hover {
+            stroke: #df9c92;
+        }
+
+        &.marked {
+            stroke: #c36256;
+            stroke-width: 4px;
+        }
+
+        &.highlighted {
+            stroke: #df9c92;
+        }
     }
 }
 

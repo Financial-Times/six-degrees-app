@@ -1,0 +1,10 @@
+<template>
+    <div class="browsing-history" if.bind="history.length">
+        <span class="arrow-line"></span>
+        <i class="material-icons">navigation</i>
+        <ul>
+            <li repeat.for="person of history">${person}</li>
+        </ul>
+        <span class="degree-count">${history.length} degree<em if.bind="history.length > 1">s</em></span>
+    </div>
+</template>

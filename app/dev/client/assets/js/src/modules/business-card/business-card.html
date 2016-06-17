@@ -1,16 +1,20 @@
 <template>
-    <div class="card-top">
-        <i class="material-icons">person</i>
+    <div class="business-card">
+        <div class="card-top">
+            <i class="material-icons">person</i>
+        </div>
+        <div class="card-middle">
+            <i class="material-icons">play_arrow</i>
+            <strong>${person.name}</strong>
+        </div>
+        <div class="card-bottom">
+            <a href="/#/connections" class="connections-number" if.bind="person.numberOfConnections">
+                <em if.bind="person.numberOfConnections !== '0'">${person.numberOfConnections} direct link<span if.bind="person.numberOfConnections > 1">s</span></em>
+                <em if.bind="person.numberOfConnections === '0'">no direct links</em>
+            </a>
+            <span class="connections-number connections-lookup" if.bind="!person.numberOfConnections">searching...</span>
+        </div>
     </div>
-    <div class="card-middle">
-        <i class="material-icons">play_arrow</i>
-        <strong>${person.name}</strong>
-    </div>
-     <div class="card-bottom">
-         <a href="/#/connections" class="connections-number" if.bind="person.numberOfConnections">
-            <em if.bind="person.numberOfConnections !== '0'">${person.numberOfConnections} connection<span if.bind="person.numberOfConnections > 1">s</span></em>
-            <em if.bind="person.numberOfConnections === '0'">no connections</em>
-        </a>
-         <span class="connections-number connections-lookup" if.bind="!person.numberOfConnections">searching...</span>
-    </div>
+    <require from="../browsing-history/browsing-history"></require>
+    <browsing-history></browsing-history>
 </template>

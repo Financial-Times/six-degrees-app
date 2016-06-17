@@ -5,6 +5,7 @@ class PeopleData {
     constructor() {
         this.elasticSearchPerson = null;
         this.people = {};
+        this.browsingHistory = [];
     }
 
     addToContent(response, imageUrl) {

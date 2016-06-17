@@ -1,4 +1,5 @@
 import PeopleData from '../../models/services/people.data.js';
+import BrowsingHistory from '../../models/services/browsing.history.js';
 
 export class Graph {
     constructor() {
@@ -23,6 +24,8 @@ export class Graph {
                 .classed('svg-content-responsive', true)
                 .call(zoom)
                 .append('svg:g');
+
+        let previousNodeId;
 
         window.onresize = function () {
             d3.select('#graph svg:first-child').attr('width', element.parentNode.offsetWidth).attr('height', element.parentNode.offsetHeight);
@@ -49,6 +52,13 @@ export class Graph {
             }
         }
 
+        function abbreviateFullName(fullName) {
+            const arrayOfWords = fullName.split(' '),
+                max = arrayOfWords.length;
+
+            return arrayOfWords[0] + ' ' + arrayOfWords[max - 1];
+        }
+
         function findNode(id) {
             let i,
                 node = null;
@@ -73,8 +83,48 @@ export class Graph {
             return index;
         }
 
+        function findDirectLinks(nodeId) {
+            const connections = svg.select('.links').selectAll('line')[0],
+                directLinks = [];
+            connections.forEach(connection => {
+                if ((connection.id.indexOf(nodeId) !== -1)) {
+                    directLinks.push(connection);
+                }
+            });
+            return directLinks;
+        }
+
+        function findLink(edgeOne, edgeTwo) {
+            let connectionExists = null;
+            const connections = svg.select('.links').selectAll('line')[0];
+
+            connections.forEach(connection => {
+                if ((connection.id === edgeOne + '-' + edgeTwo || connection.id === edgeTwo + '-' + edgeOne)) {
+                    connectionExists = connection;
+                }
+            });
+
+            return connectionExists;
+        }
+
+        function markConnection(edgeOne, edgeTwo) {
+            const link = findLink(edgeOne, edgeTwo);
+            let areDirectlyConnected = false;
+
+            if (link) {
+                d3.select(link).attr('class', 'link marked');
+                areDirectlyConnected = true;
+            }
+
+            if (!areDirectlyConnected) {
+                svg.select('.links').selectAll('line.marked').attr('class', 'link');
+                svg.select('.nodes').selectAll('g.node-visited').attr('class', 'node');
+                BrowsingHistory.clear();
+            }
+        }
+
         function update() {
-            let link, node, nodeEnter;
+            let line, link, node, nodeEnter;
 
             svg.append('g').attr('class', 'links');
             svg.append('g').attr('class', 'nodes');
@@ -83,14 +133,17 @@ export class Graph {
                 return d.source.id + '-' + d.target.id;
             });
 
-            link.enter().append('line')
+            line = link.enter().append('line')//eslint-disable-line prefer-const
                 .attr('id', function (d) {
                     return d.source.id + '-' + d.target.id;
                 })
                 .attr('stroke-width', function (d) {
                     return d.value / 10;
-                })
-                .attr('class', 'link');
+                });
+
+            line.attr('class', function () {
+                return 'link';
+            });
 
             link.append('title')
                 .text(function (d) {
@@ -105,6 +158,11 @@ export class Graph {
 
             nodeEnter = node.enter().append('g') //eslint-disable-line prefer-const
                 .attr('class', function (d, index) {
+                    if (index === 0) {
+                        d.fixed = true;
+                        d.x = width / 2;
+                        d.y = height / 2;
+                    }
                     return index === 0 ? 'node node-root' : 'node';
                 })
                 .call(force.drag);
@@ -115,33 +173,85 @@ export class Graph {
                 })
                 .on('click', function (nodeData) {
                     svg.select('.nodes').selectAll('g.node circle').attr('r', 20);
-                    svg.select('.nodes').selectAll('g.node-root').attr('class', 'node');
+                    svg.select('.nodes').selectAll('g.node-root').attr('class', 'node node-visited');
 
                     d3.select(this).attr('r', 25);
                     d3.select(this.parentNode).attr('class', 'node node-root');
 
+                    nodes.forEach(item => {
+                        item.fixed = false;
+                    });
+                    nodeData.fixed = true;
+
+                    previousNodeId = PeopleData.activePerson.prefLabel;
                     PeopleData.setActiveByName(nodeData.id);
+
+                    if (previousNodeId) {
+                        const name = abbreviateFullName(previousNodeId);
+                        if (!BrowsingHistory.contains(name)) {
+                            BrowsingHistory.add(name);
+                        }
+                        markConnection(previousNodeId, PeopleData.activePerson.prefLabel);
+                    }
+
+                })
+                .on('mouseover', function (d) {
+                    const connection = findLink(PeopleData.activePerson.prefLabel, d.id);
+                    if (PeopleData.activePerson.prefLabel !== d.id) {
+                        if (connection) {
+                            d3.select(connection).classed('hover', true);
+                            d3.select(this.parentNode).classed('node-active', true);
+                        } else {
+                            d3.select(this.parentNode).classed('node-no-connection', true);
+                        }
+                    } else {
+                        findDirectLinks(d.id).forEach(directLink => {
+                            d3.select(directLink).classed('highlighted', true);
+                        });
+                    }
+                })
+                .on('mouseout', function () {
+                    d3.selectAll('.link.hover').classed('hover', false);
+                    d3.selectAll('.link.highlighted').classed('highlighted', false);
+                    d3.selectAll('.node-active').classed('node-active', false);
+                    d3.selectAll('.node-no-connection').classed('node-no-connection', false);
                 });
 
             nodeEnter.append('svg:text')
+                .attr('id', function (d) {
+                    return d.id.replace(/ /g, '-');
+                })
                 .attr('x', function () {
                     return 0;
                 })
                 .attr('y', function () {
                     return '1.4em';
                 }).each(function (d) {
-                    const arrayOfWords = d.id.split(' '),
-                        max = arrayOfWords.length;
+                    const arrayOfWords = abbreviateFullName(d.id).split(' ');
 
                     d3.select(this).append('tspan')
                         .text(arrayOfWords[0])
                         .attr('x', '0')
-                        .attr('dy', '1em');
+                        .attr('dy', '1em')
+                        .attr('class', 'name firstname');
 
                     d3.select(this).append('tspan')
-                        .text(arrayOfWords[max - 1])
+                        .text(arrayOfWords[1])
                         .attr('x', '0')
-                        .attr('dy', '1em');
+                        .attr('dy', '1em')
+                        .attr('class', 'name lastname');
+
+                    d3.select(this).append('tspan')
+                        .text('no direct')
+                        .attr('x', '0')
+                        .attr('dy', '1em')
+                        .attr('class', 'no-connection-hint');
+
+                    d3.select(this).append('tspan')
+                        .text('connection')
+                        .attr('x', '0')
+                        .attr('dy', '1em')
+                        .attr('class', 'no-connection-hint');
                 });
 
             node.exit().remove();
@@ -166,8 +276,8 @@ export class Graph {
             });
 
             // Restart the force layout.
-            force.gravity(0.05)
-                .charge(-2000)
+            force.gravity(0.5)
+                .charge(-5000)
                 .linkDistance(function (d) {
                     return d.value * 10;
                 })
@@ -180,6 +290,10 @@ export class Graph {
                 this.blur();
                 zoomByFactor(factor);
             });
+
+            if (previousNodeId) {
+                markConnection(previousNodeId, PeopleData.activePerson.prefLabel);
+            }
 
         }
 
