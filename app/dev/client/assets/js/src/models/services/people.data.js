@@ -3,6 +3,7 @@ import Ajax from '../../models/services/ajax.js';
 class PeopleData {
 
     constructor() {
+        this.sourcePerson = null;
         this.elasticSearchPerson = null;
         this.people = {};
         this.browsingHistory = [];

@@ -5,13 +5,13 @@
         </div>
         <div class="card-middle">
             <i class="material-icons">play_arrow</i>
-            <strong>${person.name}</strong>
+            <strong class="card-name" mouseover.delegate="highlightActiveOnGraph()" mouseout.delegate="cancelHighlightingActiveOnGraph()">${person.name}</strong>
         </div>
-        <div class="card-bottom">
-            <a href="/#/connections" class="connections-number" if.bind="person.numberOfConnections">
+        <div class="card-bottom" mouseover.delegate="highlightDirectLinksOnGraph()" mouseout.delegate="cancelHighlightingDirectLinksOnGraph()">
+            <p class="connections-number" if.bind="person.numberOfConnections">
                 <em if.bind="person.numberOfConnections !== '0'">${person.numberOfConnections} direct link<span if.bind="person.numberOfConnections > 1">s</span></em>
                 <em if.bind="person.numberOfConnections === '0'">no direct links</em>
-            </a>
+            </p>
             <span class="connections-number connections-lookup" if.bind="!person.numberOfConnections">searching...</span>
         </div>
     </div>

@@ -3,8 +3,8 @@
         <span class="arrow-line"></span>
         <i class="material-icons">navigation</i>
         <ul>
-            <li repeat.for="person of history">${person}</li>
+            <li repeat.for="person of history" mouseover.delegate="highlightPersonOnGraph(person)" mouseout.delegate="cancelHighlightingPersonOnGraph()">${person}</li>
         </ul>
-        <span class="degree-count">${history.length} degree<em if.bind="history.length > 1">s</em></span>
+        <span class="degree-count" mouseover.delegate="highlightRouteOnGraph()" mouseout.delegate="cancelHighlightingRouteOnGraph()">${history.length} degree<em if.bind="history.length > 1">s</em></span>
     </div>
 </template>

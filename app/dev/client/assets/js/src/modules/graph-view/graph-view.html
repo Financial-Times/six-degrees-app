@@ -17,4 +17,8 @@
         <a href="/#/connections" class="o-buttons zoom" id="zoom_in">+</a>
         <a href="/#/connections" class="o-buttons zoom" id="zoom_out" >-</a>
     </div>
+
+    <div class="connections-source-target" if.bind="sourcePerson && targetPerson">
+        <h2>${sourcePerson} <i class="material-icons">link</i> ${targetPerson}</h2>
+    </div>
 </template>

@@ -116,10 +116,11 @@ export class Graph {
                 areDirectlyConnected = true;
             }
 
-            if (!areDirectlyConnected) {
+            if (!areDirectlyConnected || BrowsingHistory.contains(PeopleData.activePerson.name) || (PeopleData.sourcePerson && PeopleData.activePerson.name === PeopleData.sourcePerson.name)) {
                 svg.select('.links').selectAll('line.marked').attr('class', 'link');
                 svg.select('.nodes').selectAll('g.node-visited').attr('class', 'node');
                 BrowsingHistory.clear();
+                PeopleData.sourcePerson = Object.assign({}, PeopleData.activePerson);
             }
         }
 
@@ -138,7 +139,7 @@ export class Graph {
                     return d.source.id + '-' + d.target.id;
                 })
                 .attr('stroke-width', function (d) {
-                    return d.value / 10;
+                    return d.value  / 2;
                 });
 
             line.attr('class', function () {
@@ -197,17 +198,17 @@ export class Graph {
                 })
                 .on('mouseover', function (d) {
                     const connection = findLink(PeopleData.activePerson.prefLabel, d.id);
+                    findDirectLinks(d.id).forEach(directLink => {
+                        d3.select(directLink).classed('highlighted', true);
+                    });
                     if (PeopleData.activePerson.prefLabel !== d.id) {
                         if (connection) {
+                            d3.select(connection).classed('highlighted', false);
                             d3.select(connection).classed('hover', true);
                             d3.select(this.parentNode).classed('node-active', true);
                         } else {
                             d3.select(this.parentNode).classed('node-no-connection', true);
                         }
-                    } else {
-                        findDirectLinks(d.id).forEach(directLink => {
-                            d3.select(directLink).classed('highlighted', true);
-                        });
                     }
                 })
                 .on('mouseout', function () {
@@ -216,6 +217,12 @@ export class Graph {
                     d3.selectAll('.node-active').classed('node-active', false);
                     d3.selectAll('.node-no-connection').classed('node-no-connection', false);
                 });
+
+            nodeEnter.append('svg:rect')
+                .attr('width', 0)
+                .attr('height', 0)
+                .attr('x', 0)
+                .attr('y', 0);
 
             nodeEnter.append('svg:text')
                 .attr('id', function (d) {
@@ -244,14 +251,38 @@ export class Graph {
                     d3.select(this).append('tspan')
                         .text('no direct')
                         .attr('x', '0')
+                        .attr('dy', '1.4em')
+                        .attr('class', 'no-connection-hint');
+
+                    d3.select(this).append('tspan')
+                        .text('connection to')
+                        .attr('x', '0')
                         .attr('dy', '1em')
                         .attr('class', 'no-connection-hint');
 
                     d3.select(this).append('tspan')
-                        .text('connection')
+                        .text('active node')
                         .attr('x', '0')
                         .attr('dy', '1em')
                         .attr('class', 'no-connection-hint');
+
+                    window.setTimeout(() => {
+                        const textWidth = this.getBBox().width + 36,
+                            textHeight = this.getBBox().height + 16,
+                            textX = this.getBBox().x - 18,
+                            textY = this.getBBox().y;
+
+                        d3.select(this.parentNode)
+                            .insert('rect', ':first-child')
+                            .attr({
+                                class: 'hint-bg',
+                                width: textWidth,
+                                height: textHeight,
+                                x: textX,
+                                y: textY
+                            });
+                    }, 1000);
+
                 });
 
             node.exit().remove();
@@ -293,6 +324,10 @@ export class Graph {
 
             if (previousNodeId) {
                 markConnection(previousNodeId, PeopleData.activePerson.prefLabel);
+            }
+
+            if (!PeopleData.sourcePerson) {
+                PeopleData.sourcePerson = Object.assign({}, PeopleData.activePerson);
             }
 
         }

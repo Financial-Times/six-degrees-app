@@ -27,8 +27,8 @@
                                     <span class="article-thumbnail default" if.bind="!person.relatedContent[i].imageUrl"></span>
                                     <a href="${person.relatedContent[i].location.uri}" target="_blank">
                                         <span class="article-title">${person.relatedContent[i].title}</span>
-                                        <span class="article-byline">by ${person.relatedContent[i].byline}</span>
-                                        <span class="article-published">${person.relatedContent[i].published}</span>
+                                        <span class="article-byline" if.bind="person.relatedContent[i].byline">by ${person.relatedContent[i].byline}</span>
+                                        <span class="article-published" if.bind="person.relatedContent[i].published">${person.relatedContent[i].published}</span>
                                     </a>
                                 </div>
                             </li>

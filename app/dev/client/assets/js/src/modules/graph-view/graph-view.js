@@ -15,6 +15,8 @@ export class GraphView {
     constructor(observerLocator, router) {
         this.observerLocator = observerLocator;
         this.router = router;
+        this.sourcePerson = null;
+        this.targetPerson = null;
     }
 
     clearErrorMessage() {
@@ -46,6 +48,8 @@ export class GraphView {
     getGraphData() {
         self.clearErrorMessage();
         self.pending = true;
+        self.sourcePerson = PeopleData.sourcePerson ? PeopleData.sourcePerson.name : null;
+        self.targetPerson = PeopleData.activePerson && PeopleData.sourcePerson && PeopleData.sourcePerson.name !== PeopleData.activePerson.name ? PeopleData.activePerson.name : null;
         new GraphData().fetch(PeopleData.activePerson).then(self.handleData).catch(self.errorHandler);
     }
 

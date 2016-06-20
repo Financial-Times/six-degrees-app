@@ -35,6 +35,7 @@ browsing-history {
                 background: white;
                 margin: 12px 0;
                 padding: 2px 0;
+                cursor: help;
 
                 &:first-child {
                     margin-top: 0;
@@ -55,6 +56,7 @@ browsing-history {
             font-size: 12px;
             position: relative;
             z-index: 2;
+            cursor: help;
 
             em {
                 font-style: normal;

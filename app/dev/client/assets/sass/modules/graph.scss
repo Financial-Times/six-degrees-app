@@ -1,3 +1,16 @@
+$default-primary-color: #27757b;
+$default-secondary-color: #2bbbbf;
+
+$path-primary-color: #b1493f;
+$path-secondary-color: #df9c92;
+$path-complimentary-color: #c36256;
+
+$graph-additional-color-one: #2e6e9e;
+$graph-additional-color-two: #8ab5cd;
+
+$link-primary-color: #cec6b9;
+$link-secondary-color: #a7a59b;
+
 graph-view {
     display: block;
     position: absolute;
@@ -33,14 +46,26 @@ graph-view {
 
             .no-connection-hint {
                 display: none;
+                font-size: 12px;
             }
         }
 
         circle {
-            fill: #2bbbbf;
-            stroke: #27757b;
+            fill: $default-secondary-color;
+            stroke: $default-primary-color;
             stroke-width: 6;
             cursor: pointer;
+        }
+
+        &.pale {
+            circle {
+                fill: rgba(39, 117, 123, 0.35);
+                stroke: rgba(43, 187, 191, 0.35);
+            }
+
+            text {
+                fill: rgba(147, 105, 113, 0.35)
+            }
         }
     }
 
@@ -50,15 +75,46 @@ graph-view {
         }
 
         circle {
-            fill: #df9c92;
-            stroke: #b1493f;
+            fill: $path-secondary-color;
+            stroke: $path-primary-color;
             stroke-width: 6px;
+        }
+
+        &.node-highlighted {
+            circle {
+                fill: $path-primary-color;
+                stroke: $path-secondary-color;
+            }
+            text {
+                fill: #333;
+            }
+        }
+
+        &.route-highlight {
+            circle {
+                fill: $graph-additional-color-one;
+                stroke: $graph-additional-color-two;
+            }
+
+            text {
+                fill: $graph-additional-color-one;
+            }
         }
     }
 
+    rect {
+        fill: transparent;
+        display: none;
+    }
+
     .node-no-connection {
+
+        rect {
+            display: block;
+        }
+
         text {
-            fill: #2e6e9e;
+            fill: #d66d06;
 
             .name {
                 display: none;
@@ -69,62 +125,80 @@ graph-view {
         }
 
         circle {
-            fill: #2e6e9e;
-            stroke: #8ab5cd;
+            fill: $default-primary-color;
+            stroke: $default-secondary-color;
             stroke-width: 6px;
         }
     }
 
     .node-active {
         text {
-            fill: #b1493f;
+            fill: $path-primary-color;
         }
         circle {
-            fill: #c36256;
-            stroke: #df9c92;
+            fill: $path-complimentary-color;
+            stroke: $path-secondary-color;
             stroke-width: 6px;
         }
+
     }
 
     .node-visited {
         text {
-            fill: #b1493f;
+            fill: $path-primary-color;
         }
         circle {
-            fill: #b1493f;
-            stroke: #df9c92;
+            fill: $path-primary-color;
+            stroke: $path-secondary-color;
             stroke-width: 6px;
         }
-    }
 
-    .node-no-text {
-        text {
-            fill: none;
+        &.node-active {
+            circle {
+                fill: $graph-additional-color-two;
+                stroke: $graph-additional-color-one;
+            }
+            &.pale {
+                text {
+                    fill: $graph-additional-color-one;
+                }
+            }
         }
 
-        circle {
-            fill: #2bbbbf;
-            stroke: #27757b;
-            stroke-width: 6px;
+        &.route-highlight {
+            circle {
+                fill: $graph-additional-color-two;
+                stroke: $graph-additional-color-one;
+            }
+            text {
+                fill: $graph-additional-color-one;
+            }
         }
     }
 
 
     .link {
-        stroke: #cec6b9;
-        stroke-width: 3px;
+        stroke: $link-primary-color;
 
         &.hover {
-            stroke: #df9c92;
+            stroke: $path-complimentary-color;
         }
 
         &.marked {
-            stroke: #c36256;
+            stroke: $path-primary-color;
             stroke-width: 4px;
+
+            &.route-highlight {
+                stroke: $graph-additional-color-one;
+            }
         }
 
         &.highlighted {
-            stroke: #df9c92;
+            stroke: #74736c;
+        }
+
+        &.pale {
+            stroke: rgba(206, 198, 185, 0.35);
         }
     }
 }
@@ -186,5 +260,30 @@ graph-view {
 
     a {
         display: block;
+    }
+}
+
+.connections-source-target {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    text-align: center;
+
+    h2 {
+        display: inline-block;
+        font-weight: normal;
+        color: $graph-additional-color-one;
+        background: rgba(255, 255, 255, 0.75);
+
+        border-radius: 3px;
+        margin: 0;
+        padding: 0 12px;
+        line-height: 32px;
+        i {
+            vertical-align: middle;
+            line-height: 32px;
+            position: relative;
+            top: -1px;
+        }
     }
 }
