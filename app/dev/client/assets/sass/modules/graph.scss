@@ -24,6 +24,23 @@ graph-view {
         z-index: 2;
     }
 
+    .connections-context {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        h4 {
+            text-align: center;
+            display: inline-block;
+            color: #8b572a;
+            margin: 0;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: normal;
+        }
+    }
+
     #graph {
         width: 100%;
         height: 100%;
@@ -210,7 +227,7 @@ graph-view {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    max-width: 80%;
+    max-width: 50%;
     margin: 0 auto;
     position: relative;
     z-index: 3;

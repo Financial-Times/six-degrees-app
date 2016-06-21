@@ -10,7 +10,10 @@ class PeopleData {
     }
 
     addToContent(response, imageUrl) {
+
         let contains = false;
+
+        this.activePerson.relatedContent = this.activePerson.relatedContent || [];
         this.activePerson.relatedContentLoading = false;
 
         function compare(a, b) {
@@ -26,17 +29,20 @@ class PeopleData {
         response.title = response.title.length > 65 ? response.title.substring(0, 65) + '...' : response.title;
         response.byline = response.byline.length > 70 ? response.byline.substring(0, 70) + '...' : response.byline;
 
-        if (this.activePerson.relatedContent) {
-            this.activePerson.relatedContent.forEach(article => {
-                if (article.title === response.title) {
-                    contains = true;
-                }
-            });
-        }
+        this.activePerson.contentBuffer.images.forEach(article => {
+            if (article.title === response.title) {
+                contains = true;
+            }
+        });
+
+        this.activePerson.contentBuffer.noimages.forEach(article => {
+            if (article.title === response.title) {
+                contains = true;
+            }
+        });
 
         if (!contains) {
-            this.activePerson.relatedContent = this.activePerson.relatedContent || [];
-            this.activePerson.relatedContent.push({
+            const article = {
                 title: response.title,
                 imageUrl: imageUrl,
                 byline: response.byline,
@@ -45,39 +51,53 @@ class PeopleData {
                 location: {
                     uri: response.webUrl
                 }
-            });
+            };
+
+            if (article.imageUrl) {
+                this.activePerson.contentBuffer.images.unshift(article);
+                this.activePerson.contentBuffer.images.sort(compare);
+            } else {
+                this.activePerson.contentBuffer.noimages.push(article);
+                this.activePerson.contentBuffer.noimages.sort(compare);
+            }
+        } else {
+            return;
         }
 
-        this.activePerson.relatedContent.sort(compare);
-        this.activePerson.maxContentItems = this.activePerson.relatedContent.length > 5 ? 6 : this.activePerson.relatedContent.length;
+        this.activePerson.relatedContent = JSON.parse(JSON.stringify(this.activePerson.contentBuffer.images.concat(this.activePerson.contentBuffer.noimages)));
+
+        //this.activePerson.relatedContent.sort(compare);
+        //this.activePerson.maxContentItems = this.activePerson.relatedContent.length > 5 ? 6 : this.activePerson.relatedContent.length;
+        this.activePerson.maxContentItems = this.activePerson.relatedContent.length;
     }
 
     getContent(contentItems) {
-        this.activePerson.relatedContentLoading = true;
-        this.activePerson.relatedContent = this.activePerson.relatedContent || [];
+        if (!this.activePerson.relatedContentLoading) {
+            this.activePerson.relatedContentLoading = true;
+            this.activePerson.relatedContent = this.activePerson.relatedContent || [];
 
-        contentItems.forEach(item => {
-            Ajax.get({
-                url: 'api/content/' + item.id
-            }).then(response => {
-
-                if (response.mainImage && response.mainImage.id) {
-                    Ajax.get({
-                        url: 'api/images/' + response.mainImage.id.replace('http://api.ft.com/content/', '')
-                    }).then(imageResponse => {
-                        if (imageResponse.members) {
-                            Ajax.get({
-                                url: 'api/image/' + imageResponse.members[0].id.replace('http://api.ft.com/content/', '')
-                            }).then(memberResponse => {
-                                this.addToContent(response, memberResponse.binaryUrl.replace('http', 'https'));
-                            });
-                        }
-                    });
-                } else {
-                    this.addToContent(response);
-                }
+            contentItems.forEach(item => {
+                Ajax.get({
+                    url: 'api/content/' + item.id
+                }).then(response => {
+                    if (response.mainImage && response.mainImage.id) {
+                        Ajax.get({
+                            url: 'api/images/' + response.mainImage.id.replace('http://api.ft.com/content/', '')
+                        }).then(imageResponse => {
+                            if (imageResponse.members) {
+                                Ajax.get({
+                                    url: 'api/image/' + imageResponse.members[0].id.replace('http://api.ft.com/content/', '')
+                                }).then(memberResponse => {
+                                    this.addToContent(response, memberResponse.binaryUrl.replace('http', 'https'));
+                                });
+                            }
+                        });
+                    } else {
+                        this.addToContent(response);
+                    }
+                });
             });
-        });
+        }
     }
 
     getMentionedMostly() {
@@ -129,11 +149,19 @@ class PeopleData {
         return prefLabelArray[0] + ' ' + prefLabelArray[max - 1];
     }
 
+    updateActivePerson(index) {
+        this.activePerson = this.stored[index];
+        this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
+        this.activePerson.contentBuffer = {
+            images: [],
+            noimages: []
+        };
+    }
+
     setActive(id) {
         this.stored.forEach((person, index) => {
             if (person.id === id) {
-                this.activePerson = this.stored[index];
-                this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
+                this.updateActivePerson(index);
             }
         });
     }
@@ -141,8 +169,7 @@ class PeopleData {
     setActiveByName(name) {
         this.stored.forEach((person, index) => {
             if (person.prefLabel === name) {
-                this.activePerson = this.stored[index];
-                this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
+                this.updateActivePerson(index);
             }
         });
     }

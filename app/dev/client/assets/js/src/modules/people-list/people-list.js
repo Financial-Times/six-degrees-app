@@ -10,7 +10,7 @@ export class PeopleList {
     constructor(router, observerLocator) {
         this.theRouter = router;
         this.observerLocator = observerLocator;
-        this.heroLabel = 'was the most mentioned person<em>in the Financial Times</em>in last 7 days';
+        this.heroLabel = 'was the most mentioned person<em>in Financial Times</em>in the last 7 days';
     }
 
     getMentionedPeople() {

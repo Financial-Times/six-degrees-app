@@ -33,13 +33,16 @@
         bottom: 25%;
     }
 
-    .o-buttons {
-        margin: 6px;
-    }
 }
 
 .button-try-again {
     clear: both;
     display: block;
     margin: 12px auto;
+}
+
+.connections-zoom-controls {
+    a {
+        margin-top: 6px;
+    }
 }
