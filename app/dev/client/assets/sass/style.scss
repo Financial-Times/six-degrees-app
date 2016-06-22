@@ -26,6 +26,7 @@ origami-header {
 
 router-view {
    display: block;
+   position: relative;
    height: 80%;
 
     .connections-module,
@@ -65,3 +66,4 @@ origami-footer {
 }
 
 @import 'mobile';
+@import 'desktop';

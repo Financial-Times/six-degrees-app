@@ -13,6 +13,7 @@ origami-header {
 router-view {
     @media all and (max-height: 767px) {
         height: auto;
+        min-height: 80%;
         margin-bottom: 24px;
     }
 }
