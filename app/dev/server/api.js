@@ -80,6 +80,10 @@
                     } else {
                         console.log('[' + CONFIG.APP + '] Problem with connections call for', uuid + ', aborting...');
                     }
+
+                    if (error) {
+                        console.log('[' + CONFIG.APP + '] Problem [' + error.code + '] with connections call for', uuid + ', aborting...');
+                    }
                 });
             }
         });

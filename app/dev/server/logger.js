@@ -11,7 +11,9 @@ module.exports = function (request, response, next) {
         const duration = +new Date() - start,
             message = '[' + CONFIG.APP + '] ' + method + ' ' + url + ' [' + duration + ' ms] ' + '\n';
 
-        stream.write(message);
+        if (CONFIG.SETTINGS.LOGGER.LEVEL === 'all') {
+            stream.write(message);
+        }
     });
 
     next();
