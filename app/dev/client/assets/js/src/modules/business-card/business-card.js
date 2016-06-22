@@ -1,5 +1,6 @@
 import PeopleData from '../../models/services/people.data.js';
 import {ObserverLocator} from 'aurelia-framework';
+import GraphSettings from '../../models/services/graph.settings.js';
 
 export class BusinessCard {
     static inject() {
@@ -11,6 +12,7 @@ export class BusinessCard {
         this.observerLocator = observerLocator;
         this.update();
         this.directLinks = null;
+        this.graphMode = GraphSettings.getMode();
 
         this.onPersonChange = () => {
             this.update();
@@ -23,6 +25,9 @@ export class BusinessCard {
         };
 
         this.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(this.onPersonChange);
+        this.observerLocator.getObserver(GraphSettings, 'mode').subscribe(() => {
+            this.graphMode = GraphSettings.getMode();
+        });
     }
 
     findDirectLinks(nodeId) {
@@ -35,6 +40,25 @@ export class BusinessCard {
             }
         });
         return directLinks;
+    }
+
+    findDirectlyConnectedNodes(id, links) {
+        const directlyConnectedPeople = [],
+            directlyConnectedNodes = [];
+
+        links.forEach(link => {
+            directlyConnectedPeople.push(link.id.replace(id + '-', '').replace('-' + id, '').replace(/ /g, '-'));
+        });
+
+        d3.selectAll('text')[0].forEach(text => {
+            directlyConnectedPeople.forEach(personId => {
+                if (personId === text.id) {
+                    directlyConnectedNodes.push(text.parentNode);
+                }
+            });
+        });
+
+        return directlyConnectedNodes;
     }
 
     update() {
@@ -54,11 +78,24 @@ export class BusinessCard {
 
     highlightDirectLinksOnGraph() {
         const id = PeopleData.activePerson.prefLabel;
+
         this.directLinks = this.findDirectLinks(id);
+        this.directlyConnectedNodes = this.findDirectlyConnectedNodes(id, this.directLinks);
+
+        d3.selectAll('.link').classed('pale', true);
         this.toggleDirectLinks(true);
+
+        d3.selectAll('.node').classed('pale', true);
+        this.directlyConnectedNodes.forEach(node => {
+            d3.select(node).classed('pale', false);
+            d3.select(node).classed('node-direct', true);
+        });
+
     }
 
     cancelHighlightingDirectLinksOnGraph() {
+        d3.selectAll('.pale').classed('pale', false);
+        d3.selectAll('.node-direct').classed('node-direct', false);
         this.toggleDirectLinks(false);
         this.directLinks = null;
     }

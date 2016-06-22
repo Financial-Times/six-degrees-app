@@ -92,7 +92,6 @@ business-card {
             font-style: normal;
         }
         .connections-number {
-            display: block;
             text-align: center;
             font-size: 14px;
             background: #936971;
@@ -106,10 +105,19 @@ business-card {
             }
 
             &.connections-lookup {
+                display: block;
                 animation: colorchange 1s;
                 animation-iteration-count: infinite;
                 -webkit-animation: colorchange 1s;
                 -webkit-animation-iteration-count: infinite;
+            }
+
+            &.visibility-true {
+                display: block;
+            }
+
+            &.visibility-false {
+                display: none;
             }
         }
 

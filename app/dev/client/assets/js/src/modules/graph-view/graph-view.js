@@ -3,6 +3,7 @@ import {ObserverLocator} from 'aurelia-framework';
 import {Graph} from '../../models/classes/graph.js';
 
 import {GraphData} from '../../models/services/graph.data.js';
+import GraphSettings from '../../models/services/graph.settings.js';
 import PeopleData from '../../models/services/people.data.js';
 
 
@@ -17,6 +18,7 @@ export class GraphView {
         this.router = router;
         this.sourcePerson = null;
         this.targetPerson = null;
+        this.graphMode = GraphSettings.getMode();
     }
 
     clearErrorMessage() {
@@ -25,23 +27,30 @@ export class GraphView {
     }
 
     errorHandler(error) {
-        if (error.status) {
+        if (error.status && !self.initialData) {
             self.errorMessage = 'Oops, something went wrong...';
             self.errorDetails = '(' + error.status + ' - ' + error.statusText + ')';
         }
+
+        if (self.initialData) {
+            PeopleData.activePerson.numberOfConnections = '1';
+        }
+        PeopleData.activePerson.connectionsSearchFailed = true;
         self.pending = false;
-        PeopleData.activePerson.numberOfConnections = '1';
     }
 
     goBack() {
         self.clearErrorMessage();
         self.graphData = null;
+        PeopleData.sourcePerson = null;
         d3.select('#graph .svg-container').remove();
         this.router.navigate('/');
     }
 
     handleData(data) {
+        self.initialData = true;
         self.pending = false;
+        delete PeopleData.activePerson.connectionsSearchFailed;
         self.drawGraph(data.nodes, data.links);
     }
 
@@ -90,6 +99,12 @@ export class GraphView {
         self.graphData.links = self.graphData.links.concat(links);
 
         PeopleData.activePerson.numberOfConnections = links.length.toString();
+    }
+
+    toggleMode() {
+        GraphSettings.setMode(!this.graphMode);
+        this.graphMode = GraphSettings.getMode();
+        document.getElementById('toggleModeBtn').blur();
     }
 
     attached() {

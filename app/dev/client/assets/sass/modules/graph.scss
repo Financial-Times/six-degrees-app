@@ -146,6 +146,12 @@ graph-view {
             stroke: $default-secondary-color;
             stroke-width: 6px;
         }
+
+        &.pale {
+            text {
+                fill: #d66d06;
+            }
+        }
     }
 
     .node-active {
@@ -156,6 +162,12 @@ graph-view {
             fill: $path-complimentary-color;
             stroke: $path-secondary-color;
             stroke-width: 6px;
+        }
+
+        &.pale {
+            text {
+                fill: $path-primary-color;;
+            }
         }
 
     }
@@ -193,6 +205,16 @@ graph-view {
         }
     }
 
+    .node-direct {
+        circle {
+            stroke: $default-secondary-color;
+            fill: $default-primary-color;
+        }
+        text {
+            fill: $default-primary-color;
+        }
+    }
+
 
     .link {
         stroke: $link-primary-color;
@@ -210,12 +232,13 @@ graph-view {
             }
         }
 
-        &.highlighted {
-            stroke: #74736c;
-        }
-
         &.pale {
             stroke: rgba(206, 198, 185, 0.35);
+        }
+
+        &.highlighted,
+        &.highlighted.pale {
+            stroke: $path-complimentary-color;
         }
     }
 }
@@ -282,7 +305,7 @@ graph-view {
 
 .connections-source-target {
     position: absolute;
-    bottom: 5px;
+    bottom: 25px;
     width: 100%;
     text-align: center;
 

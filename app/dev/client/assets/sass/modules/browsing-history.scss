@@ -1,8 +1,15 @@
 browsing-history {
-    display: block;
     margin-top: 12px;
     background: white;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+
+    &.visibility-true {
+        display: block;
+    }
+
+    &.visibility-false {
+        display: none;
+    }
 
     .browsing-history {
         text-align: center;

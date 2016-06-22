@@ -46,3 +46,34 @@
         margin-top: 6px;
     }
 }
+
+.connections-mode-selector {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+
+    a {
+        span {
+            text-transform: uppercase;
+
+            &:first-child {
+                -webkit-border-top-right-radius: 0;
+                -webkit-border-bottom-right-radius: 0;
+                -moz-border-top-right-radius: 0;
+                -moz-border-bottom-right-radius: 0;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+
+            &:last-child {
+                -webkit-border-top-left-radius: 0;
+                -webkit-border-bottom-left-radius: 0;
+                -moz-border-top-left-radius: 0;
+                -moz-border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+    }
+}

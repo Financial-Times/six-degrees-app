@@ -1,8 +1,16 @@
+import {ObserverLocator} from 'aurelia-framework';
 import PeopleData from '../../models/services/people.data.js';
 import BrowsingHistory from '../../models/services/browsing.history.js';
+import GraphSettings from '../../models/services/graph.settings.js';
 
 export class Graph {
-    constructor() {
+    static inject() {
+        return [ObserverLocator];
+    }
+
+    constructor(observerLocator) {
+        this.observerLocator = observerLocator;
+        this.graphMode = GraphSettings.getMode();
 
         const zoom = d3.behavior.zoom().scaleExtent([0.5, 2]).on('zoom', zoomed), //eslint-disable-line no-use-before-define
             force = d3.layout.force(),
@@ -124,6 +132,25 @@ export class Graph {
             }
         }
 
+        function findDirectlyConnectedNodes(id, directLinks) {
+            const directlyConnectedPeople = [],
+                directlyConnectedNodes = [];
+
+            directLinks.forEach(link => {
+                directlyConnectedPeople.push(link.id.replace(id + '-', '').replace('-' + id, '').replace(/ /g, '-'));
+            });
+
+            d3.selectAll('text')[0].forEach(text => {
+                directlyConnectedPeople.forEach(personId => {
+                    if (personId === text.id) {
+                        directlyConnectedNodes.push(text.parentNode);
+                    }
+                });
+            });
+
+            return directlyConnectedNodes;
+        }
+
         function update() {
             let line, link, node, nodeEnter;
 
@@ -197,17 +224,29 @@ export class Graph {
 
                 })
                 .on('mouseover', function (d) {
-                    const connection = findLink(PeopleData.activePerson.prefLabel, d.id);
-                    findDirectLinks(d.id).forEach(directLink => {
-                        d3.select(directLink).classed('highlighted', true);
-                    });
-                    if (PeopleData.activePerson.prefLabel !== d.id) {
-                        if (connection) {
-                            d3.select(connection).classed('highlighted', false);
-                            d3.select(connection).classed('hover', true);
-                            d3.select(this.parentNode).classed('node-active', true);
-                        } else {
-                            d3.select(this.parentNode).classed('node-no-connection', true);
+                    const connection = findLink(PeopleData.activePerson.prefLabel, d.id),
+                        directLinks = findDirectLinks(d.id),
+                        graphMode = GraphSettings.getMode();
+
+                    if (graphMode === true) {
+                        directLinks.forEach(directLink => {
+                            d3.select(directLink).classed('highlighted', true);
+                        });
+
+                        d3.selectAll('.node').classed('pale', true);
+                        findDirectlyConnectedNodes(d.id, directLinks).forEach(directNode => {
+                            d3.select(directNode).classed('pale', false);
+                            d3.select(directNode).classed('node-direct', true);
+                        });
+
+                        if (PeopleData.activePerson.prefLabel !== d.id) {
+                            if (connection) {
+                                d3.select(connection).classed('highlighted', false);
+                                d3.select(connection).classed('hover', true);
+                                d3.select(this.parentNode).classed('node-active', true);
+                            } else {
+                                d3.select(this.parentNode).classed('node-no-connection', true);
+                            }
                         }
                     }
                 })
@@ -216,6 +255,8 @@ export class Graph {
                     d3.selectAll('.link.highlighted').classed('highlighted', false);
                     d3.selectAll('.node-active').classed('node-active', false);
                     d3.selectAll('.node-no-connection').classed('node-no-connection', false);
+                    d3.selectAll('.pale').classed('pale', false);
+                    d3.selectAll('.node-direct').classed('node-direct', false);
                 });
 
             nodeEnter.append('svg:rect')

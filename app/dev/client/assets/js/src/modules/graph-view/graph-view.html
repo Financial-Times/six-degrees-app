@@ -22,7 +22,13 @@
         <a href="/#/connections" class="o-buttons zoom" id="zoom_out" >-</a>
     </div>
 
-    <div class="connections-source-target" if.bind="sourcePerson && targetPerson">
+    <div class="connections-mode-selector">
+        <a href="/#/connections" click.delegate="toggleMode()" id="toggleModeBtn">
+            <span class="o-buttons o-buttons--small ${graphMode === true ? 'o-buttons--standout' : ''}">details</span><span class="o-buttons o-buttons--small ${graphMode === true ? '' : 'o-buttons--standout'}">no details</span>
+        </a>
+    </div>
+
+    <div class="connections-source-target" if.bind="sourcePerson && targetPerson && graphMode === true">
         <h2>${sourcePerson} <i class="material-icons">link</i> ${targetPerson}</h2>
     </div>
 </template>

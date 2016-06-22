@@ -52,6 +52,39 @@
         });
     }
 
+    function getAndCacheConnections(body) {
+        const todayDate = moment().format('YYYYMMDD'),
+            fromDate = moment().add(-7, 'days').format('YYYY-MM-DD'),
+            toDate = moment().format('YYYY-MM-DD'),
+            peopleIds = [],
+            people = JSON.parse(body);
+
+        handleCache('connections');
+        responsesCache.connections[todayDate] = responsesCache.connections[todayDate] || {};
+
+        people.forEach(person => {
+            if (person.id) {
+                peopleIds.push(person.id.replace('http://api.ft.com/things/', ''));
+            } else if (person.person && person.person.id) {
+                peopleIds.push(person.person.id.replace('http://api.ft.com/things/', ''));
+            }
+        });
+
+        peopleIds.forEach(uuid => {
+            if (!responsesCache.connections[todayDate][uuid]) {
+                console.log('[' + CONFIG.APP + ']', uuid, 'not found in cache, sending request...');
+                request(CONFIG.API_URL.SIX_DEGREES.HOST + 'connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&uuid=' + uuid, function (error, response, connectionsBody) {
+                    if (response && response.statusCode && response.statusCode === 200) {
+                        responsesCache.connections[todayDate][uuid] = connectionsBody;
+                        console.log('[' + CONFIG.APP + '] Connections for', uuid, 'cached successfuly.');
+                    } else {
+                        console.log('[' + CONFIG.APP + '] Problem with connections call for', uuid + ', aborting...');
+                    }
+                });
+            }
+        });
+    }
+
     function handleConnectionsCall(uuid, clientResponse) {
         let responseSent = false;
 
@@ -89,6 +122,7 @@
                         status: 200,
                         data: JSON.parse(body)
                     });
+                    getAndCacheConnections(body);
                 } else if (!responseSent) {
                     sendResponseToClient(clientResponse, {
                         status: 502
@@ -129,6 +163,7 @@
                         status: 200,
                         data: JSON.parse(body)
                     });
+                    getAndCacheConnections(body);
                 } else if (!responseSent) {
                     sendResponseToClient(clientResponse, {
                         status: 502
