@@ -95,11 +95,7 @@ var authS3O = function (req, res, next) {
         var s3o_url;
         var protocol = (req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] === 'https') ? 'https' : req.protocol;
 
-        if (req.hostname === 'localhost') {
-            s3o_url = 'https://s3o.ft.com/v2/authenticate?post=true&host=' + encodeURIComponent(req.hostname) + '&redirect=' + encodeURIComponent(protocol + '://' + req.headers.host + req.originalUrl);
-        } else {
-            s3o_url = 'https://s3o.ft.com/v2/authenticate?post=true&host=' + encodeURIComponent(req.hostname) + '&redirect=' + encodeURIComponent('https://semantic-up.ft.com/__public-six-degrees-app/');
-        }
+        s3o_url = 'https://s3o.ft.com/v2/authenticate?post=true&host=' + encodeURIComponent(req.hostname) + '&redirect=' + encodeURIComponent(protocol + '://' + req.headers.host + req.originalUrl);
         debug('S3O: No token/s3o_username found. Redirecting to ' + s3o_url);
 
         // Don't cache any redirection responses.
