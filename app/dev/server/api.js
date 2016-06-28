@@ -223,9 +223,15 @@
             url: 'https://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
         }, function (error, response, body) {
             if (body) {
+                let parsedBody = {};
+                try {
+                    parsedBody = JSON.parse(body);
+                } catch (err) {
+                    console.log('[' + CONFIG.APP + '] Error during response body parsing!\n', err, '\nBody:', body);
+                }
                 sendResponseToClient(clientResponse, {
                     status: 200,
-                    data: JSON.parse(body)
+                    data: parsedBody
                 });
             } else {
                 sendResponseToClient(clientResponse, {

@@ -152,10 +152,15 @@ export class Graph {
         }
 
         function update() {
-            let line, link, node, nodeEnter;
+            let line, link, node, nodeEnter,
+                linksTotalValue = 0;
 
             svg.append('g').attr('class', 'links');
             svg.append('g').attr('class', 'nodes');
+
+            function calculateLinkQuota(singleLinkValue) {
+                return singleLinkValue * 100 / linksTotalValue;
+            }
 
             link = svg.select('.links').selectAll('line').data(links, function (d) { //eslint-disable-line prefer-const
                 return d.source.id + '-' + d.target.id;
@@ -347,11 +352,15 @@ export class Graph {
                 });
             });
 
+            links.forEach(singleLink => {
+                linksTotalValue += singleLink.value;
+            });
+
             // Restart the force layout.
             force.gravity(0.5)
                 .charge(-5000)
                 .linkDistance(function (d) {
-                    return d.value * 10;
+                    return 110 - calculateLinkQuota(d.value);
                 })
                 .size([width, height])
                 .start();
