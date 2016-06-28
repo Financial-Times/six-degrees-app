@@ -2,6 +2,12 @@ browsing-history {
     margin-top: 12px;
     background: white;
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-height: 70%;
+    overflow-y: auto;
+    position: relative;
+    margin-right: -30px;
+    padding-right: 30px;
 
     &.visibility-true {
         display: block;
@@ -14,7 +20,9 @@ browsing-history {
     .browsing-history {
         text-align: center;
         position: relative;
-        padding-top: 3px;
+        padding: 3px 0 25px 0;
+        height: 100%;
+
         .material-icons {
             color: #2e6e9e;
         }
@@ -53,21 +61,24 @@ browsing-history {
                 }
             }
         }
+    }
 
-        .degree-count {
-            display: block;
-            text-align: center;
-            background: #2e6e9e;
-            color: white;
-            padding: 6px 0;
-            font-size: 12px;
-            position: relative;
-            z-index: 2;
-            cursor: help;
+    .degree-count {
+        display: block;
+        text-align: center;
+        background: #2e6e9e;
+        color: white;
+        padding: 6px 0;
+        font-size: 12px;
+        position: absolute;
+        z-index: 2;
+        cursor: help;
+        bottom: 0;
+        left: 0;
+        right: 0;
 
-            em {
-                font-style: normal;
-            }
+        em {
+            font-style: normal;
         }
     }
 }

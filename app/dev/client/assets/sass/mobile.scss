@@ -53,3 +53,48 @@ origami-footer {
         }
     }
 }
+
+business-card {
+    @media all and (max-width: 1023px) {
+        top: 54px;
+        width: 75px;
+    }
+
+    .business-card {
+        .card-top {
+            i {
+                @media all and (max-width: 1023px) {
+                    font-size: 1.6em;
+                    line-height: 1.6em;
+                }
+            }
+        }
+        .card-middle {
+            @media all and (max-width: 1023px) {
+                padding: 8px 3px 6px 3px;
+            }
+        }
+    }
+}
+
+browsing-history {
+    .browsing-history {
+        .arrow-line {
+            @media all and (max-width: 1023px) {
+                left: 37px;
+                width: 1px;
+            }
+        }
+        .material-icons {
+            font-size: 18px;
+        }
+        ul {
+            li {
+                @media all and (max-width: 1023px) {
+                    line-height: 1em;
+                    padding: 3px 0;
+                }
+            }
+        }
+    }
+}

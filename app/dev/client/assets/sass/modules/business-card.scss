@@ -31,6 +31,8 @@ business-card {
     left: 12px;
     z-index: 2;
     width: 100px;
+    height: 80%;
+    overflow: hidden;
 }
 
 .business-card {
@@ -81,6 +83,10 @@ business-card {
             position: relative;
             z-index: 10;
 
+            @media all and (max-width: 1023px) {
+                font-size: 14px;
+            }
+
             &:hover {
                 cursor: help;
             }
@@ -99,6 +105,11 @@ business-card {
             padding: 6px 0;
             margin: 0;
             text-decoration: none;
+
+            @media all and (max-width: 1023px) {
+                font-size: 12px;
+                padding: 3px 0;
+            }
 
             &:hover {
                 cursor: help;

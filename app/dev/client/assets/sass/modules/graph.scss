@@ -38,6 +38,12 @@ graph-view {
             font-size: 13px;
             text-transform: uppercase;
             font-weight: normal;
+
+            @media all and (max-width: 1023px) {
+                background: rgba(255, 255, 255, 0.75);
+                padding: 2px 4px;
+                border-radius: 3px;
+            }
         }
     }
 
@@ -291,6 +297,14 @@ graph-view {
     top: 0;
     right: 0;
     z-index: 3;
+
+    @media all and (max-width: 1023px) {
+        text-indent: -9999px;
+        min-width: 26px;
+        width: 26px;
+        background: url('../img/components/ic_arrow_back_black_24dp_2x.png') no-repeat center center;
+        background-size: contain;
+    }
 }
 
 .connections-zoom-controls {

@@ -212,7 +212,7 @@ export class Graph {
                     nodeData.fixed = true;
 
                     previousNodeId = PeopleData.activePerson.prefLabel;
-                    PeopleData.setActiveByName(nodeData.id);
+                    PeopleData.setActiveByUuid(nodeData.uuid);
 
                     if (previousNodeId) {
                         const name = abbreviateFullName(previousNodeId);
@@ -373,9 +373,10 @@ export class Graph {
 
         }
 
-        this.addNode = function (id) {
+        this.addNode = function (id, uuid) {
             nodes.push({
-                'id': id
+                'id': id,
+                'uuid': uuid
             });
 
             update();

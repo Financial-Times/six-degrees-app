@@ -5,6 +5,7 @@ import {Graph} from '../../models/classes/graph.js';
 import {GraphData} from '../../models/services/graph.data.js';
 import GraphSettings from '../../models/services/graph.settings.js';
 import PeopleData from '../../models/services/people.data.js';
+import BrowsingHistoryData from '../../models/services/browsing.history.js';
 
 
 let self;
@@ -44,6 +45,7 @@ export class GraphView {
         self.graphData = null;
         PeopleData.sourcePerson = null;
         d3.select('#graph .svg-container').remove();
+        BrowsingHistoryData.clear();
         this.router.navigate('/');
     }
 
@@ -88,7 +90,7 @@ export class GraphView {
         }
 
         nodes.forEach(node => {
-            self.graph.addNode(node.caption);
+            self.graph.addNode(node.caption, node.uuid);
         });
 
         links.forEach(link => {

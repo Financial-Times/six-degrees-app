@@ -174,6 +174,15 @@ class PeopleData {
         });
     }
 
+    setActiveByUuid(uuid) {
+        uuid = uuid.replace('http://api.ft.com/things/', '');
+        this.stored.forEach((person, index) => {
+            if (person.id.replace('http://api.ft.com/things/', '') === uuid) {
+                this.updateActivePerson(index);
+            }
+        });
+    }
+
     acceptedSearchPerson(person) {
         this.elasticSearchPerson = person;
     }
