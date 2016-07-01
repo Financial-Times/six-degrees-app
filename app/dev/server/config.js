@@ -3,18 +3,23 @@
     const CONFIG = {
             URL: '127.0.0.1',
             API_URL: {
+                CONTENT: process.env.FT_API_URL + 'content/',
+                THINGS: process.env.FT_API_URL + 'things/',
                 SIX_DEGREES: {
-                    HOST: 'https://sixdegrees-demo.in.ft.com/sixdegrees/'
+                    HOST: process.env.FT_SIX_DEGREES_API_URL
                 },
-                ELASTIC_SEARCH: 'https://pre-prod-up.ft.com/__elasticsearch/'
+                ELASTIC_SEARCH: {
+                    MAIN: process.env.FT_ELASTIC_SEARCH_API_URL_MAIN,
+                    PEOPLE: process.env.FT_ELASTIC_SEARCH_API_URL_PEOPLE
+                }
             },
             AUTH: {
                 API_KEY: {
-                    FT: 'vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+                    FT: process.env.FT_API_KEY
                 },
                 HEADERS: {
                     ELASTIC_SEARCH: {
-                        BASIC: 'Basic cHJlLXByb2Q6ZWQ4YjkwMzMtNDFhMi00NDJlLWEyMGYtNjFlY2FmZDE3YTU3'
+                        BASIC: 'Basic ' + process.env.FT_ELASTIC_SEARCH_BASIC_AUTH
                     }
                 }
             },

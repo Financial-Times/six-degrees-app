@@ -64,9 +64,9 @@
 
         people.forEach(person => {
             if (person.id) {
-                peopleIds.push(person.id.replace('http://api.ft.com/things/', ''));
+                peopleIds.push(person.id.replace(CONFIG.API_URL.THINGS, ''));
             } else if (person.person && person.person.id) {
-                peopleIds.push(person.person.id.replace('http://api.ft.com/things/', ''));
+                peopleIds.push(person.person.id.replace(CONFIG.API_URL.THINGS, ''));
             }
         });
 
@@ -109,7 +109,7 @@
         } else {
 
             const timeout = setTimeout(function () {
-                console.log('[' + CONFIG.APP + '] No answer for 5 secs: https://sixdegrees-demo.in.ft.com/sixdegrees/mostMentionedPeople');
+                console.log('[' + CONFIG.APP + '] No answer for 5 secs from most mentioned people server');
                 sendResponseToClient(clientResponse, {
                     status: 504
                 });
@@ -180,7 +180,7 @@
 
     function handleSearchCall(query, clientResponse) {
         request({
-            url: CONFIG.API_URL.ELASTIC_SEARCH + 'concepts/people/_search?q=' + query,
+            url: CONFIG.API_URL.ELASTIC_SEARCH.MAIN + 'concepts/people/_search?q=' + query,
             headers: {
                 'Authorization': CONFIG.AUTH.HEADERS.ELASTIC_SEARCH.BASIC
             }
@@ -200,7 +200,7 @@
 
     function handleLookUpCall(uuid, clientResponse) {
         request({
-            url: 'https://pre-prod-up.ft.com/__restorage-elasticsearch-concepts/people/' + uuid,
+            url: CONFIG.API_URL.ELASTIC_SEARCH.PEOPLE + uuid,
             headers: {
                 'Authorization': CONFIG.AUTH.HEADERS.ELASTIC_SEARCH.BASIC
             }
@@ -220,7 +220,7 @@
 
     function handleContentCall(id, clientResponse) {
         request({
-            url: 'https://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+            url: CONFIG.API_URL.CONTENT + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
         }, function (error, response, body) {
             if (body) {
                 let parsedBody = {};
@@ -243,7 +243,7 @@
 
     function handleImagesCall(id, clientResponse) {
         request({
-            url: 'http://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+            url: CONFIG.API_URL.CONTENT + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
         }, function (error, response, body) {
             if (body) {
                 sendResponseToClient(clientResponse, {
@@ -260,7 +260,7 @@
 
     function handleImageCall(id, clientResponse) {
         request({
-            url: 'http://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+            url: CONFIG.API_URL.CONTENT + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
         }, function (error, response, body) {
             if (body) {
                 sendResponseToClient(clientResponse, {
