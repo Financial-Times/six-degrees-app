@@ -6,11 +6,22 @@
                 SIX_DEGREES: {
                     HOST: 'https://sixdegrees-demo.in.ft.com/sixdegrees/'
                 },
-                ELASTIC_SEARCH: 'https://pre-prod-up.ft.com/__elasticsearch/'
+                ELASTIC_SEARCH: 'https://pre-prod-up.ft.com/__elasticsearch/',
+                CONTENT: 'http://api.ft.com/content/',
+                MEMBERSHIP: {
+                    SESSIONS: {
+                        PROD: 'https://beta-api.ft.com/sessions/',
+                        TEST: 'https://beta-api-t.ft.com/sessions/'
+                    }
+                }
             },
             AUTH: {
                 API_KEY: {
-                    FT: 'vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo'
+                    FT: 'vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo',
+                    MEMBERSHIP: {
+                        PROD: 'kfEpIgvbuo81YH02sD1dI13lk2qGWLMO2xOh9WYL',
+                        TEST: 'TeaJIE776S65tdYuFbhTl4qxEGE7Qfoi7UcyrIpm'
+                    }
                 },
                 HEADERS: {
                     ELASTIC_SEARCH: {

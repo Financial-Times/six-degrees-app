@@ -30,6 +30,10 @@ export class App {
             route: ['connections'],
             name: 'connections',
             moduleId: './pages/connections'
+        }, {
+            route: ['login', 'login/:param'],
+            name: 'login',
+            moduleId: './pages/login'
         }]);
 
         this.router = router;

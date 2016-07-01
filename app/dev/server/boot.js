@@ -8,6 +8,7 @@
         api = require('./api'),
         cors = require('./cors'),
         //authS3O = require('./vendor/s3o-middleware'),
+        https = require('https'),
         server = express();
 
     function updateConfig(version) {

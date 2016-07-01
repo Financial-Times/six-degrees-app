@@ -1,5 +1,6 @@
 <template bindable="people">
     <section class="iftt-search-row-wrapper">
+
         <form submit.trigger="submit()">
             <div class="iftt-search-row-field" id="search-input">
                 <input type="text" placeholder="Search for someone else..." value.bind="searchPhrase" oninput.bind="handleInput" onkeydown.bind="handleKey" />

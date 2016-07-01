@@ -100,9 +100,12 @@ class PeopleData {
         }
     }
 
-    getMentionedMostly() {
-        return Ajax.get({
-            url: 'api/mentioned'
+    getMentionedMostly(uuid) {
+        return Ajax.post({
+            url: 'api/mentioned',
+            headers: {
+                'X-UUID': uuid
+            }
         });
     }
 

@@ -2,7 +2,7 @@
     <div class="spinner" if.bind="!graphData && !errorMessage"></div>
 
     <div class="connections-context">
-        <h4>people connections in FT articles<br />within the last 7 days</h4>
+        <h4 innerhtml.bind="connectionsContext"></h4>
     </div>
 
     <div id="graph" style="width: 100%; height: 100%;" class.bind="!graphData || errorMessage ? 'hidden' : ''"></div>

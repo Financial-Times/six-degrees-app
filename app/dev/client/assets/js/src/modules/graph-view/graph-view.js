@@ -6,7 +6,7 @@ import {GraphData} from '../../models/services/graph.data.js';
 import GraphSettings from '../../models/services/graph.settings.js';
 import PeopleData from '../../models/services/people.data.js';
 import BrowsingHistoryData from '../../models/services/browsing.history.js';
-
+import UserData from '../../models/services/user.data.js';
 
 let self;
 
@@ -20,6 +20,8 @@ export class GraphView {
         this.sourcePerson = null;
         this.targetPerson = null;
         this.graphMode = GraphSettings.getMode();
+        this.signedIn = UserData.uuid;
+        this.connectionsContext = 'people connections<br />in FT articles ' + (this.signedIn ? 'you have read' : '') + '<br />within the last 7 days';
     }
 
     clearErrorMessage() {

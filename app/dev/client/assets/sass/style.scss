@@ -9,6 +9,7 @@
 @import 'modules/related-content';
 @import 'modules/graph';
 @import 'modules/search';
+@import 'modules/login';
 
 html {
     height: 100%;
@@ -21,13 +22,15 @@ body {
 
 origami-header {
     display: block;
-    height: 5%;
+    overflow: auto;
 }
 
 router-view {
    display: block;
    position: relative;
-   height: 80%;
+   height: 75%;
+   overflow: hidden;
+   overflow-y: auto;
 
     .connections-module,
     .related-content {

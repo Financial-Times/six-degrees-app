@@ -1,0 +1,12 @@
+<template>
+    <div class="log-in-prompt">
+        <span if.bind="!signedIn">
+            <em>for personalised content</em>
+            <a href="http://accounts.ft.com/login?location=${loginRedirectUrl}">Sign In</a>
+        </span>
+        <span if.bind="signedIn">
+            <em>Welcome, ${userDetails.fname} ${userDetails.lname}</em>
+            <a href="http://accounts.ft.com/logout?location=${loginRedirectUrl}">Sign Out</a>
+        </span>
+    </div>
+</template>

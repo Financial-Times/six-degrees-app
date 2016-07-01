@@ -1,6 +1,8 @@
 import {Router} from 'aurelia-router';
 import {ObserverLocator} from 'aurelia-framework';
 import PeopleData from '../../models/services/people.data.js';
+import UserData from '../../models/services/user.data.js';
+import Cookies from '../../models/services/cookies.js';
 
 export class PeopleList {
     static inject() {
@@ -10,11 +12,12 @@ export class PeopleList {
     constructor(router, observerLocator) {
         this.theRouter = router;
         this.observerLocator = observerLocator;
-        this.heroLabel = 'was the most mentioned person<em>in Financial Times</em>in the last 7 days';
+        this.signedIn = Cookies.read('FTSession');
+        this.heroLabel = 'was the most mentioned person<em>' + (this.signedIn ? 'in articles you have read' : 'in Financial Times') + '</em>in the last 7 days';
     }
 
-    getMentionedPeople() {
-        PeopleData.getMentionedMostly().then(people => {
+    getMentionedPeople(uuid) {
+        PeopleData.getMentionedMostly(uuid).then(people => {
             if (people && people.length) {
                 this.hero = people[0];
                 this.people = people;
@@ -29,7 +32,7 @@ export class PeopleList {
 
     tryAgain() {
         this.errorMessage = null;
-        this.getMentionedPeople();
+        this.getMentionedPeople(UserData.uuid);
     }
 
     redirect(id) {
@@ -38,12 +41,18 @@ export class PeopleList {
     }
 
     attached() {
-        this.getMentionedPeople();
+
+        if (!this.signedIn) {
+            this.getMentionedPeople();
+        } else {
+            const self = this;
+            UserData.obtainUuid(Cookies.read('FTSession'), self.getMentionedPeople);
+        }
+
         this.observerLocator.getObserver(PeopleData, 'elasticSearchPerson').subscribe((person) => {
             this.elasticSearchPerson = person;
             this.heroLabel = null;
         });
-
         this.observerLocator.getObserver(PeopleData, 'stored').subscribe((people) => {
             this.people = people;
             this.hero = people[0];
