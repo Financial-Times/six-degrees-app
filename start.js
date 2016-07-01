@@ -1,8 +1,9 @@
 (function () {
     'use strict';
 
-    let version,
-        cmdArgs = [];
+    const cmdArgs = [];
+
+    require('dotenv').config();
 
     process.argv.forEach(function (val, index) {
         if (index > 1 && val) {
@@ -10,7 +11,7 @@
         }
     });
 
-    version = (cmdArgs.length && cmdArgs.indexOf('--dev') > -1) ? 'dev' : 'release';
+    let version = (cmdArgs.length && cmdArgs.indexOf('--dev') > -1) ? 'dev' : 'release';
 
     require('./app/' + version + '/server/boot').start(version);
 
