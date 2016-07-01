@@ -89,7 +89,7 @@ class PeopleData {
                                     url: 'api/image/' + imageResponse.members[0].id.replace('http://api.ft.com/content/', '')
                                 }).then(memberResponse => {
                                     //this.addToContent(response, memberResponse.binaryUrl.replace('http', 'https'));
-                                    this.addToContent(response, memberResponse.binaryUrl.replace('http://', '//'));
+                                    this.addToContent(response, memberResponse.binaryUrl);
                                 });
                             }
                         });
