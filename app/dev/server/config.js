@@ -1,4 +1,7 @@
 (function () {
+    'use strict';
+
+    let CONFIG_INSTANCE;
 
     const CONFIG = {
             URL: '127.0.0.1',
@@ -37,6 +40,8 @@
             APP: 'FTSixDegrees',
             VER: 'dev',
             APP_PATH: '.',
+            APP_IMAGES_CACHE_UPLOAD_PATH: 'app/dev/client/',
+            APP_IMAGES_CACHE_DOWNLOAD_PATH: 'app/dev/client/',
             EXTENSIONS: {
                 '.html': 'text/html',
                 '.jsp': 'text/html',
@@ -71,11 +76,18 @@
     CONFIG.SETTINGS.LOGGER.LEVEL = (cmdArgs.length && cmdArgs.indexOf('--log-all') > -1) ? 'all' : 'basic';
 
     function get() {
-        return CONFIG;
+        if (CONFIG_INSTANCE === undefined) {
+            CONFIG_INSTANCE = CONFIG;
+        }
+        return CONFIG_INSTANCE;
     }
 
     function set(key, value) {
-        CONFIG[key] = value;
+        if (CONFIG_INSTANCE === undefined) {
+            CONFIG[key] = value;
+        } else {
+            CONFIG_INSTANCE[key] = value;
+        }
     }
 
     module.exports = {

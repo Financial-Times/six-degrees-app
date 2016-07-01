@@ -1,11 +1,11 @@
 {
   "name": "ft-six-degrees",
-  "version": "0.2.20",
+  "version": "0.2.33",
   "description": "FT Six Degrees prototype FE App",
   "author": "Tomasz Libich",
   "scripts": {
     "dev": "gulp client-unbundle && gulp client-build && node-dev start --dev",
-    "release": "gulp client-build-release && node start",
+    "release": "gulp client-build-release && node-dev start --release",
     "postinstall": "jspm install && gulp client-build",
     "start": "node start"
   },

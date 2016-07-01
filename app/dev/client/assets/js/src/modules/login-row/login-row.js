@@ -18,7 +18,6 @@ export class LoginRow {
         this.signedIn = Cookies.read('FTSession');
         if (this.signedIn) {
             this.userDetails = UserData.getUserDetails();
-            console.warn('userDetails', this.userDetails);
         } else {
             this.userDetails = null;
         }

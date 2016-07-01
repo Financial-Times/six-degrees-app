@@ -9,7 +9,7 @@ class PeopleData {
         this.browsingHistory = [];
     }
 
-    addToContent(response, imageUrl) {
+    addToContent(response) {
 
         let contains = false;
 
@@ -44,7 +44,7 @@ class PeopleData {
         if (!contains) {
             const article = {
                 title: response.title,
-                imageUrl: imageUrl,
+                imageUrl: response.imageUrl,
                 byline: response.byline,
                 published: moment(response.publishedDate).format('MMMM DD, YYYY'),
                 publishedTimestamp: moment(response.publishedDate).unix(),
@@ -80,22 +80,7 @@ class PeopleData {
                 Ajax.get({
                     url: 'api/content/' + item.id
                 }).then(response => {
-                    if (response.mainImage && response.mainImage.id) {
-                        Ajax.get({
-                            url: 'api/images/' + response.mainImage.id.replace('http://api.ft.com/content/', '')
-                        }).then(imageResponse => {
-                            if (imageResponse.members) {
-                                Ajax.get({
-                                    url: 'api/image/' + imageResponse.members[0].id.replace('http://api.ft.com/content/', '')
-                                }).then(memberResponse => {
-                                    //this.addToContent(response, memberResponse.binaryUrl.replace('http', 'https'));
-                                    this.addToContent(response, memberResponse.binaryUrl);
-                                });
-                            }
-                        });
-                    } else {
-                        this.addToContent(response);
-                    }
+                    this.addToContent(response);
                 });
             });
         }

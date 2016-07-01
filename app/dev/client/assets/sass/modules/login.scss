@@ -37,7 +37,7 @@
 }
 
 login-row {
-    display: none;
+    display: block;
     position: relative;
     z-index: 2;
 
@@ -60,7 +60,7 @@ login-row {
 
     span {
         float: right;
-        margin-right: 12px;
+        margin-right: 10px;
 
         em {
             font-style: normal;

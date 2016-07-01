@@ -3,12 +3,23 @@
 
     const CONFIG = require('../config').get(),
         responder = require('../api/common/responder'),
+        preloader = require('../api/common/preloader'),
         cache = require('../api/common/cache'),
         cacheStorage = cache.storage,
         request = require('request'),
         moment = require('moment');
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
+
+    function parseJson(body) {
+        let bodyParsed = null;
+        try {
+            bodyParsed = JSON.parse(body);
+        } catch (err) {
+            console.log('[' + CONFIG.APP + '] Response body parser error.', err);
+        }
+        return bodyParsed;
+    }
 
     function handleTestCall(clientResponse) {
         responder.send(clientResponse, {
@@ -24,7 +35,7 @@
             fromDate = moment().add(-7, 'days').format('YYYY-MM-DD'),
             toDate = moment().format('YYYY-MM-DD'),
             peopleIds = [],
-            people = JSON.parse(body);
+            people = parseJson(body);
 
         cache.handle('connections');
         cacheStorage.connections[todayDate] = cacheStorage.connections[todayDate] || {};
@@ -70,7 +81,7 @@
             console.log('[' + CONFIG.APP + '] Serving response from cacheStorage.');
             responder.send(clientResponse, {
                 status: 200,
-                data: JSON.parse(cacheStorage.connections[todayDate][uuid])
+                data: parseJson(cacheStorage.connections[todayDate][uuid])
             });
 
         } else {
@@ -91,7 +102,7 @@
                     clearTimeout(timeout);
                     responder.send(clientResponse, {
                         status: 200,
-                        data: JSON.parse(body)
+                        data: parseJson(body)
                     });
                     getAndCacheConnections(body);
                 } else if (!responseSent) {
@@ -115,7 +126,7 @@
         articles.forEach(article => {
             request('http://api.ft.com/enrichedcontent/' + article.id + '?apiKey=96gvuunqwfn9rhqe7eymxqsk', function (error, response, enrichedcontent) {
                 responseCount += 1;
-                JSON.parse(enrichedcontent).annotations.forEach(annotation => {
+                parseJson(enrichedcontent).annotations.forEach(annotation => {
                     if (annotation.type === 'PERSON') {
                         annotatedPeople.push({
                             id: annotation.id,
@@ -151,8 +162,8 @@
             console.log('[' + CONFIG.APP + '] No history cache detected, sending request.', uuid);
             request('http://ftaps58254-law1a-eu-p:8080/recommended-reads-api/users/' + uuid + '/history?limit=10&recency=7', function (error, response, history) {
                 if (response.statusCode === 200) {
-                    cacheStorage.users[todayDate][uuid].history = JSON.parse(history).response;
-                    getPeopleFromHistory(uuid, JSON.parse(history).response, callback);
+                    cacheStorage.users[todayDate][uuid].history = parseJson(history).response;
+                    getPeopleFromHistory(uuid, parseJson(history).response, callback);
                 } else {
                     callback(502, error);
                 }
@@ -174,7 +185,7 @@
             console.log('[' + CONFIG.APP + '] Serving response from cacheStorage.');
             responder.send(clientResponse, {
                 status: 200,
-                data: JSON.parse(cacheStorage.people[todayDate])
+                data: parseJson(cacheStorage.people[todayDate])
             });
             responseSent = true;
         } else if (uuid && cacheStorage.users[todayDate] && cacheStorage.users[todayDate][uuid] && cacheStorage.users[todayDate][uuid].response) {
@@ -209,7 +220,7 @@
                         clearTimeout(timeout);
                         responder.send(clientResponse, {
                             status: 200,
-                            data: JSON.parse(body)
+                            data: parseJson(body)
                         });
                         getAndCacheConnections(body);
                         responseSent = true;
@@ -235,7 +246,7 @@
             if (body) {
                 responder.send(clientResponse, {
                     status: 200,
-                    data: JSON.parse(body).hits ? JSON.parse(body).hits.hits : []
+                    data: parseJson(body).hits ? parseJson(body).hits.hits : []
                 });
             } else {
                 responder.send(clientResponse, {
@@ -255,7 +266,7 @@
             if (body) {
                 responder.send(clientResponse, {
                     status: 200,
-                    data: JSON.parse(body)
+                    data: parseJson(body)
                 });
             } else {
                 responder.send(clientResponse, {
@@ -272,54 +283,43 @@
             if (body) {
                 let parsedBody = {};
                 try {
-                    parsedBody = JSON.parse(body);
+                    parsedBody = parseJson(body);
                 } catch (err) {
                     console.log('[' + CONFIG.APP + '] Error during response body parsing!\n', err, '\nBody:', body);
                 }
-                responder.send(clientResponse, {
-                    status: 200,
-                    data: parsedBody
-                });
-            } else {
-                responder.send(clientResponse, {
-                    status: 502
-                });
-            }
-        });
-    }
 
-    function handleImagesCall(id, clientResponse) {
-        request({
-            url: CONFIG.API_URL.CONTENT + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
-        }, function (error, response, body) {
-            if (body) {
-                responder.send(clientResponse, {
-                    status: 200,
-                    data: JSON.parse(body)
-                });
-            } else {
-                responder.send(clientResponse, {
-                    status: 502
-                });
-            }
-        });
-    }
+                if (parsedBody.mainImage && parsedBody.mainImage.id) {
+                    request({
+                        url: CONFIG.API_URL.CONTENT + parsedBody.mainImage.id.replace('http://api.ft.com/content/', '') + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+                    }, function (imagesError, imagesResponse, imagesBody) {
+                        imagesBody = parseJson(imagesBody);
+                        if (imagesBody.members) {
+                            request({
+                                url: CONFIG.API_URL.CONTENT + imagesBody.members[0].id.replace('http://api.ft.com/content/', '') + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+                            }, function (imageError, imageResponse, imageBody) {
+                                imageBody = parseJson(imageBody);
+                                parsedBody.binaryUrl = imageBody.binaryUrl;
 
-    function handleImageCall(id, clientResponse) {
-        request({
-            url: CONFIG.API_URL.CONTENT + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
-        }, function (error, response, body) {
-            if (body) {
-                let data = {};
-                try {
-                    data = JSON.parse(body);
-                } catch (err) {
-                    console.log('[' + CONFIG.APP + '] Body parsing error', err, body);
+                                preloader.handle(parsedBody, function (data) {
+                                    responder.send(clientResponse, {
+                                        status: 200,
+                                        data: data
+                                    });
+                                });
+                            });
+                        } else {
+                            responder.send(clientResponse, {
+                                status: 200,
+                                data: parsedBody
+                            });
+                        }
+                    });
+                } else {
+                    responder.send(clientResponse, {
+                        status: 200,
+                        data: parsedBody
+                    });
                 }
-                responder.send(clientResponse, {
-                    status: 200,
-                    data: data
-                });
             } else {
                 responder.send(clientResponse, {
                     status: 502
@@ -398,12 +398,6 @@
                 break;
             case 'content':
                 handleContentCall(params[1], clientResponse);
-                break;
-            case 'images':
-                handleImagesCall(params[1], clientResponse);
-                break;
-            case 'image':
-                handleImageCall(params[1], clientResponse);
                 break;
             case 'uuid':
                 handleUuidCall(params[1], clientResponse);

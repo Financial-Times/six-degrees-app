@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
 
     const express = require('express'),
         bodyParser = require('body-parser'),
@@ -8,13 +9,14 @@
         api = require('./api'),
         cors = require('./cors'),
         //authS3O = require('./vendor/s3o-middleware'),
-        https = require('https'),
         server = express();
 
     function updateConfig(version) {
-        if (version !== 'dev') {
+        if (version === 'release') {
             config.set('VER', version);
             config.set('APP_PATH', 'app/' + version + '/client/');
+            config.set('APP_IMAGES_CACHE_UPLOAD_PATH', 'app/release/client/');
+            config.set('APP_IMAGES_CACHE_DOWNLOAD_PATH', '/');
         }
     }
 
