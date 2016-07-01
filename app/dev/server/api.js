@@ -160,7 +160,7 @@
             }, 5000);
 
             request(CONFIG.API_URL.SIX_DEGREES.HOST + 'mostMentionedPeople', function (error, response, body) {
-                if (!responseSent && response.statusCode === 200) {
+                if (!responseSent && response && response.statusCode === 200) {
                     responsesCache.people[todayDate] = body;
                     clearTimeout(timeout);
                     sendResponseToClient(clientResponse, {
@@ -263,9 +263,15 @@
             url: CONFIG.API_URL.CONTENT + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
         }, function (error, response, body) {
             if (body) {
+                let bodyParsed = {};
+                try {
+                    bodyParsed = JSON.parse(body);
+                } catch (err) {
+                    console.log('[' + CONFIG.APP + '] Response parser error.', err);
+                }
                 sendResponseToClient(clientResponse, {
                     status: 200,
-                    data: JSON.parse(body)
+                    data: bodyParsed
                 });
             } else {
                 sendResponseToClient(clientResponse, {

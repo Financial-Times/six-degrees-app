@@ -1,10 +1,10 @@
 {
   "name": "ft-six-degrees",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "description": "FT Six Degrees prototype FE App",
   "author": "Tomasz Libich",
   "scripts": {
-    "dev": "gulp client-unbundle && gulp client-build && FT_API_URL=https://api.ft.com/ FT_API_KEY=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo FT_ELASTIC_SEARCH_API_URL_MAIN=https://pre-prod-up.ft.com/__elasticsearch/ FT_ELASTIC_SEARCH_API_URL_PEOPLE=https://pre-prod-up.ft.com/__restorage-elasticsearch-concepts/people/ FT_ELASTIC_SEARCH_BASIC_AUTH=cHJlLXByb2Q6ZWQ4YjkwMzMtNDFhMi00NDJlLWEyMGYtNjFlY2FmZDE3YTU3 FT_SIX_DEGREES_API_URL=https://sixdegrees-demo.in.ft.com/sixdegrees/ node start --dev",
+    "dev": "gulp client-unbundle && gulp client-build && FT_API_URL=https://api.ft.com/ FT_API_KEY=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo FT_ELASTIC_SEARCH_API_URL_MAIN=https://pre-prod-up.ft.com/__elasticsearch/ FT_ELASTIC_SEARCH_API_URL_PEOPLE=https://pre-prod-up.ft.com/__restorage-elasticsearch-concepts/people/ FT_ELASTIC_SEARCH_BASIC_AUTH=cHJlLXByb2Q6ZWQ4YjkwMzMtNDFhMi00NDJlLWEyMGYtNjFlY2FmZDE3YTU3 FT_SIX_DEGREES_API_URL=https://sixdegrees-demo.in.ft.com/sixdegrees/ node-dev start --dev",
     "release": "gulp client-build-release && FT_API_URL=https://api.ft.com/ FT_API_KEY=vg9u6GResCWNIwqGCdNZVaL7RdEOCtGo FT_ELASTIC_SEARCH_API_URL_MAIN=https://pre-prod-up.ft.com/__elasticsearch/ FT_ELASTIC_SEARCH_API_URL_PEOPLE=https://pre-prod-up.ft.com/__restorage-elasticsearch-concepts/people/ FT_ELASTIC_SEARCH_BASIC_AUTH=cHJlLXByb2Q6ZWQ4YjkwMzMtNDFhMi00NDJlLWEyMGYtNjFlY2FmZDE3YTU3 FT_SIX_DEGREES_API_URL=https://sixdegrees-demo.in.ft.com/sixdegrees/ node start",
     "postinstall": "jspm install && gulp client-build",
     "start": "node start"
