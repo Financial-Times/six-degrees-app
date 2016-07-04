@@ -209,6 +209,13 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     }
   },
+  depCache: {
+    "configuration.js": [
+      "aurelia-framework",
+      "aurelia-logging-console",
+      "fetch"
+    ]
+  },
   bundles: {
     "app.min.js": [
       "configuration.js",
@@ -299,13 +306,6 @@ System.config({
       "npm:aurelia-templating-router@1.0.0-beta.1.2.0/router-view.js",
       "npm:aurelia-templating@1.0.0-beta.1.2.1.js",
       "npm:aurelia-templating@1.0.0-beta.1.2.1/aurelia-templating.js"
-    ]
-  },
-  depCache: {
-    "configuration.js": [
-      "aurelia-framework",
-      "aurelia-logging-console",
-      "fetch"
     ]
   }
 });
