@@ -42,9 +42,9 @@
 
         people.forEach(person => {
             if (person.id) {
-                peopleIds.push(person.id.replace('http://api.ft.com/things/', ''));
+                peopleIds.push(person.id.replace(CONFIG.API_URL.THINGS, ''));
             } else if (person.person && person.person.id) {
-                peopleIds.push(person.person.id.replace('http://api.ft.com/things/', ''));
+                peopleIds.push(person.person.id.replace(CONFIG.API_URL.THINGS, ''));
             }
         });
 
@@ -87,7 +87,7 @@
         } else {
 
             const timeout = setTimeout(function () {
-                console.log('[' + CONFIG.APP + '] No answer for 5 secs: https://sixdegrees-demo.in.ft.com/sixdegrees/mostMentionedPeople');
+                console.log('[' + CONFIG.APP + '] No answer for 5 secs from most mentioned people service.');
                 responder.send(clientResponse, {
                     status: 504
                 });
@@ -124,7 +124,7 @@
             responseData = [];
 
         articles.forEach(article => {
-            request('http://api.ft.com/enrichedcontent/' + article.id + '?apiKey=96gvuunqwfn9rhqe7eymxqsk', function (error, response, enrichedcontent) {
+            request(CONFIG.API_URL.ENRICHED_CONTENT + article.id + '?apiKey=96gvuunqwfn9rhqe7eymxqsk', function (error, response, enrichedcontent) {
                 responseCount += 1;
                 parseJson(enrichedcontent).annotations.forEach(annotation => {
                     if (annotation.type === 'PERSON') {
@@ -160,10 +160,12 @@
             getPeopleFromHistory(uuid, cacheStorage.users[todayDate][uuid].history, callback);
         } else {
             console.log('[' + CONFIG.APP + '] No history cache detected, sending request.', uuid);
-            request('http://ftaps58254-law1a-eu-p:8080/recommended-reads-api/users/' + uuid + '/history?limit=10&recency=7', function (error, response, history) {
-                if (response.statusCode === 200) {
+            request(CONFIG.API_URL.RECOMMENDATIONS.USERS + uuid + '/history?limit=10&recency=7&apiKey=' + CONFIG.AUTH.API_KEY.RECOMMENDATIONS, function (error, response, history) {
+                if (response && response.statusCode === 200) {
                     cacheStorage.users[todayDate][uuid].history = parseJson(history).response;
                     getPeopleFromHistory(uuid, parseJson(history).response, callback);
+                } else if (!error && response) {
+                    callback(404, JSON.parse(response.body));
                 } else {
                     callback(502, error);
                 }
@@ -258,7 +260,7 @@
 
     function handleLookUpCall(uuid, clientResponse) {
         request({
-            url: 'https://pre-prod-up.ft.com/__restorage-elasticsearch-concepts/people/' + uuid,
+            url: CONFIG.API_URL.ELASTIC_SEARCH.PEOPLE + uuid,
             headers: {
                 'Authorization': CONFIG.AUTH.HEADERS.ELASTIC_SEARCH.BASIC
             }
@@ -278,7 +280,7 @@
 
     function handleContentCall(id, clientResponse) {
         request({
-            url: 'https://api.ft.com/content/' + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+            url: CONFIG.API_URL.CONTENT + id + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
         }, function (error, response, body) {
             if (body) {
                 let parsedBody = {};
@@ -289,13 +291,17 @@
                 }
 
                 if (parsedBody.mainImage && parsedBody.mainImage.id) {
+                    const uuid = parsedBody.mainImage.id.replace('http', 'https').replace(process.env.FT_API_URL + 'content/', '');
+
                     request({
-                        url: CONFIG.API_URL.CONTENT + parsedBody.mainImage.id.replace('http://api.ft.com/content/', '') + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+                        url: CONFIG.API_URL.CONTENT + uuid + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
                     }, function (imagesError, imagesResponse, imagesBody) {
                         imagesBody = parseJson(imagesBody);
+
                         if (imagesBody.members) {
+                            const memberUuid = imagesBody.members[0].id.replace('http', 'https').replace(process.env.FT_API_URL + 'content/', '');
                             request({
-                                url: CONFIG.API_URL.CONTENT + imagesBody.members[0].id.replace('http://api.ft.com/content/', '') + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+                                url: CONFIG.API_URL.CONTENT + memberUuid + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
                             }, function (imageError, imageResponse, imageBody) {
                                 imageBody = parseJson(imageBody);
                                 parsedBody.binaryUrl = imageBody.binaryUrl;
@@ -338,45 +344,13 @@
             if (body) {
                 responder.send(clientResponse, {
                     status: 200,
-                    data: body
+                    data: parseJson(body)
                 });
             } else {
                 responder.send(clientResponse, {
                     status: 502
                 });
             }
-        });
-    }
-
-    function handleAuthorizationCall(clientResponse, clientRequest) {
-        function parseCookies(req) {
-            const list = {},
-                rc = req.headers.cookie,
-                rcSplit = rc.split(';');
-
-            let parts;
-
-            if (rcSplit) {
-                rcSplit.forEach(function (cookie) {
-                    parts = cookie.split('=');
-                    list[parts.shift().trim()] = decodeURI(parts.join('='));
-                });
-            }
-
-            return list;
-        }
-        console.log('FTSession COOKIE', parseCookies(clientRequest).FTSession);
-        request({
-            url: 'https://beta-api.ft.com/authorize?client_id=83229b97-a9c4-4a3a-a129-da3b379a6198&response_type=token',
-            headers: {
-                'Cookie': 'FTSession_s=' + parseCookies(clientRequest).FTSession
-            }
-        }, function (error, response) {
-            console.log('RESPONSE', response.statusCode, response.statusMessage);
-            responder.send(clientResponse, {
-                status: 200,
-                data: {}
-            });
         });
     }
 
@@ -401,9 +375,6 @@
                 break;
             case 'uuid':
                 handleUuidCall(params[1], clientResponse);
-                break;
-            case 'authorize':
-                handleAuthorizationCall(clientResponse, clientRequest);
                 break;
             default:
                 responder.reject(clientResponse);

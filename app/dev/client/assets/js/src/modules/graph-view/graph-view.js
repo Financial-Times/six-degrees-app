@@ -21,7 +21,7 @@ export class GraphView {
         this.targetPerson = null;
         this.graphMode = GraphSettings.getMode();
         this.signedIn = UserData.uuid;
-        this.connectionsContext = 'people connections<br />in FT articles ' + (this.signedIn ? 'you have read' : '') + '<br />within the last 7 days';
+        this.connectionsContext = 'people connections<br />in FT articles' + (this.signedIn && PeopleData.personalized ? ' that you have read' : '') + '<br />within the last 7 days';
     }
 
     clearErrorMessage() {

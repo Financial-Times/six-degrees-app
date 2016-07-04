@@ -14,7 +14,8 @@ class UserData {
         Ajax.get({
             url: '/api/uuid/' + Cookies.read('FTSession')
         }).then(userData => {
-            console.warn('uuid data by session', userData);
+            this.uuid = userData.uuid;
+            callback(this.uuid);
         });
     }
 
@@ -30,17 +31,6 @@ class UserData {
         this.details = cookieData;
 
         return this.details;
-    }
-
-    authorize() {
-        Ajax.get({
-            url: '/api/authorize/',
-            headers: {
-                'X-Api-Key': this.uuid
-            }
-        }).then(response => {
-            console.warn('res', response);
-        });
     }
 
 }

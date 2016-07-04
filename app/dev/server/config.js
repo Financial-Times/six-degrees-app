@@ -7,6 +7,7 @@
             URL: '127.0.0.1',
             API_URL: {
                 CONTENT: process.env.FT_API_URL + 'content/',
+                ENRICHED_CONTENT: process.env.FT_API_URL + 'enrichedcontent/',
                 THINGS: process.env.FT_API_URL + 'things/',
                 SIX_DEGREES: {
                     HOST: process.env.FT_SIX_DEGREES_API_URL
@@ -17,17 +18,19 @@
                 },
                 MEMBERSHIP: {
                     SESSIONS: {
-                        PROD: 'https://beta-api.ft.com/sessions/',
-                        TEST: 'https://beta-api-t.ft.com/sessions/'
+                        PROD: process.env.FT_SESSIONS_API_URL
                     }
+                },
+                RECOMMENDATIONS: {
+                    USERS: process.env.FT_RECOMMENDATIONS_USERS_API_URL
                 }
             },
             AUTH: {
                 API_KEY: {
                     FT: process.env.FT_API_KEY,
+                    RECOMMENDATIONS: process.env.FT_RECOMMENDATIONS_API_KEY,
                     MEMBERSHIP: {
-                        PROD: 'kfEpIgvbuo81YH02sD1dI13lk2qGWLMO2xOh9WYL',
-                        TEST: 'TeaJIE776S65tdYuFbhTl4qxEGE7Qfoi7UcyrIpm'
+                        PROD: process.env.FT_SESSIONS_API_KEY
                     }
                 },
                 HEADERS: {

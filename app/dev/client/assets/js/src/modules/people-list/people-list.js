@@ -13,21 +13,32 @@ export class PeopleList {
         this.theRouter = router;
         this.observerLocator = observerLocator;
         this.signedIn = Cookies.read('FTSession');
-        this.heroLabel = 'was the most mentioned person<em>' + (this.signedIn ? 'in articles you have read' : 'in Financial Times') + '</em>in the last 7 days';
-    }
 
-    getMentionedPeople(uuid) {
-        PeopleData.getMentionedMostly(uuid).then(people => {
-            if (people && people.length) {
-                this.hero = people[0];
-                this.people = people;
-                PeopleData.storeMentioned(people);
-            }
-        }).catch(error => {
-            if (error.status) {
-                this.errorMessage = 'Oops, something went wrong... (' + error.status + ')';
-            }
-        });
+        this.getMentionedPeople = (uuid) => {
+            PeopleData.personalized = uuid ? true : false;
+
+            PeopleData.getMentionedMostly(uuid).then(people => {
+                if (people && people.length) {
+                    this.hero = people[0];
+                    this.people = people;
+                    PeopleData.storeMentioned(people);
+                } else {
+                    PeopleData.personalized = false;
+                    this.getMentionedPeople();
+                }
+            }).catch(error => {
+                PeopleData.personalized = false;
+                if (error.status && error.status !== 504) {
+                    this.getMentionedPeople();
+                } else {
+                    this.errorMessage = 'Oops, something went wrong... (' + error.status + ')';
+                }
+            });
+        };
+
+        this.updateheroLabel = () => {
+            this.heroLabel = 'was the most mentioned person<em>in FT articles' + (this.signedIn && PeopleData.personalized ? ' that you have read' : '') + '</em>in the last 7 days';
+        };
     }
 
     tryAgain() {
@@ -41,12 +52,12 @@ export class PeopleList {
     }
 
     attached() {
+        this.updateheroLabel();
 
         if (!this.signedIn) {
             this.getMentionedPeople();
         } else {
-            const self = this;
-            UserData.obtainUuid(Cookies.read('FTSession'), self.getMentionedPeople);
+            UserData.obtainUuid(this.getMentionedPeople);
         }
 
         this.observerLocator.getObserver(PeopleData, 'elasticSearchPerson').subscribe((person) => {
@@ -67,5 +78,7 @@ export class PeopleList {
                 this.hero.aliases = aliases;
             }
         });
+
+        this.observerLocator.getObserver(PeopleData, 'personalized').subscribe(this.updateheroLabel);
     }
 }
