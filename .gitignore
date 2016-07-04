@@ -7,5 +7,6 @@
 
 **/app/release
 **/app/dev/client/assets/css
+**/app/dev/client/assets/img/content/cache
 **/app/dev/client/assets/js/dst
 **/test/coverage-report
