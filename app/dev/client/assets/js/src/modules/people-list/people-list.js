@@ -19,9 +19,16 @@ export class PeopleList {
 
             PeopleData.getMentionedMostly(uuid).then(people => {
                 if (people && people.length) {
+                    people.forEach(person => {
+                        person.name = PeopleData.getAbbreviatedName(person.prefLabel);
+                        PeopleData.getImage(person.name).then(imageData => {
+                            person.imageUrl = imageData.url;
+                        });
+                    });
                     this.hero = people[0];
                     this.people = people;
                     PeopleData.storeMentioned(people);
+                    console.warn('PEOPLE', people);
                 } else {
                     PeopleData.personalized = false;
                     this.getMentionedPeople();
@@ -37,7 +44,7 @@ export class PeopleList {
         };
 
         this.updateheroLabel = () => {
-            this.heroLabel = 'was the most mentioned person<em>in FT articles' + (this.signedIn && PeopleData.personalized ? ' that you have read' : '') + '</em>in the last 7 days';
+            this.heroLabel = 'mentioned mostly <em>in FT articles ' + (this.signedIn && PeopleData.personalized ? ' that you have read ' : '') + '</em>in the last 7 days';
         };
     }
 

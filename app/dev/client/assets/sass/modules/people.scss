@@ -1,18 +1,19 @@
-people-list {
+.people-list {
     min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    .o-grid-row {
+        margin: 0 32px;
+    }
 }
 
 .people-container {
-    width: 80%;
-    margin: 0 auto;
-
-    @media all and (min-width: 1024px) {
-        width: 50%;
+    margin: 16px 5%;
+    @media all and (min-width: 1400px) {
+        margin: 16px 10%;
     }
-
     .details {
         .info {
             display: inline-block;
@@ -21,57 +22,69 @@ people-list {
         }
     }
 
-    h1 {
+    .person {
         text-align: center;
-        background: #505050;
-        color: white;
-        padding: 24px;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-        border-radius: 2px;
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 16px;
 
-        &.hide {
-            visibility: hidden;
-        }
+        .person-inner {
+            padding: 8px;
+            background: #e9decf;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
 
-        &.show {
-            visibility: visible;
-        }
-
-        .o-buttons--big {
-            min-height: 48px;
-            padding: 8px 24px;
-            font-size: 24px;
-            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-            @media all and (max-width: 1023px) {
-                font-size: 18px;
+            @media all and (max-width: 1050px) {
+                height: 120px;
             }
-        }
-        span {
-            display: block;
-            font-weight: normal;
-            font-size: 18px;
-            margin: 16px auto 0 auto;
-            width: 70%;
 
-            @media all and (max-width: 1023px) {
-                font-size: 16px;
+            @media all and (max-width: 660px) {
+                height: 100px;
+            }
+
+            .person-name {
+                color: #9e2f50;
+            }
+
+            .person-image {
+                display: block;
+                margin-bottom: 8px;
+
+                .image-wrapper {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    width: 50px;
+                    height: 50px;
+                    background: white;
+                    border: solid 2px white;
+                    margin: 0 auto;
+                }
+
+                .picture {
+                    display: block;
+                    width: 50px;
+                    height: 50px;
+                    margin: 0 auto;
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    background-size: cover;
+                }
             }
 
             em {
-                display: block;
                 font-style: normal;
             }
         }
-    }
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        text-align: center;
 
-        li {
-            display: inline-block;
-            margin: 6px;
+        .material-icons {
+            display: block;
+            font-size: 2em;
         }
     }
 }
@@ -90,5 +103,54 @@ people-list {
         display: inline-block;
         vertical-align: middle;
         color: white;
+    }
+}
+
+.main-title {
+    padding: 0;
+    &.section-meta {
+        position: relative;
+        text-align: center;
+        width: 80%;
+        margin: 0 auto;
+
+        h2 {
+            display: inline-block;
+            font-size: 28px;
+            font-family: MetricWeb, sans-serif;
+            line-height: 40px;
+            margin: 0 auto;
+            font-weight: normal;
+            text-transform: uppercase;
+            color: #416e92;
+            background: #fff1e0;
+            position: relative;
+            padding: 0 16px;
+        }
+        &:before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin: -4px auto 0 auto;
+            height: 9px;
+            width: 100%;
+            background: transparent url('../img/origami/section-header-bg.svg?source=next&format=svg&tint=000000,000000') repeat;
+        }
+    }
+}
+
+.content-label {
+    display: block;
+    font-weight: normal;
+    font-size: 13px;
+    text-transform: uppercase;
+    margin: 0 auto;
+    width: 70%;
+    text-align: center;
+    color: #9e2f50;
+
+    em {
+        font-style: normal;
     }
 }

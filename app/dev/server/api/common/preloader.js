@@ -21,7 +21,6 @@
     }
 
     function download(uri, filename, callback) {
-
         request.head(uri, function (err, response) {
             const type = response.headers['content-type'],
                 extension = determineExtension(type);

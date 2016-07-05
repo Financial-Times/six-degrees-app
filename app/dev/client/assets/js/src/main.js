@@ -27,6 +27,10 @@ export class App {
             moduleId: './pages/home',
             nav: true
         }, {
+            route: ['people-list'],
+            name: 'people-list',
+            moduleId: './pages/people-list'
+        }, {
             route: ['connections'],
             name: 'connections',
             moduleId: './pages/connections'

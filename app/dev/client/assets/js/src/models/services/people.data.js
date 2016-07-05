@@ -138,9 +138,14 @@ class PeopleData {
         return prefLabelArray[0] + ' ' + prefLabelArray[max - 1];
     }
 
+    getImage(name) {
+        return Ajax.get({
+            url: 'api/personimage/' + name
+        });
+    }
+
     updateActivePerson(index) {
         this.activePerson = this.stored[index];
-        this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
         this.activePerson.contentBuffer = {
             images: [],
             noimages: []

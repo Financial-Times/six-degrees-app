@@ -1,12 +1,14 @@
-import Search from '../../models/services/search.js';
+import {Router} from 'aurelia-router';
 import {ObserverLocator} from 'aurelia-framework';
+import Search from '../../models/services/search.js';
 import PeopleData from '../../models/services/people.data.js';
 
 export class SearchRow {
     static inject() {
-        return [ObserverLocator];
+        return [Router, ObserverLocator];
     }
-    constructor(observerLocator) {
+    constructor(router, observerLocator) {
+        this.theRouter = router;
         this.observerLocator = observerLocator;
         this.searchPhrase = null;
         this.acceptedPhrase = null;
@@ -135,10 +137,13 @@ export class SearchRow {
                     if (person._source) {
                         person.id = 'http://api.ft.com/things/' + person._id,
                         person.prefLabel = person._source.name;
+                        person.name = PeopleData.getAbbreviatedName(person.prefLabel);
                     }
                     /*eslint-enable */
                 });
                 PeopleData.storeMentioned(response);
+                PeopleData.setActiveByName(response[0].prefLabel);
+                this.theRouter.navigate('connections');
             });
 
 

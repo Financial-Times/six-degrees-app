@@ -1,35 +1,53 @@
 <template>
-    <div class="spinner" if.bind="!people && !errorMessage"></div>
+    <div class="people-list">
 
-    <require from='../search-row/search-row'></require>
-    <search-row id="search-row" if.bind="people"></search-row>
+        <div class="spinner" if.bind="!people && !errorMessage"></div>
 
-    <div class="people-container" if.bind="people">
-        <h1 class.bind="hero.prefLabel ? 'show' : 'hide'">
-            <button class="o-buttons o-buttons--big o-buttons--standout" click.delegate="redirect(hero.id)">
-                ${hero.prefLabel}
-            </button>
-            <section class="details">
-                <span class="info birthYear" if.bind="hero._source.birthYear">born ${hero._source.birthYear}</span>
-                <span class="info alias" if.bind="hero.aliases.length">aka. ${hero.aliases[0]}</span>
-            </section>
-            <span innerhtml.bind="heroLabel" class="heroLabel"></span>
-        </h1>
-        <ul>
-            <li repeat.for="person of people" if.bind="person.prefLabel !== hero.prefLabel">
-                <button class="o-buttons" click.delegate="redirect(person.id)">
-                    ${person.prefLabel}
-                </button>
-            </li>
-        </ul>
-    </div>
+        <div class="o-grid-row">
 
-    <div class="people-request-error" if.bind="errorMessage">
-        <div class="error-inner">
-            <i class="material-icons">&#xE000;</i>
-            <span>${errorMessage}</span>
+            <div data-o-grid-colspan="12" if.bind="people && !errorMessage">
+                <div class="section-meta main-title">
+                    <h2>People</h2>
+                </div>
+                <span class="content-label" innerhtml.bind="heroLabel"></span>
+            </div>
+
         </div>
-        <button class="o-buttons button-try-again" click.delegate="tryAgain()">try again</button>
+
+        <div class="o-grid-row">
+            <div class="people-container" if.bind="people">
+                <a href="#" class="person hero" data-o-grid-colspan="4 S3 M2 XL1" click.delegate="redirect(hero.id)">
+                    <span class="person-inner">
+                        <span class="person-image">
+                            <b class="image-wrapper">
+                                <em class="material-icons" if.bind="!hero.imageUrl">person</em>
+                                <em class="picture" style="background-image: url(${hero.imageUrl})" if.bind="hero.imageUrl"></em>
+                            </b>
+                        </span>
+                        <em class="person-name">${hero.name}</em>
+                    </span>
+                </a>
+                <a href="#" class="person" data-o-grid-colspan="4 S3 M2 XL1" repeat.for="person of people" if.bind="person.prefLabel !== hero.prefLabel" click.delegate="redirect(person.id)">
+                    <span class="person-inner">
+                        <span class="person-image">
+                            <b class="image-wrapper">
+                                <em class="material-icons" if.bind="!person.imageUrl">person</em>
+                                <em class="picture" style="background-image: url(${person.imageUrl})" if.bind="person.imageUrl"></em>
+                            </b>
+                        </span>
+                        <em class="person-name">${person.name}</em>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="people-request-error" if.bind="errorMessage">
+            <div class="error-inner">
+                <i class="material-icons">&#xE000;</i>
+                <span>${errorMessage}</span>
+            </div>
+            <button class="o-buttons button-try-again" click.delegate="tryAgain()">try again</button>
+        </div>
     </div>
 
 </template>

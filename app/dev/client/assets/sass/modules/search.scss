@@ -1,16 +1,16 @@
 search-row {
-    display: block;
+    float: left;
+    width: 35%;
     position: relative;
-    top: 0;
+    margin: 5px 0 0 5%;
+
+    visibility: hidden;
+
     h1 {
         font-weight: normal;
         color: #936971;
     }
 
-    @media all and (min-width: 1024px) {
-        width: 40%;
-        margin: 0 auto;
-    }
 }
 
 .iftt-search-row-wrapper {
@@ -33,19 +33,14 @@ search-row {
 .iftt-search-row-field {
     margin: 0 auto;
     position: relative;
-    width: 65%;
-
-    @media all and (min-width: 1024px) {
-        width: 100%;
-    }
 
     input[type=text] {
         width: 94%;
         padding: 0 3%;
         border: none;
         background: transparent;
-        font-size: 1.6em;
-        line-height: 46px;
+        font-size: 1.2em;
+        line-height: 36px;
         color: #936971;
         background: white;
         border-radius: 2px;
@@ -67,7 +62,7 @@ search-row {
     padding: 0;
     background: #eeeeee;
     position: absolute;
-    top: 44px;
+    top: 36px;
     left: 0;
     right: 0;
     z-index: 20;
@@ -90,19 +85,26 @@ search-row {
             line-height: 46px;
             padding: 0 3%;
             color: #74736c;
+            overflow: auto;
+            clear: both;
 
             &.active {
                 background: #dddddd;
                 color: #505050;
             }
 
+            em {
+                font-style: normal;
+                margin: 0;
+            }
+
             span {
                 float: right;
                 font-size: 12px;
+            }
 
-                &.left {
-                    float: left;
-                }
+            .left {
+                float: left;
             }
         }
     }

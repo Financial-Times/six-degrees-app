@@ -240,7 +240,7 @@
 
     function handleSearchCall(query, clientResponse) {
         request({
-            url: CONFIG.API_URL.ELASTIC_SEARCH + 'concepts/people/_search?q=' + query,
+            url: CONFIG.API_URL.ELASTIC_SEARCH.MAIN + 'concepts/people/_search?q=' + query,
             headers: {
                 'Authorization': CONFIG.AUTH.HEADERS.ELASTIC_SEARCH.BASIC
             }
@@ -354,6 +354,31 @@
         });
     }
 
+    function handlePersonImageCall(name, clientResponse) {
+        request({
+            url: 'https://en.wikipedia.org/w/api.php?action=query&titles=' + name + '&prop=pageimages&format=json&pithumbsize=100'
+        }, function (error, response, body) {
+
+            let key, url;
+            body = parseJson(body);
+
+            if (body.query && body.query.pages) {
+                for (key in body.query.pages) {
+                    if (body.query.pages.hasOwnProperty(key)) {
+                        url = body.query.pages[key].thumbnail ? body.query.pages[key].thumbnail.source : null;
+                    }
+                }
+            }
+
+            responder.send(clientResponse, {
+                status: 200,
+                data: {
+                    url: url
+                }
+            });
+        });
+    }
+
     function handleGet(clientRequest, clientResponse) {
         const params = clientRequest.url.replace('/api/', '').split('/');
 
@@ -375,6 +400,9 @@
                 break;
             case 'uuid':
                 handleUuidCall(params[1], clientResponse);
+                break;
+            case 'personimage':
+                handlePersonImageCall(params[1], clientResponse);
                 break;
             default:
                 responder.reject(clientResponse);

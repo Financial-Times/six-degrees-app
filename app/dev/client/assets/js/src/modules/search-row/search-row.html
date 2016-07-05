@@ -1,5 +1,5 @@
 <template bindable="people">
-    <section class="iftt-search-row-wrapper">
+    <section class="iftt-search-row-wrapper" id="search-row">
 
         <form submit.trigger="submit()">
             <div class="iftt-search-row-field" id="search-input">
@@ -7,7 +7,8 @@
                 <ul class="iftt-search-hints" id="search-hints" onkeydown.bind="handleKey" if.bind="people.length">
                     <li repeat.for="person of people">
                         <a href="#" class.bind="$index === activeIndex ? 'active' : ''" click.delegate="submit($event)">
-                            ${person.name}<em if.bind="person.salutation" class="left">, ${person.salutation}</em>
+                            <em class="left">${person.name}</em>
+                            <em if.bind="person.salutation" class="left">, ${person.salutation}</em>
                             <span if.bind="person.birthYear">born ${person.birthYear}</span>
                             <span if.bind="person.birthYear && person.aliases.length">,&nbsp;</span>
                             <span if.bind="person.aliases.length">aka. ${person.aliases[0]}</span>
