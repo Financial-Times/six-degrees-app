@@ -26,7 +26,8 @@
     "q": "^2.0.3",
     "request": "*",
     "util": "*",
-    "whatwg-fetch": "^1.0.0"
+    "whatwg-fetch": "^1.0.0",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "aurelia-bundler": "^0.4.0",

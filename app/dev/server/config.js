@@ -26,6 +26,7 @@
                 }
             },
             AUTH: {
+                BASIC_TOKEN: process.env.FT_APP_BASIC_AUTH_TOKEN,
                 API_KEY: {
                     FT: process.env.FT_API_KEY,
                     RECOMMENDATIONS: process.env.FT_RECOMMENDATIONS_API_KEY,

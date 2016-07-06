@@ -6,6 +6,7 @@
         config = require('./config'),
         CONFIG = config.get(),
         logger = require('./logger'),
+        winston = require('./winston-logger'),
         api = require('./api'),
         cors = require('./cors'),
         //authS3O = require('./vendor/s3o-middleware'),
@@ -36,17 +37,15 @@
         initializeServer(version);
 
         server.get('/api/*', function (request, response) {
-            console.log('\n[' + CONFIG.APP + '] API GET request detected, handling.');
             api.handleGet(request, response);
         });
 
         server.post('/api/*', function (request, response) {
-            console.log('\n[' + CONFIG.APP + '] API POST request detected, handling.');
             api.handlePost(request, response);
         });
 
         server.listen(CONFIG.PORT, function () {
-            console.log('\n[' + CONFIG.APP + '] Running server on port', CONFIG.PORT, 'in', CONFIG.VER, 'version...');
+            winston.logger.info('Running server on port', CONFIG.PORT, 'in', CONFIG.VER, 'version...');
         });
 
     }

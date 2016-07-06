@@ -5,6 +5,7 @@
         url = require('url'),
         request = require('request'),
         CONFIG = require('../../config').get(),
+        winston = require('../../winston-logger'),
         registry = [];
 
     function isRegistered(id) {
@@ -37,7 +38,7 @@
 
         if (!isRegistered(filename)) {
             download(imageData.binaryUrl, filename, function () {
-                console.log('\n[' + CONFIG.APP + '] Image', imageData.binaryUrl, 'loaded.');
+                winston.logger.info('Image loaded.\n' + imageData.binaryUrl);
                 imageData.imageUrl = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/' + filename + '.jpg';
                 callback(imageData);
             });

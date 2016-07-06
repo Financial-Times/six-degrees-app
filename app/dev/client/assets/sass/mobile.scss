@@ -56,7 +56,6 @@ origami-footer {
 
 business-card {
     @media all and (max-width: 1023px) {
-        top: 54px;
         width: 75px;
     }
 
@@ -65,13 +64,7 @@ business-card {
             i {
                 @media all and (max-width: 1023px) {
                     font-size: 1.6em;
-                    line-height: 1.6em;
                 }
-            }
-        }
-        .card-middle {
-            @media all and (max-width: 1023px) {
-                padding: 8px 3px 6px 3px;
             }
         }
     }

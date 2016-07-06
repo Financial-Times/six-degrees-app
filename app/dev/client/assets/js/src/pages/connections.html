@@ -19,16 +19,15 @@
                     </div>
                     <div class="related-articles" if.bind="person.relatedContent">
                         <ul>
-                            <li repeat.for="i of person.maxContentItems" if.bind="person.relatedContent[i].title">
+                            <li repeat.for="article of person.relatedContent">
                                 <div class="article-details">
-                                    <a href="${person.relatedContent[i].location.uri}" target="_blank" class="article-thumbnail" if.bind="person.relatedContent[i].imageUrl">
-                                        <img src="${person.relatedContent[i].imageUrl}" alt="${person.relatedContent[i].title}" />
+                                    <a href="${article.location.uri}" target="_blank" class="article-thumbnail" if.bind="article.imageUrl">
+                                        <img src="${article.imageUrl}" alt="${article.title}" />
                                     </a>
-                                    <!--<span class="article-thumbnail default" if.bind="!person.relatedContent[i].imageUrl"></span>-->
-                                    <a href="${person.relatedContent[i].location.uri}" target="_blank">
-                                        <span class="article-title">${person.relatedContent[i].title}</span>
-                                        <span class="article-byline" if.bind="person.relatedContent[i].byline">by ${person.relatedContent[i].byline}</span>
-                                        <span class="article-published" if.bind="person.relatedContent[i].published">${person.relatedContent[i].published}</span>
+                                    <a href="${article.location.uri}" target="_blank">
+                                        <span class="article-title">${article.title}</span>
+                                        <span class="article-byline" if.bind="article.byline">by ${article.byline}</span>
+                                        <span class="article-published" if.bind="article.published">${article.published}</span>
                                     </a>
                                 </div>
                             </li>

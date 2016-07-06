@@ -16,7 +16,7 @@
 
         <div class="o-grid-row">
             <div class="people-container" if.bind="people">
-                <a href="#" class="person hero" data-o-grid-colspan="4 S3 M2 XL1" click.delegate="redirect(hero.id)">
+                <a href="#" class="person hero" click.delegate="redirect(hero.id)">
                     <span class="person-inner">
                         <span class="person-image">
                             <b class="image-wrapper">
@@ -27,7 +27,7 @@
                         <em class="person-name">${hero.name}</em>
                     </span>
                 </a>
-                <a href="#" class="person" data-o-grid-colspan="4 S3 M2 XL1" repeat.for="person of people" if.bind="person.prefLabel !== hero.prefLabel" click.delegate="redirect(person.id)">
+                <a href="#" class="person" repeat.for="person of people" if.bind="person.prefLabel !== hero.prefLabel" click.delegate="redirect(person.id)">
                     <span class="person-inner">
                         <span class="person-image">
                             <b class="image-wrapper">

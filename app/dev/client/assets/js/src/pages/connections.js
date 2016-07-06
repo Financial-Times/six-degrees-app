@@ -12,7 +12,7 @@ export class Connections {
         this.observerLocator = observerLocator;
     }
 
-    activate() {
+    attached() {
         if (PeopleData.activePerson) {
             this.person = PeopleData.activePerson;
         } else {
@@ -22,6 +22,7 @@ export class Connections {
         this.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(() => {
             this.person = PeopleData.activePerson;
         });
+
     }
 
     changePerson(event, id) {
