@@ -100,5 +100,8 @@ export class BusinessCard {
         this.directLinks = null;
     }
 
+    toggleShareLinkState() {
+        GraphSettings.toggleShareLinkState();
+    }
 
 }

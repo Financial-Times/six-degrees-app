@@ -1,6 +1,7 @@
 class GraphSettings {
     constructor() {
         this.mode = true; //false - just browse, true - explore with details
+        this.shareLinkState = false;
     }
 
     setMode(mode) {
@@ -9,6 +10,10 @@ class GraphSettings {
 
     getMode() {
         return this.mode;
+    }
+
+    toggleShareLinkState() {
+        this.shareLinkState = !this.shareLinkState;
     }
 }
 

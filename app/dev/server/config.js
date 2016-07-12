@@ -7,6 +7,7 @@
             URL: '127.0.0.1',
             API_URL: {
                 CONTENT: process.env.FT_API_URL + 'content/',
+                PEOPLE: process.env.FT_API_URL + 'people/',
                 ENRICHED_CONTENT: process.env.FT_API_URL + 'enrichedcontent/',
                 THINGS: process.env.FT_API_URL + 'things/',
                 SIX_DEGREES: {

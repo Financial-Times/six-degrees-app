@@ -51,6 +51,30 @@ business-card {
         flex-direction: column;
         justify-content: center;
         border-radius: 3px;
+        position: relative;
+
+        .o-share__action--url {
+            position: absolute;
+            right: -6px;
+            bottom: 0;
+            display: block;
+            cursor: pointer;
+
+            @media all and (min-width: 1024px) {
+                right: 0;
+            }
+
+            a {
+                &:active,
+                &:focus {
+                    outline: none;
+
+                    i {
+                        box-shadow: none;
+                    }
+                }
+            }
+        }
 
         .person-image {
             display: block;
@@ -75,7 +99,7 @@ business-card {
     .card-middle {
         text-align: center;
         position: relative;
-        padding: 6px;
+        padding: 8px 6px 6px 6px;
         min-height: 40px;
         display: flex;
         flex-direction: column;

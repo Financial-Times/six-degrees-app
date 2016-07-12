@@ -3,6 +3,9 @@
         <div class="card-top">
             <i class="person-image material-icons" if.bind="!person.imageUrl">person</i>
             <i class="person-image picture" style="background-image: url(${person.imageUrl})" if.bind="person.imageUrl"></i>
+            <span class="o-share__action o-share__action--url" if.bind="person.hasConnections">
+                <a href="#/connections" click.delegate="toggleShareLinkState()"><i>URL</i></a>
+            </span>
         </div>
         <div class="card-middle">
             <i class="material-icons">play_arrow</i>

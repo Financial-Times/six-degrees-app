@@ -228,6 +228,7 @@ export class Graph {
                     }
 
                     previousNodeId = PeopleData.activePerson.prefLabel;
+
                     PeopleData.setActiveByUuid(nodeData.uuid);
 
                     if (previousNodeId) {

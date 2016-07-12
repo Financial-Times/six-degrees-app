@@ -31,7 +31,7 @@ export class App {
             name: 'people-list',
             moduleId: './pages/people-list'
         }, {
-            route: ['connections'],
+            route: ['connections', 'connections/:id'],
             name: 'connections',
             moduleId: './pages/connections'
         }, {

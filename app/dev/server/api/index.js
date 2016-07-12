@@ -405,6 +405,18 @@
         });
     }
 
+    function handlePersonCall(uuid, clientResponse) {
+        request({
+            url: CONFIG.API_URL.PEOPLE + uuid + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
+        }, function (error, response, body) {
+            responder.send(clientResponse, {
+                status: 200,
+                description: 'person by uuid',
+                data: parseJson(body)
+            });
+        });
+    }
+
     function handleLogsCall(params, auth, clientResponse) {
 
         const authValid = validateBasicAuth(auth),
@@ -467,6 +479,9 @@
                 break;
             case 'lookup':
                 handleLookUpCall(params[1], clientResponse);
+                break;
+            case 'person':
+                handlePersonCall(params[1], clientResponse);
                 break;
             case 'content':
                 handleContentCall(params[1], clientResponse);

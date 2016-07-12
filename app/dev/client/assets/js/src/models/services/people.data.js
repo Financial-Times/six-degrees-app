@@ -128,6 +128,11 @@ class PeopleData {
                         this.stored.push(connection.person);
                     }
                 });
+                this.stored.forEach((person) => {
+                    if (person.id.replace('http://api.ft.com/things/', '') === uuid) {
+                        person.hasConnections = true;
+                    }
+                });
             }
             return response;
         });
@@ -162,6 +167,11 @@ class PeopleData {
         if (!this.activePerson.name) {
             this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
         }
+        if (!this.activePerson.imageUrl) {
+            this.getImage(this.activePerson.name).then(image => {
+                this.activePerson.imageUrl = image.url;
+            });
+        }
     }
 
     setActive(id) {
@@ -182,11 +192,24 @@ class PeopleData {
 
     setActiveByUuid(uuid) {
         uuid = uuid.replace('http://api.ft.com/things/', '');
+        this.stored = this.stored || [];
+
         this.stored.forEach((person, index) => {
             if (person.id.replace('http://api.ft.com/things/', '') === uuid) {
                 this.updateActivePerson(index);
             }
         });
+
+        if (!this.activePerson) {
+            Ajax.get({
+                url: '/api/person/' + uuid
+            }).then(person => {
+                this.stored.push(person);
+                this.updateActivePerson(this.stored.length - 1);
+            });
+        }
+
+        return uuid;
     }
 
     acceptedSearchPerson(person) {

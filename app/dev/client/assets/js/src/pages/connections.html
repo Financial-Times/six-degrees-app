@@ -3,6 +3,12 @@
         <div class="o-grid-row">
             <div data-o-grid-colspan="12 M8 XL8">
                 <div class="connections-module">
+
+                    <div class="connections-share-link" if.bind="shareLinkState">
+                        <input type="text" value="${shareLink}" id="connectionsShareLink" />
+                        <a href="#/connections" class="copy-icon material-icons" click.delegate="copyShareLink()" title="Copy link to clipboard!">content_copy</a>
+                    </div>
+
                     <require from="../modules/business-card/business-card"></require>
                     <business-card></business-card>
                     <div class="connections-graph">

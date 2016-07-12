@@ -53,8 +53,7 @@ export class PeopleList {
     }
 
     redirect(id) {
-        PeopleData.setActive(id);
-        this.theRouter.navigate('connections');
+        this.theRouter.navigate('connections/' + PeopleData.setActiveByUuid(id));
     }
 
     attached() {
