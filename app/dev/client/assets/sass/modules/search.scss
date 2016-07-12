@@ -1,10 +1,8 @@
 search-row {
-    float: left;
-    width: 35%;
+    display: block;
     position: relative;
-    margin: 5px 0 0 5%;
-
-    visibility: hidden;
+    margin: 5px auto 0 auto;
+    width: 60%;
 
     h1 {
         font-weight: normal;
@@ -31,7 +29,7 @@ search-row {
 }
 
 .iftt-search-row-field {
-    margin: 0 auto;
+    margin: 16px auto;
     position: relative;
 
     input[type=text] {

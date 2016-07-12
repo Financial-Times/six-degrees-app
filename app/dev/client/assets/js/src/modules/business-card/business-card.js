@@ -100,4 +100,5 @@ export class BusinessCard {
         this.directLinks = null;
     }
 
+
 }

@@ -35,6 +35,16 @@ browsing-history {
             left: 49px;
             background: #2e6e9e;
         }
+
+        .clear-btn {
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            text-decoration: none;
+            color: #9e2f50;
+        }
+
         ul {
             margin: 0;
             padding: 0;

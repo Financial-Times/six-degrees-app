@@ -62,6 +62,10 @@ origami-footer {
     bottom: 0;
     left: 0;
     right: 0;
+
+    abbr[title] {
+        text-decoration: none;
+    }
 }
 
 .o-footer {

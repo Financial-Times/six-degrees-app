@@ -2,6 +2,7 @@
     <div class="browsing-history" if.bind="history.length">
         <span class="arrow-line"></span>
         <i class="material-icons">navigation</i>
+        <a href="/#/connections" class="material-icons clear-btn" click.delegate="focusOnActivePerson()">clear</a>
         <ul>
             <li repeat.for="person of history" mouseover.delegate="highlightPersonOnGraph(person)" mouseout.delegate="cancelHighlightingPersonOnGraph()">${person}</li>
         </ul>

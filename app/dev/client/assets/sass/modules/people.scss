@@ -32,19 +32,11 @@
         .person-inner {
             padding: 8px;
             background: #e9decf;
-            height: 120px;
+            height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             border-radius: 3px;
-
-            @media all and (max-width: 1050px) {
-                height: 120px;
-            }
-
-            @media all and (max-width: 660px) {
-                height: 100px;
-            }
 
             .person-name {
                 color: #9e2f50;
@@ -106,8 +98,8 @@
     }
 }
 
-.main-title {
-    padding: 0;
+.title {
+
     &.section-meta {
         position: relative;
         text-align: center;
@@ -152,5 +144,28 @@
 
     em {
         font-style: normal;
+    }
+}
+
+.main-title {
+    padding: 60px 0 0 0;
+    background: transparent url('../img/six-degrees-icon.png') no-repeat center 20px;
+    background-size: 50px auto;
+
+    h1 {
+        text-align: center;
+        font-size: 42px;
+        font-weight: normal;
+        font-family: FinancierDisplayWeb, serif;
+        color: #333;
+        margin: 0.25em 0;
+    }
+    strong {
+        display: block;
+        font-weight: normal;
+        text-align: center;
+        font: 16px/1.3 Georgia,serif;
+        color: #505050;
+        margin-bottom: 16px;
     }
 }

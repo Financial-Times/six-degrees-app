@@ -39,8 +39,11 @@ export class Graph {
             d3.select('#graph svg:first-child').attr('width', element.parentNode.offsetWidth).attr('height', element.parentNode.offsetHeight);
         };
 
-        function zoomed() {
-            svg.attr('transform', 'translate(' + zoom.translate() + ')scale(' + zoom.scale() + ')');
+        function zoomed(pos, sc) {
+            const position = pos || zoom.translate(),
+                scale = sc || zoom.scale();
+
+            svg.attr('transform', 'translate(' + position + ')scale(' + scale + ')');
         }
 
         function zoomByFactor(factor) {
@@ -215,6 +218,14 @@ export class Graph {
                         item.fixed = false;
                     });
                     nodeData.fixed = true;
+
+                    if (nodeData.focus) {
+                        delete nodeData.focus;
+                        nodeData.px = width / 2;
+                        nodeData.py = height / 2;
+                        //zoomed([0, 0], 1); TODOOOOOO, ale na osobnym przycisku!
+                        PeopleData.targetPerson = null;
+                    }
 
                     previousNodeId = PeopleData.activePerson.prefLabel;
                     PeopleData.setActiveByUuid(nodeData.uuid);

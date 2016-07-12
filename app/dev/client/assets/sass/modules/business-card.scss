@@ -44,7 +44,7 @@ business-card {
 
     .card-top {
         background: #e9decf;
-        height: 60px;
+        height: 72px;
         text-align: center;
         color: white;
         display: flex;
@@ -75,7 +75,7 @@ business-card {
     .card-middle {
         text-align: center;
         position: relative;
-        padding: 10px 6px;
+        padding: 6px;
         min-height: 40px;
         display: flex;
         flex-direction: column;
@@ -118,20 +118,15 @@ business-card {
         }
         .connections-number {
             text-align: center;
-            font-size: 14px;
+            font-size: 12px;
             background: #936971;
             color: white;
-            padding: 0;
-            min-height: 21px;
+            padding: 6px 0;
             margin: 0;
             text-decoration: none;
             display: flex;
             flex-direction: column;
             justify-content: center;
-
-            @media all and (max-width: 1023px) {
-                font-size: 12px;
-            }
 
             &:hover {
                 cursor: help;

@@ -71,17 +71,25 @@ class PeopleData {
         this.activePerson.maxContentItems = this.activePerson.relatedContent.length;
     }
 
-    getContent(contentItems) {
+    fetchContent(id) {
+        Ajax.get({
+            url: 'api/content/' + id
+        }).then(response => {
+            this.addToContent(response);
+        });
+    }
+
+    searchForContent(uuid) {
+        console.warn('search handler', uuid);
+    }
+
+    requestContent(contentItems) {
         if (!this.activePerson.relatedContentLoading) {
             this.activePerson.relatedContentLoading = true;
             this.activePerson.relatedContent = this.activePerson.relatedContent || [];
 
             contentItems.forEach(item => {
-                Ajax.get({
-                    url: 'api/content/' + item.id
-                }).then(response => {
-                    this.addToContent(response);
-                });
+                this.fetchContent(item.id);
             });
         }
     }
@@ -113,7 +121,7 @@ class PeopleData {
                         content.push(article);
                     });
                 });
-                this.getContent(content);
+                this.requestContent(content);
                 response.forEach(connection => {
                     if (!this.people[connection.person.id]) {
                         this.people[connection.person.id] = connection.person;
@@ -129,6 +137,7 @@ class PeopleData {
         this.stored = people;
         people.forEach(person => {
             this.people[person.id] = person;
+            this.searchForContent(person.id.replace('http://api.ft.com/things/', ''));
         });
     }
 
@@ -150,6 +159,9 @@ class PeopleData {
             images: [],
             noimages: []
         };
+        if (!this.activePerson.name) {
+            this.activePerson.name = this.getAbbreviatedName(this.activePerson.prefLabel);
+        }
     }
 
     setActive(id) {

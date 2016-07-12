@@ -30,6 +30,7 @@
                 API_KEY: {
                     FT: process.env.FT_API_KEY,
                     RECOMMENDATIONS: process.env.FT_RECOMMENDATIONS_API_KEY,
+                    ENRICHED_CONTENT: process.env.FT_ENRICHED_CONTENT_API_KEY,
                     MEMBERSHIP: {
                         PROD: process.env.FT_SESSIONS_API_KEY
                     }

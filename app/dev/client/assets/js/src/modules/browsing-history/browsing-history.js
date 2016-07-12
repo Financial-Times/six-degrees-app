@@ -1,5 +1,6 @@
 import {ObserverLocator} from 'aurelia-framework';
 import BrowsingHistoryData from '../../models/services/browsing.history.js';
+import PeopleData from '../../models/services/people.data.js';
 
 export class BrowsingHistory {
     static inject() {
@@ -63,5 +64,16 @@ export class BrowsingHistory {
         d3.selectAll('.pale').classed('pale', false);
         d3.selectAll('.route-highlight').classed('route-highlight', false);
     }
+
+    focusOnActivePerson() {
+        BrowsingHistoryData.clear();
+        PeopleData.targetPerson = PeopleData.targetPerson === null ? undefined : null;
+        d3.select('.node-root circle').each(function (d, i) {
+            const onClickFunc = d3.select(this).on('click');
+            d.focus = true;
+            onClickFunc.apply(this, [d, i]);
+        });
+    }
+
 
 }

@@ -133,7 +133,7 @@
             responseData = [];
 
         articles.forEach(article => {
-            request(CONFIG.API_URL.ENRICHED_CONTENT + article.id + '?apiKey=96gvuunqwfn9rhqe7eymxqsk', function (error, response, enrichedcontent) {
+            request(CONFIG.API_URL.ENRICHED_CONTENT + article.id + '?apiKey=' + CONFIG.AUTH.API_KEY.ENRICHED_CONTENT, function (error, response, enrichedcontent) {
                 responseCount += 1;
                 parseJson(enrichedcontent).annotations.forEach(annotation => {
                     if (annotation.type === 'PERSON') {
@@ -407,10 +407,10 @@
 
     function handleLogsCall(params, auth, clientResponse) {
 
-        const authValid = validateBasicAuth(auth);
-        let fields,
+        const authValid = validateBasicAuth(auth),
             from = params && params.from ? params.from : moment().add(-1, 'days'),
             until = params && params.until ? params.until : moment();
+        let fields;
 
         if (!authValid) {
             responder.rejectUnauthorized(clientResponse);

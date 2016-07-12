@@ -1,12 +1,26 @@
 <template>
     <div class="people-list">
 
+        <div class="o-grid-row">
+            <div data-o-grid-colspan="12" class="title main-title">
+                <h1>FT Six Degrees</h1>
+                <strong>discover connections between people - click at a person from the proposed list below<br />or use the search input field to find someone else</strong>
+            </div>
+        </div>
+
+        <div class="o-grid-row" if.bind="!errorMessage">
+            <div data-o-grid-colspan="12">
+                <require from="../search-row/search-row"></require>
+                <search-row></search-row>
+            </div>
+        </div>
+
         <div class="spinner" if.bind="!people && !errorMessage"></div>
 
         <div class="o-grid-row">
 
             <div data-o-grid-colspan="12" if.bind="people && !errorMessage">
-                <div class="section-meta main-title">
+                <div class="section-meta title sub-title">
                     <h2>People</h2>
                 </div>
                 <span class="content-label" innerhtml.bind="heroLabel"></span>

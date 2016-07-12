@@ -8,6 +8,14 @@
         winston = require('../../winston-logger'),
         registry = [];
 
+    function fileExists(filePath) {
+        try {
+            return fs.statSync(filePath).isFile();//eslint-disable-line no-sync
+        } catch (err) {
+            return false;
+        }
+    }
+
     function isRegistered(id) {
         return registry.indexOf(id) !== -1;
     }
@@ -26,25 +34,39 @@
             const type = response.headers['content-type'],
                 extension = determineExtension(type);
 
-            registry.push(filename);
-            request(uri).pipe(fs.createWriteStream(CONFIG.APP_IMAGES_CACHE_UPLOAD_PATH + 'assets/img/content/cache/' + filename + extension)).on('close', callback);
+            if (!err) {
+                registry.push(filename);
+                request(uri).pipe(fs.createWriteStream(CONFIG.APP_IMAGES_CACHE_UPLOAD_PATH + 'assets/img/content/cache/' + filename + extension)).on('close', callback);
+            } else {
+                callback(err);
+            }
 
         });
     }
 
     function handle(imageData, callback) {
         const urlParsed = url.parse(imageData.binaryUrl),
-            filename = imageData.binaryUrl.replace(urlParsed.protocol + '//' + urlParsed.host + '/', '');
+            filename = imageData.binaryUrl.replace(urlParsed.protocol + '//' + urlParsed.host + '/', ''),
+            localImageUrl = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/' + filename + '.jpg';
 
-        if (!isRegistered(filename)) {
-            download(imageData.binaryUrl, filename, function () {
-                winston.logger.info('Image loaded.\n' + imageData.binaryUrl);
-                imageData.imageUrl = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/' + filename + '.jpg';
+        if (!fileExists(localImageUrl)) {
+            winston.logger.warn('Image not EXISTS.\n' + imageData.binaryUrl + '\n' + localImageUrl);
+        }
+
+        if (isRegistered(filename) && fileExists(localImageUrl)) {
+            imageData.imageUrl = localImageUrl;
+            callback(imageData);
+        } else {
+            download(imageData.binaryUrl, filename, function (err) {
+
+                if (!err && fileExists(localImageUrl)) {
+                    winston.logger.info('Image loaded & cached.\n' + imageData.binaryUrl);
+                    imageData.imageUrl = localImageUrl;
+
+                }
+
                 callback(imageData);
             });
-        } else {
-            imageData.imageUrl = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/' + filename + '.jpg';
-            callback(imageData);
         }
     }
 

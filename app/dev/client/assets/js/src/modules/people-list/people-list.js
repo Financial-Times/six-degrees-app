@@ -28,7 +28,6 @@ export class PeopleList {
                     this.hero = people[0];
                     this.people = people;
                     PeopleData.storeMentioned(people);
-                    console.warn('PEOPLE', people);
                 } else {
                     PeopleData.personalized = false;
                     this.getMentionedPeople();

@@ -39,7 +39,9 @@ export class GraphView {
             PeopleData.activePerson.numberOfConnections = '1';
         }
         PeopleData.activePerson.connectionsSearchFailed = true;
+        PeopleData.activePerson.connectionsRequestPending = false;
         self.pending = false;
+
     }
 
     goBack() {
@@ -56,11 +58,13 @@ export class GraphView {
         self.pending = false;
         delete PeopleData.activePerson.connectionsSearchFailed;
         self.drawGraph(data.nodes, data.links);
+        PeopleData.activePerson.connectionsRequestPending = false;
     }
 
     getGraphData() {
         self.clearErrorMessage();
         self.pending = true;
+        PeopleData.activePerson.connectionsRequestPending = true;
         self.sourcePerson = PeopleData.sourcePerson ? PeopleData.sourcePerson.name : null;
         self.targetPerson = PeopleData.activePerson && PeopleData.sourcePerson && PeopleData.sourcePerson.name !== PeopleData.activePerson.name ? PeopleData.activePerson.name : null;
         new GraphData().fetch(PeopleData.activePerson).then(self.handleData).catch(self.errorHandler);
@@ -114,6 +118,9 @@ export class GraphView {
     attached() {
         self = this;
         self.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(self.getGraphData);
+        self.observerLocator.getObserver(PeopleData, 'targetPerson').subscribe(function (targetPerson) {
+            self.targetPerson = targetPerson;
+        });
 
         if (PeopleData.activePerson && !self.pending) {
             self.getGraphData();
