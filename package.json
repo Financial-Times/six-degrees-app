@@ -71,6 +71,7 @@
     "gulp-uglify": "^1.5.3",
     "gulp-version-append": "^0.2.0",
     "gulp-watch": "^4.3.5",
+    "haikro": "^2.3.3",
     "isparta": "^3.1.0",
     "istanbul": "^0.3.13",
     "jspm": "^0.16.15",
