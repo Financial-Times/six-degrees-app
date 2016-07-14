@@ -3,6 +3,7 @@
 
     const express = require('express'),
         bodyParser = require('body-parser'),
+        fs = require('fs'),
         config = require('./config'),
         CONFIG = config.get(),
         logger = require('./logger'),
@@ -19,6 +20,15 @@
             config.set('MONITOR_PATH', 'app/' + version + '/server/view/monitor/');
             config.set('APP_IMAGES_CACHE_UPLOAD_PATH', 'app/release/client/');
             config.set('APP_IMAGES_CACHE_DOWNLOAD_PATH', '/');
+
+            setTimeout(function () {
+                const cacheFolder = 'app/release/client/assets/img/content/';
+
+                if (!fs.existsSync(cacheFolder)) {//eslint-disable-line no-sync
+                    fs.mkdirSync(cacheFolder);//eslint-disable-line no-sync
+                    fs.mkdirSync(cacheFolder + 'cache/');//eslint-disable-line no-sync
+                }
+            }, 2000);
         }
     }
 

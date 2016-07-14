@@ -1,6 +1,6 @@
 {
   "name": "ft-six-degrees",
-  "version": "0.2.21",
+  "version": "0.2.40",
   "description": "FT Six Degrees prototype FE App",
   "author": "Tomasz Libich",
   "scripts": {
@@ -11,7 +11,7 @@
     "deploy": "haikro build && haikro deploy --app ft-upp-six-degrees"
   },
   "engines": {
-    "node": "4.2.6",
+    "node": "6.3.0",
     "npm": "3.8.6"
   },
   "repository": {
