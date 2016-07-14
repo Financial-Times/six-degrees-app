@@ -1,0 +1,67 @@
+<!doctype html>
+<html ng-app="baseApp">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Six Degress BA Monitor</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/darkly/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+        <link rel="stylesheet" href="css/style.css">
+
+        <script src="js/vendor/react/react.js"></script>
+        <script src="js/vendor/react/react-dom.js"></script>
+        <script src="js/vendor/babel/browser.min.js"></script>
+
+        <script data-main="js/main" src="js/vendor/require.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h2>FT Six Degrees</h2>
+                    <p class="text-muted">Basic Monitoring Tool</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-9">
+                    <section class="panel panel-default">
+                        <div class="panel-heading logs-heading">
+                            <h4 class="panel-title">Logs</h4>
+                            <span class="ajax-loader" id="logs-loading-indicator"></span>
+                            <a href="#" id="reload-logs-btn" class="refresh-button material-icons">refresh</a>
+                        </div>
+                        <div class="panel-body logs-list">
+                            <ul class="nav nav-tabs" id="logs-nav-tabs">
+                                <li class="active"><a href="#" data-level="error">error</a></li>
+                                <li><a href="#" data-level="warn">warn</a></li>
+                                <li><a href="#" data-level="info">info</a></li>
+                                <li><a href="#" data-level="all">all</a></li>
+                            </ul>
+                            <div id="logs-list" class="list-container"></div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                    <section class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Integrated API Status</h3>
+                        </div>
+                        <div class="panel-body" id="status-board"></div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <script>
+            requirejs.config({
+                baseUrl: 'js',
+                paths: {
+                    jquery: 'vendor/jquery-3.1.0.min',
+                    moment: 'vendor/moment.min'
+                }
+            });
+        </script>
+    </body>
+</html>

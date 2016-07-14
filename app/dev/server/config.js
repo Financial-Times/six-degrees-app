@@ -46,6 +46,7 @@
             APP: 'FTSixDegrees',
             VER: 'dev',
             APP_PATH: '.',
+            MONITOR_PATH: './app/dev/server/view/monitor/',
             APP_IMAGES_CACHE_UPLOAD_PATH: 'app/dev/client/',
             APP_IMAGES_CACHE_DOWNLOAD_PATH: 'app/dev/client/',
             EXTENSIONS: {
@@ -68,6 +69,9 @@
             SETTINGS: {
                 LOGGER: {
                     LEVEL: 'api'
+                },
+                RETRY: {
+                    MAX_ATTEMPTS: 20
                 }
             }
         },

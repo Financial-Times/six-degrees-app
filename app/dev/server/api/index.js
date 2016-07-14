@@ -4,16 +4,18 @@
     const CONFIG = require('../config').get(),
         responder = require('../api/common/responder'),
         preloader = require('../api/common/preloader'),
+        retry = require('../api/common/retry-handler'),
         cache = require('../api/common/cache'),
         cacheStorage = cache.storage,
         request = require('request'),
         winston = require('../winston-logger'),
-        moment = require('moment');
+        moment = require('moment'),
+        monitor = require('../api/monitor/check');
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'; // Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
 
     function validateBasicAuth(auth) {
-        return auth.replace('Basic ', '') === CONFIG.AUTH.BASIC_TOKEN;
+        return auth ? auth.replace('Basic ', '') === CONFIG.AUTH.BASIC_TOKEN : false;
     }
 
     function parseJson(body) {
@@ -93,12 +95,16 @@
         } else {
 
             const timeout = setTimeout(function () {
-                winston.logger.warn('No answer for 5 secs from most mentioned people service.');
+                winston.logger.warn('No answer for 5 secs from connections service for ' + uuid);
                 responder.send(clientResponse, {
                     status: 504,
+                    description: 'new connections',
                     error: 'timeout'
                 });
                 responseSent = true;
+                if (!retry.inProgress['connections-' + uuid]) {
+                    retry.start('connections-' + uuid, handleConnectionsCall, uuid);
+                }
             }, 2000);
 
 
@@ -113,6 +119,7 @@
                         data: parseJson(body)
                     });
                     getAndCacheConnections(body);
+                    retry.stop('connections-' + uuid);
                 } else if (!responseSent) {
                     responder.send(clientResponse, {
                         status: 502,
@@ -137,10 +144,20 @@
                 responseCount += 1;
                 parseJson(enrichedcontent).annotations.forEach(annotation => {
                     if (annotation.type === 'PERSON') {
-                        annotatedPeople.push({
-                            id: annotation.id,
-                            prefLabel: annotation.prefLabel
+                        let alreadyInAnnotatedArray = false;
+
+                        annotatedPeople.forEach(annotatedPerson => {
+                            if (annotatedPerson.id === annotation.id) {
+                                alreadyInAnnotatedArray = true;
+                            }
                         });
+
+                        if (!alreadyInAnnotatedArray) {
+                            annotatedPeople.push({
+                                id: annotation.id,
+                                prefLabel: annotation.prefLabel
+                            });
+                        }
                     }
                 });
             });
@@ -215,9 +232,14 @@
                 winston.logger.warn('No answer for 5 secs: ' + CONFIG.API_URL.SIX_DEGREES.HOST + 'mostMentionedPeople');
                 responder.send(clientResponse, {
                     status: 504,
+                    description: 'new mentioned people',
                     error: 'timeout'
                 });
                 responseSent = true;
+
+                if (!retry.inProgress['most-mentioned']) {
+                    retry.start('most-mentioned', handleMostMentionedCall, uuid);
+                }
             }, 5000);
 
             if (uuid) {
@@ -240,6 +262,7 @@
                         });
                         getAndCacheConnections(body);
                         responseSent = true;
+                        retry.stop('most-mentioned');
                     } else if (!responseSent) {
                         responder.send(clientResponse, {
                             status: 502,
@@ -309,7 +332,7 @@
                     winston.logger.warn('Error during response body parsing!\n' + err + '\nBody:\n' + body);
                 }
 
-                if (parsedBody.mainImage && parsedBody.mainImage.id) {
+                if (parsedBody && parsedBody.mainImage && parsedBody.mainImage.id) {
                     const uuid = parsedBody.mainImage.id.replace('http', 'https').replace(process.env.FT_API_URL + 'content/', '');
 
                     request({
@@ -397,7 +420,7 @@
 
             responder.send(clientResponse, {
                 status: 200,
-                description: 'wikipedia image search result',
+                description: 'wikipedia image search result for ' + decodeURIComponent(name),
                 data: {
                     url: url
                 }
@@ -439,7 +462,8 @@
                 until: until,
                 start: 0,
                 order: 'desc',
-                fields: fields
+                fields: fields,
+                limit: 50
             }, function (err, results) {
                 let logsQueryStatus,
                     logsData;
@@ -456,11 +480,21 @@
                     status: logsQueryStatus,
                     description: 'logs query result',
                     data: logsData
-                });
+                }, true);
             });
 
         }
 
+    }
+
+    function handleMonitorCall(params, auth, clientResponse) {
+        const authValid = validateBasicAuth(auth);
+
+        if (!authValid) {
+            responder.rejectUnauthorized(clientResponse);
+        } else {
+            monitor.handle(params, clientResponse);
+        }
     }
 
     function handleGet(clientRequest, clientResponse) {
@@ -468,7 +502,9 @@
 
         if (params.length && params[0] !== '') {
 
-            winston.logger.info('API GET request detected, params: ' + JSON.stringify(clientRequest.query));
+            if (params[0] !== 'monitor' && params[0] !== 'logs') {
+                winston.logger.info('API GET /' + params[0] + '/' + (clientRequest.query && JSON.stringify(clientRequest.query) !== '{}' ? JSON.stringify(clientRequest.query) : ''));
+            }
 
             switch (params[0]) {
             case 'test':
@@ -494,6 +530,9 @@
                 break;
             case 'logs':
                 handleLogsCall(clientRequest.query, clientRequest.headers.authorization, clientResponse);
+                break;
+            case 'monitor':
+                handleMonitorCall(params[1], clientRequest.headers.authorization, clientResponse);
                 break;
             default:
                 responder.reject(clientResponse);

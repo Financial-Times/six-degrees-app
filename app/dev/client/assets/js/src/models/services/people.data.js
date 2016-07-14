@@ -191,22 +191,26 @@ class PeopleData {
     }
 
     setActiveByUuid(uuid) {
+        let indexToUpdate = null;
+
         uuid = uuid.replace('http://api.ft.com/things/', '');
         this.stored = this.stored || [];
 
         this.stored.forEach((person, index) => {
             if (person.id.replace('http://api.ft.com/things/', '') === uuid) {
-                this.updateActivePerson(index);
+                indexToUpdate = index;
             }
         });
 
-        if (!this.activePerson) {
+        if (indexToUpdate === null) {
             Ajax.get({
                 url: '/api/person/' + uuid
             }).then(person => {
                 this.stored.push(person);
                 this.updateActivePerson(this.stored.length - 1);
             });
+        } else {
+            this.updateActivePerson(indexToUpdate);
         }
 
         return uuid;

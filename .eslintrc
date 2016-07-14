@@ -1,6 +1,7 @@
 {
     "ecmaFeatures": {
-        "modules": true
+        "modules": true,
+        "jsx": true
     },
     "env": {
         "browser": true,
@@ -98,6 +99,10 @@
         "no-with": 2,
         "one-var": [2, "always"],
         "quotes": [2, "single", "avoid-escape"],
+        "requirejs/no-invalid-define": 2,
+        "requirejs/no-multiple-define": 2,
+        "requirejs/no-commonjs-wrapper": 2,
+        "requirejs/no-object-define": 1,
         "radix": 2,
         "semi": [2, "always"],
         "semi-spacing": [2, {"before": false, "after": true}],
@@ -123,8 +128,15 @@
         "ecmaVersion": 6,
         "sourceType": "module"
     },
+    "plugins": [
+        "react",
+        "requirejs"
+    ],
     "globals": {
         "d3": true,
-        "moment": true
+        "moment": true,
+        "define": true,
+        "React": true,
+        "ReactDOM": true
     }
 }

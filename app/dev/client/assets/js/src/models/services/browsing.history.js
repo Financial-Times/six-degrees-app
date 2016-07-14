@@ -1,10 +1,15 @@
 class BrowsingHistoryData {
     constructor() {
         this.storage = '#';
+        this.details = [];
     }
 
-    add(name) {
+    add(name, id) {
         this.storage += (',' + name);
+        this.details.push({
+            id: id,
+            name: name
+        });
     }
 
     contains(name) {
@@ -13,6 +18,19 @@ class BrowsingHistoryData {
 
     clear() {
         this.storage = '#';
+        this.details = [];
+    }
+
+    findUuid(name) {
+        let uuid = null;
+
+        this.details.forEach(person => {
+            if (person.name === name) {
+                uuid = person.id;
+            }
+        });
+
+        return uuid;
     }
 
     get() {

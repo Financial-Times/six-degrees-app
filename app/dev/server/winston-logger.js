@@ -14,7 +14,7 @@
         moment = require('moment'),
         winston = require('winston'),
         logger = new (winston.Logger)({
-            exitOnError: false, //don't crash on exception
+            //exitOnError: false, //don't crash on exception
             transports: [
                 new (winston.transports.Console)({
                     level: 'debug',

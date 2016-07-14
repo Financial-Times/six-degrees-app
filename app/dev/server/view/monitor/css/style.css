@@ -1,0 +1,58 @@
+.text-shadow {
+    text-shadow: 1px 1px 1px rgba(0,0,0, 0.35);
+}
+
+.service-item span {
+    font-size: 13px;
+}
+
+.logs-heading {
+    overflow: auto;
+}
+
+.logs-heading h4 {
+    float: left;
+}
+
+.logs-heading a {
+    float: right;
+    text-decoration: none;
+}
+
+.logs-heading a.refresh-button {
+    display: none;
+}
+
+.logs-heading a:hover {
+    color: white;
+}
+
+.logs-heading .ajax-loader {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background: transparent url('../img/reload.svg') no-repeat center center;
+    background-size: 22px 22px;
+}
+
+.logs-list {
+    height: 600px;
+    overflow: hidden;
+    overflow-y: auto;
+
+}
+
+.logs-list .list-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border: solid 1px #464545;
+    border-top: none;
+}
+
+.logs-list .list-container ul li {
+    display: block;
+    background: #222;
+    padding: 6px 12px;
+    margin-bottom: 2px;
+}

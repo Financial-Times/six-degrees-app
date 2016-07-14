@@ -33,7 +33,7 @@ export class Graph {
                 .call(zoom)
                 .append('svg:g');
 
-        let previousNodeId;
+        let previousNodeId, previousNodeUuid;
 
         window.onresize = function () {
             d3.select('#graph svg:first-child').attr('width', element.parentNode.offsetWidth).attr('height', element.parentNode.offsetHeight);
@@ -208,6 +208,7 @@ export class Graph {
                     return index === 0 ? 25 : 20;
                 })
                 .on('click', function (nodeData) {
+
                     svg.select('.nodes').selectAll('g.node circle').attr('r', 20);
                     svg.select('.nodes').selectAll('g.node-root').attr('class', 'node node-visited');
 
@@ -228,13 +229,13 @@ export class Graph {
                     }
 
                     previousNodeId = PeopleData.activePerson.prefLabel;
-
+                    previousNodeUuid = PeopleData.activePerson.id;
                     PeopleData.setActiveByUuid(nodeData.uuid);
 
                     if (previousNodeId) {
                         const name = abbreviateFullName(previousNodeId);
                         if (!BrowsingHistory.contains(name)) {
-                            BrowsingHistory.add(name);
+                            BrowsingHistory.add(name, previousNodeUuid);
                         }
                         markConnection(previousNodeId, PeopleData.activePerson.prefLabel);
                     }

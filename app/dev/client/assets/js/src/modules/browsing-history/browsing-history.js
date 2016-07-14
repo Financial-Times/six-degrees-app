@@ -1,13 +1,15 @@
 import {ObserverLocator} from 'aurelia-framework';
+import {Router} from 'aurelia-router';
 import BrowsingHistoryData from '../../models/services/browsing.history.js';
 import PeopleData from '../../models/services/people.data.js';
 
 export class BrowsingHistory {
     static inject() {
-        return [ObserverLocator];
+        return [Router, ObserverLocator];
     }
 
-    constructor(observerLocator) {
+    constructor(router, observerLocator) {
+        this.theRouter = router;
         this.observerLocator = observerLocator;
         this.update = () => {
             this.history = BrowsingHistoryData.get().split(',').reverse();
@@ -73,6 +75,15 @@ export class BrowsingHistory {
             d.focus = true;
             onClickFunc.apply(this, [d, i]);
         });
+    }
+
+    startFromHere(name) {
+        const uuid = BrowsingHistoryData.findUuid(name);
+
+        if (uuid) {
+            this.theRouter.navigate('connections/' + PeopleData.setActiveByUuid(uuid));
+            window.location.reload();
+        }
     }
 
 

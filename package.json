@@ -1,13 +1,14 @@
 {
   "name": "ft-six-degrees",
-  "version": "0.2.19",
+  "version": "0.2.21",
   "description": "FT Six Degrees prototype FE App",
   "author": "Tomasz Libich",
   "scripts": {
     "dev": "gulp client-unbundle && gulp client-build && node-dev start --dev",
     "release": "gulp client-build-release && node-dev start --release",
     "postinstall": "jspm install && gulp client-build",
-    "start": "node start"
+    "start": "node start",
+    "deploy": "haikro build && haikro deploy --app ft-upp-six-degrees"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
     "body-parser": "^1.14.2",
     "cookie": "^0.2.2",
     "dotenv": "^2.0.0",
+    "eslint-plugin-react": "^5.2.2",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "ft-poller": "^2.6.0",
@@ -25,6 +27,7 @@
     "node-rsa": "^0.3.3",
     "q": "^2.0.3",
     "request": "*",
+    "s3o-middleware": "^1.7.0",
     "util": "*",
     "whatwg-fetch": "^1.0.0",
     "winston": "^2.2.0"
@@ -46,6 +49,7 @@
     "browser-sync": "^2.13.0",
     "chai": "^3.5.0",
     "del": "^1.1.0",
+    "eslint-plugin-requirejs": "^0.10.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-bump": "^2.1.0",

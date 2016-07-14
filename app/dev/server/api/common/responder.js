@@ -14,16 +14,22 @@
             'type': 'text/plain'
         };
 
-    function send(response, params) {
-        if (params.status === 200) {
-            winston.logger.info('Sending JSON response to client.' + (params.description ? ' (' + params.description + ')\n' : '\n') + (CONFIG.SETTINGS.LOGGER.LEVEL === 'all' ? JSON.stringify(params.data) : ''));
-            response.json(params.data);
-        } else {
-            response.writeHead(params.status, {
-                'Content-Type': 'text/plain'
-            });
-            winston.logger.error('Error, sending text response to client: ' + (params.error || 'unknown'));
-            response.end((params.error || 'unknown'));
+    function send(response, params, nolog) {
+        if (response) {
+            if (params.status === 200) {
+                if (!nolog) {
+                    winston.logger.info('Request \'' + (params.description ? params.description + '\' ' : '') + 'successful. Sending JSON response to client.' + (CONFIG.SETTINGS.LOGGER.LEVEL === 'all' ? JSON.stringify(params.data) : ''));
+                }
+                response.json(params.data);
+            } else {
+                response.writeHead(params.status, {
+                    'Content-Type': 'text/plain'
+                });
+                if (!nolog) {
+                    winston.logger.error((params.description ? 'Request error: \'' + params.description + '\' ' : 'Error') + ', sending text response to client: ' + (params.error || 'unknown'));
+                }
+                response.end((params.error || 'unknown'));
+            }
         }
     }
 

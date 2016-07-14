@@ -84,6 +84,7 @@
 .people-request-error {
     text-align: center;
     line-height: 24px;
+    margin: 16px 0;
     .error-inner {
         display: inline-block;
         padding: 6px;
@@ -149,7 +150,7 @@
 
 .main-title {
     padding: 60px 0 0 0;
-    background: transparent url('../img/six-degrees-icon.png') no-repeat center 20px;
+    background: transparent url('../img/six-degrees-icon.png') no-repeat center 17px;
     background-size: 50px auto;
 
     h1 {
@@ -166,6 +167,6 @@
         text-align: center;
         font: 16px/1.3 Georgia,serif;
         color: #505050;
-        margin-bottom: 16px;
+        margin-bottom: 0;
     }
 }

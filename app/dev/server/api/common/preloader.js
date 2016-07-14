@@ -45,28 +45,32 @@
     }
 
     function handle(imageData, callback) {
-        const urlParsed = url.parse(imageData.binaryUrl),
-            filename = imageData.binaryUrl.replace(urlParsed.protocol + '//' + urlParsed.host + '/', ''),
-            localImageUrl = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/' + filename + '.jpg';
+        if (imageData.binaryUrl) {
+            const urlParsed = url.parse(imageData.binaryUrl),
+                filename = imageData.binaryUrl.replace(urlParsed.protocol + '//' + urlParsed.host + '/', ''),
+                localImageUrl = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/' + filename + '.jpg';
 
-        if (!fileExists(localImageUrl)) {
-            winston.logger.warn('Image not EXISTS.\n' + imageData.binaryUrl + '\n' + localImageUrl);
-        }
+            if (!fileExists(localImageUrl)) {
+                winston.logger.warn('Image not EXISTS.\n' + imageData.binaryUrl + '\n' + localImageUrl);
+            }
 
-        if (isRegistered(filename) && fileExists(localImageUrl)) {
-            imageData.imageUrl = localImageUrl;
-            callback(imageData);
-        } else {
-            download(imageData.binaryUrl, filename, function (err) {
-
-                if (!err && fileExists(localImageUrl)) {
-                    winston.logger.info('Image loaded & cached.\n' + imageData.binaryUrl);
-                    imageData.imageUrl = localImageUrl;
-
-                }
-
+            if (isRegistered(filename) && fileExists(localImageUrl)) {
+                imageData.imageUrl = localImageUrl;
                 callback(imageData);
-            });
+            } else {
+                download(imageData.binaryUrl, filename, function (err) {
+
+                    if (!err && fileExists(localImageUrl)) {
+                        winston.logger.info('Image loaded & cached.\n' + imageData.binaryUrl);
+                        imageData.imageUrl = localImageUrl;
+
+                    }
+
+                    callback(imageData);
+                });
+            }
+        } else {
+            callback();
         }
     }
 
