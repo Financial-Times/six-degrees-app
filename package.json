@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "gulp client-unbundle && gulp client-build && node-dev start --dev",
     "release": "gulp client-build-release && node-dev start --release",
-    "postinstall": "jspm install && gulp client-build",
+    "postinstall": "jspm install && gulp client-build && npm install -g haikro",
     "start": "node start",
     "deploy": "haikro build && haikro deploy --app ft-upp-six-degrees"
   },
