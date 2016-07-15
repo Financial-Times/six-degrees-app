@@ -80,7 +80,7 @@ class PeopleData {
     }
 
     searchForContent(uuid) {
-        console.warn('search handler', uuid);
+        return uuid;
     }
 
     requestContent(contentItems) {
