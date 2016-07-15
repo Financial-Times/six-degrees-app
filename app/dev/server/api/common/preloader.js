@@ -25,7 +25,6 @@
 
                     if (optimized.indexOf(imagePath) === -1) {
                         winston.logger.info('Attempting to optimize image: ' + imagePath);
-                        optimized.push(imagePath);
                         Jimp.read(imagePath).then(function (lenna) {
                             lenna.resize(400, Jimp.AUTO)            // resize
                                 .quality(60)                 // set JPEG quality
@@ -38,7 +37,7 @@
                                             result = err;
                                         } else {
                                             winston.logger.info(imagePath + ' successfully copied to cache...');
-                                            fs.remove(localCachePathServer + 'optimized/');
+                                            optimized.push(imagePath);
                                         }
                                         imagesOptimizationInProgress = false;
                                         return result;
