@@ -1,12 +1,60 @@
 (function () {
     'use strict';
 
-    const fs = require('fs'),
+    const fs = require('fs-extra'),
         url = require('url'),
         request = require('request'),
+        glob = require('glob'),
+        Jimp = require('jimp'),
         CONFIG = require('../../config').get(),
         winston = require('../../winston-logger'),
+        localCachePathServer = CONFIG.APP_IMAGES_CACHE_UPLOAD_PATH + 'assets/img/content/cache/',
+        localCachePathClient = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/',
+        optimized = [],
         registry = [];
+
+    let imagesOptimizationInProgress = false;
+
+    function optimizeImages() {
+        imagesOptimizationInProgress = true;
+        setTimeout(function () {
+            winston.logger.info('Attempting to optimize content images... ');
+            glob(localCachePathServer + '*.*', function (er, images) {
+
+                images.forEach(imagePath => {
+
+                    if (optimized.indexOf(imagePath) === -1) {
+                        winston.logger.info('Attempting to optimize image: ' + imagePath);
+                        optimized.push(imagePath);
+                        Jimp.read(imagePath).then(function (lenna) {
+                            lenna.resize(400, Jimp.AUTO)            // resize
+                                .quality(60)                 // set JPEG quality
+                                .write(localCachePathServer + 'optimized/' + imagePath.replace(localCachePathServer, ''), function () {
+                                    winston.logger.info(imagePath + ' optimized successfuly...');
+                                    fs.copy(localCachePathServer + 'optimized/' + imagePath.replace(localCachePathServer, ''), imagePath, function (err) {
+                                        let result = true;
+                                        if (err) {
+                                            winston.logger.info('Copying ' + imagePath + ' to cache failed...', err);
+                                            result = err;
+                                        } else {
+                                            winston.logger.info(imagePath + ' successfully copied to cache...');
+                                            fs.remove(localCachePathServer + 'optimized/');
+                                            imagesOptimizationInProgress = false;
+                                        }
+
+                                        return result;
+                                    });
+                                });
+                        }).catch(function (err) {
+                            console.error(err);
+                        });
+                    }
+                });
+
+            });
+
+        }, 10000);
+    }
 
     function fileExists(filePath) {
         try {
@@ -36,7 +84,7 @@
 
             if (!err) {
                 registry.push(filename);
-                request(uri).pipe(fs.createWriteStream(CONFIG.APP_IMAGES_CACHE_UPLOAD_PATH + 'assets/img/content/cache/' + filename + extension)).on('close', callback);
+                request(uri).pipe(fs.createWriteStream(localCachePathServer + filename + extension)).on('close', callback);
             } else {
                 callback(err);
             }
@@ -48,22 +96,21 @@
         if (imageData.binaryUrl) {
             const urlParsed = url.parse(imageData.binaryUrl),
                 filename = imageData.binaryUrl.replace(urlParsed.protocol + '//' + urlParsed.host + '/', ''),
-                localImageUrl = CONFIG.APP_IMAGES_CACHE_DOWNLOAD_PATH + 'assets/img/content/cache/' + filename + '.jpg';
+                localImageUrl = localCachePathClient + filename + '.jpg',
+                localServerImagePath = localCachePathServer + filename + '.jpg';
 
-            if (!fileExists(localImageUrl)) {
-                winston.logger.warn('Image not EXISTS.\n' + imageData.binaryUrl + '\n' + localImageUrl);
-            }
-
-            if (isRegistered(filename) && fileExists(localImageUrl)) {
+            if (fileExists(localServerImagePath)) {
                 imageData.imageUrl = localImageUrl;
                 callback(imageData);
             } else {
+                winston.logger.warn('Image not EXISTS.\nremote source: ' + imageData.binaryUrl + '\nlocal target: ' + localServerImagePath);
                 download(imageData.binaryUrl, filename, function (err) {
-
-                    if (!err && fileExists(localImageUrl)) {
-                        winston.logger.info('Image loaded & cached.\n' + imageData.binaryUrl);
+                    if (!err) {
+                        winston.logger.info('Image loaded & cached.\nremote source: ' + imageData.binaryUrl + '\nlocal target: ' + localServerImagePath);
                         imageData.imageUrl = localImageUrl;
-
+                        if (!imagesOptimizationInProgress) {
+                            optimizeImages();
+                        }
                     }
 
                     callback(imageData);

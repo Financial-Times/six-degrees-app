@@ -1,6 +1,6 @@
 {
   "name": "ft-six-degrees",
-  "version": "0.2.40",
+  "version": "0.2.138",
   "description": "FT Six Degrees prototype FE App",
   "author": "Tomasz Libich",
   "scripts": {
@@ -25,8 +25,11 @@
     "eslint-plugin-react": "^5.2.2",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
+    "fs-extra": "^0.30.0",
     "ft-poller": "^2.6.0",
+    "glob": "^7.0.5",
     "http": "*",
+    "jimp": "^0.2.24",
     "moment": "^2.13.0",
     "node-rsa": "^0.3.3",
     "q": "^2.0.3",

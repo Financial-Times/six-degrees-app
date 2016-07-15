@@ -3,7 +3,7 @@
 
     const express = require('express'),
         bodyParser = require('body-parser'),
-        fs = require('fs'),
+        fs = require('fs-extra'),
         config = require('./config'),
         CONFIG = config.get(),
         logger = require('./logger'),
@@ -14,22 +14,24 @@
         server = express();
 
     function updateConfig(version) {
-        if (version === 'release') {
+        if (version === 'dev') {
             config.set('VER', version);
-            config.set('APP_PATH', 'app/' + version + '/client/');
-            config.set('MONITOR_PATH', 'app/' + version + '/server/view/monitor/');
-            config.set('APP_IMAGES_CACHE_UPLOAD_PATH', 'app/release/client/');
-            config.set('APP_IMAGES_CACHE_DOWNLOAD_PATH', '/');
-
-            setTimeout(function () {
-                const cacheFolder = 'app/release/client/assets/img/content/';
-
-                if (!fs.existsSync(cacheFolder)) {//eslint-disable-line no-sync
-                    fs.mkdirSync(cacheFolder);//eslint-disable-line no-sync
-                    fs.mkdirSync(cacheFolder + 'cache/');//eslint-disable-line no-sync
-                }
-            }, 2000);
+            config.set('APP_PATH', '.');
+            config.set('MONITOR_PATH', './app/dev/server/view/monitor/');
+            config.set('APP_IMAGES_CACHE_UPLOAD_PATH', 'app/dev/client/');
+            config.set('APP_IMAGES_CACHE_DOWNLOAD_PATH', 'app/dev/client/');
         }
+
+        setTimeout(function () {
+            const cacheFolder = 'app/' + version + '/client/assets/img/content/';
+
+            if (fs.existsSync(cacheFolder)) {//eslint-disable-line no-sync
+                fs.removeSync(cacheFolder);//eslint-disable-line no-sync
+                fs.mkdirs(cacheFolder + 'cache/optimized/');
+            } else {
+                fs.mkdirs(cacheFolder + 'cache/optimized/');
+            }
+        }, 2000);
     }
 
     function initializeServer(version) {
