@@ -39,9 +39,8 @@
                                         } else {
                                             winston.logger.info(imagePath + ' successfully copied to cache...');
                                             fs.remove(localCachePathServer + 'optimized/');
-                                            imagesOptimizationInProgress = false;
                                         }
-
+                                        imagesOptimizationInProgress = false;
                                         return result;
                                     });
                                 });
