@@ -1,9 +1,12 @@
 (function () {
     'use strict';
 
-    const cmdArgs = [];
+    const fs = require('fs-extra'),
+        cmdArgs = [];
 
-    require('dotenv').config();
+    if (fs.existsSync('.env')) {//eslint-disable-line no-sync
+        require('dotenv').config();
+    }
 
     process.argv.forEach(function (val, index) {
         if (index > 1 && val) {
