@@ -19,3 +19,6 @@ deployment:
     branch: develop
     commands:
       - ./deployment/build_release.sh
+    branch: master
+    commands:
+      - ./deployment/deploy_to_heroku.sh

@@ -1,12 +1,3 @@
-#git add .
-#git commit -m "Config update"
-
-#git checkout master
-#git pull origin master
-
-#git checkout develop
-#git rebase master
-
 gulp client-build-release
 git add .
 
@@ -20,5 +11,3 @@ git push origin v$PACKAGE_VERSION
 git checkout master
 git merge develop
 git push origin master
-
-npm run deploy
