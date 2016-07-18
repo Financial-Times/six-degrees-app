@@ -21,4 +21,4 @@ git checkout master
 git merge develop
 git push origin master
 
-haikro build && haikro deploy --app ft-upp-six-degrees --commit `v$PACKAGE_VERSION`
+npm run deploy
