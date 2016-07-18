@@ -99,10 +99,6 @@
         "no-with": 2,
         "one-var": [2, "always"],
         "quotes": [2, "single", "avoid-escape"],
-        "requirejs/no-invalid-define": 2,
-        "requirejs/no-multiple-define": 2,
-        "requirejs/no-commonjs-wrapper": 2,
-        "requirejs/no-object-define": 1,
         "radix": 2,
         "semi": [2, "always"],
         "semi-spacing": [2, {"before": false, "after": true}],
@@ -129,8 +125,6 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react",
-        "requirejs"
     ],
     "globals": {
         "d3": true,

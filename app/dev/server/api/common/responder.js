@@ -8,6 +8,10 @@
             'error': 'Bad request',
             'type': 'text/plain'
         },
+        badGatewayParams = {
+            status: 502,
+            error: 'bad gateway'
+        },
         unauthorizedRequestParams = {
             'status': 401,
             'error': 'Unauthorized',
@@ -37,6 +41,10 @@
         send(response, badRequestParams);
     }
 
+    function rejectBadGateway(response) {
+        send(response, badGatewayParams);
+    }
+
     function rejectUnauthorized(response) {
         send(response, unauthorizedRequestParams);
     }
@@ -44,6 +52,7 @@
     module.exports = {
         send: send,
         reject: reject,
-        rejectUnauthorized: rejectUnauthorized
+        rejectUnauthorized: rejectUnauthorized,
+        rejectBadGateway: rejectBadGateway
     };
 }());

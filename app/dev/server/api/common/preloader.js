@@ -101,18 +101,22 @@
                 imageData.imageUrl = localImageUrl;
                 callback(imageData);
             } else {
-                winston.logger.warn('Image not EXISTS.\nremote source: ' + imageData.binaryUrl + '\nlocal target: ' + localServerImagePath);
-                download(imageData.binaryUrl, filename, function (err) {
-                    if (!err) {
-                        winston.logger.info('Image loaded & cached.\nremote source: ' + imageData.binaryUrl + '\nlocal target: ' + localServerImagePath);
-                        imageData.imageUrl = localImageUrl;
-                        if (!imagesOptimizationInProgress) {
-                            optimizeImages();
+                if (filename.indexOf('/') === -1) {
+                    winston.logger.warn('Image not EXISTS.\nremote source: ' + imageData.binaryUrl + '\nlocal target: ' + localServerImagePath);
+                    download(imageData.binaryUrl, filename, function (err) {
+                        if (!err) {
+                            winston.logger.info('Image loaded & cached.\nremote source: ' + imageData.binaryUrl + '\nlocal target: ' + localServerImagePath);
+                            imageData.imageUrl = localImageUrl;
+                            if (!imagesOptimizationInProgress) {
+                                optimizeImages();
+                            }
                         }
-                    }
 
+                        callback(imageData);
+                    });
+                } else {
                     callback(imageData);
-                });
+                }
             }
         } else {
             callback();

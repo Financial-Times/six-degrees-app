@@ -14,8 +14,8 @@
         }
     });
 
-    let version = (cmdArgs.length && cmdArgs.indexOf('--dev') > -1) ? 'dev' : 'release';
+    process.env.APP_VERSION = (cmdArgs.length && cmdArgs.indexOf('--dev') > -1) ? 'dev' : 'release';
 
-    require('./app/' + version + '/server/boot').start(version);
+    require('./app/' + process.env.APP_VERSION + '/server/boot').start(process.env.APP_VERSION);
 
 }());

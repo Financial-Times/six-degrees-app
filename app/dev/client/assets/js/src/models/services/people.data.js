@@ -1,4 +1,5 @@
 import Ajax from '../../models/services/ajax.js';
+import Content from '../../models/services/content.js';
 
 class PeopleData {
 
@@ -9,12 +10,9 @@ class PeopleData {
         this.browsingHistory = [];
     }
 
-    addToContent(response) {
+    addToContent(item) {
 
         let contains = false;
-
-        this.activePerson.relatedContent = this.activePerson.relatedContent || [];
-        this.activePerson.relatedContentLoading = false;
 
         function compare(a, b) {
             if (a.publishedTimestamp < b.publishedTimestamp) {
@@ -26,72 +24,60 @@ class PeopleData {
             return 0;
         }
 
-        response.title = response.title.length > 65 ? response.title.substring(0, 65) + '...' : response.title;
-        response.byline = response.byline.length > 70 ? response.byline.substring(0, 70) + '...' : response.byline;
+        item.title = item.title.length > 65 ? item.title.substring(0, 65) + '...' : item.title;
+        item.byline = item.byline.length > 70 ? item.byline.substring(0, 70) + '...' : item.byline;
 
-        this.activePerson.contentBuffer.images.forEach(article => {
-            if (article.title === response.title) {
+        this.contentBuffer.images.forEach(article => {
+            if (article.title === item.title) {
                 contains = true;
             }
         });
 
-        this.activePerson.contentBuffer.noimages.forEach(article => {
-            if (article.title === response.title) {
+        this.contentBuffer.noimages.forEach(article => {
+            if (article.title === item.title) {
                 contains = true;
             }
         });
 
         if (!contains) {
             const article = {
-                title: response.title,
-                imageUrl: response.imageUrl,
-                byline: response.byline,
-                published: moment(response.publishedDate).format('MMMM DD, YYYY'),
-                publishedTimestamp: moment(response.publishedDate).unix(),
+                title: item.title,
+                imageUrl: item.imageUrl,
+                byline: item.byline,
+                published: moment(item.publishedDate).format('MMMM DD, YYYY'),
+                publishedTimestamp: moment(item.publishedDate).unix(),
                 location: {
-                    uri: response.webUrl
+                    uri: item.webUrl
                 }
             };
 
             if (article.imageUrl) {
-                this.activePerson.contentBuffer.images.unshift(article);
-                this.activePerson.contentBuffer.images.sort(compare);
+                this.contentBuffer.images.unshift(article);
+                this.contentBuffer.images.sort(compare);
             } else {
-                this.activePerson.contentBuffer.noimages.push(article);
-                this.activePerson.contentBuffer.noimages.sort(compare);
+                this.contentBuffer.noimages.push(article);
+                this.contentBuffer.noimages.sort(compare);
             }
         } else {
             return;
         }
 
-        this.activePerson.relatedContent = JSON.parse(JSON.stringify(this.activePerson.contentBuffer.images.concat(this.activePerson.contentBuffer.noimages)));
-
-        //this.activePerson.relatedContent.sort(compare);
-        //this.activePerson.maxContentItems = this.activePerson.relatedContent.length > 5 ? 6 : this.activePerson.relatedContent.length;
-        this.activePerson.maxContentItems = this.activePerson.relatedContent.length;
+        Content.update(JSON.parse(JSON.stringify(this.contentBuffer.images.concat(this.contentBuffer.noimages))));
     }
 
-    fetchContent(id) {
+    searchForContent() {
+        Content.inProgress = true;
         Ajax.get({
-            url: 'api/content/' + id
+            url: 'api/articles/' + window.encodeURIComponent(this.activePerson.id)
         }).then(response => {
-            this.addToContent(response);
-        });
-    }
-
-    searchForContent(uuid) {
-        return uuid;
-    }
-
-    requestContent(contentItems) {
-        if (!this.activePerson.relatedContentLoading) {
-            this.activePerson.relatedContentLoading = true;
-            this.activePerson.relatedContent = this.activePerson.relatedContent || [];
-
-            contentItems.forEach(item => {
-                this.fetchContent(item.id);
+            Content.inProgress = false;
+            response.forEach(article => {
+                this.addToContent(article);
             });
-        }
+        }).catch(error => {
+            console.warn('error', error);
+        });
+
     }
 
     getMentionedMostly(uuid) {
@@ -114,14 +100,6 @@ class PeopleData {
             }
         }).then(response => {
             if (response.length) {
-                //response contains articles in relation to connected people
-                const content = [];
-                response.forEach(connectionRelatedArticles => {
-                    connectionRelatedArticles.content.forEach(article => {
-                        content.push(article);
-                    });
-                });
-                this.requestContent(content);
                 response.forEach(connection => {
                     if (!this.people[connection.person.id]) {
                         this.people[connection.person.id] = connection.person;
@@ -142,7 +120,6 @@ class PeopleData {
         this.stored = people;
         people.forEach(person => {
             this.people[person.id] = person;
-            this.searchForContent(person.id.replace('http://api.ft.com/things/', ''));
         });
     }
 
@@ -160,7 +137,7 @@ class PeopleData {
 
     updateActivePerson(index) {
         this.activePerson = this.stored[index];
-        this.activePerson.contentBuffer = {
+        this.contentBuffer = {
             images: [],
             noimages: []
         };
@@ -171,6 +148,10 @@ class PeopleData {
             this.getImage(this.activePerson.name).then(image => {
                 this.activePerson.imageUrl = image.url;
             });
+        }
+
+        if (!this.activePerson.relatedContent) {
+            this.searchForContent();
         }
     }
 

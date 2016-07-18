@@ -2,6 +2,7 @@ import {Router} from 'aurelia-router';
 import {ObserverLocator} from 'aurelia-framework';
 import PeopleData from '../models/services/people.data.js';
 import GraphSettings from '../models/services/graph.settings.js';
+import Content from '../models/services/content.js';
 import Utils from '../models/services/utils.js';
 
 export class Connections {
@@ -17,6 +18,7 @@ export class Connections {
             return PeopleData.activePerson ? window.location.protocol + '//' + window.location.hostname + (port ? ':' + port : '') + '/#/connections/' + PeopleData.activePerson.id.replace('http://api.ft.com/things/', '') : window.location.href;
         };
         this.shareLink = this.generateShareLink();
+        this.contentInProgress = true;
     }
 
     attached() {
@@ -30,6 +32,7 @@ export class Connections {
         }
 
         this.observerLocator.getObserver(PeopleData, 'activePerson').subscribe(() => {
+            this.contentData = [];
             this.person = PeopleData.activePerson;
         });
 
@@ -38,6 +41,14 @@ export class Connections {
             if (state) {
                 this.shareLink = this.generateShareLink();
             }
+        });
+
+        this.observerLocator.getObserver(Content, 'data').subscribe(() => {
+            this.contentData = Content.get();
+        });
+
+        this.observerLocator.getObserver(Content, 'inProgress').subscribe(() => {
+            this.contentInProgress = Content.inProgress;
         });
 
     }

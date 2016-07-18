@@ -13,6 +13,7 @@ export class PeopleList {
         this.theRouter = router;
         this.observerLocator = observerLocator;
         this.signedIn = Cookies.read('FTSession');
+        this.user = UserData.getUserDetails();
 
         this.getMentionedPeople = (uuid) => {
             PeopleData.personalized = uuid ? true : false;

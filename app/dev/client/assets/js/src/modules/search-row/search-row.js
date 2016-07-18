@@ -129,21 +129,28 @@ export class SearchRow {
                 this.elasticSearchPerson = person;
             });
 
+            console.warn('this.searchPhrase', this.searchPhrase);
+
             Search.findPerson({
                 'queryString': this.searchPhrase
             }).then(response => {
-                response.forEach((person) => {
-                    /*eslint-disable */
-                    if (person._source) {
-                        person.id = 'http://api.ft.com/things/' + person._id,
-                        person.prefLabel = person._source.name;
-                        person.name = PeopleData.getAbbreviatedName(person.prefLabel);
-                    }
-                    /*eslint-enable */
-                });
-                PeopleData.storeMentioned(response);
-                PeopleData.setActiveByName(response[0].prefLabel);
-                this.theRouter.navigate('connections');
+                this.response = response.length ? response : [];
+
+                if (this.response.length) {
+                    this.response.forEach((person) => {
+                        /*eslint-disable */
+                        if (person._source) {
+                            person.id = 'http://api.ft.com/things/' + person._id,
+                            person.prefLabel = person._source.name;
+                            person.name = PeopleData.getAbbreviatedName(person.prefLabel);
+                        }
+                        /*eslint-enable */
+                    });
+
+                    PeopleData.storeMentioned(this.response);
+                    PeopleData.setActiveByName(this.response[0].prefLabel);
+                    this.theRouter.navigate('connections');
+                }
             });
 
 

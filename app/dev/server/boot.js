@@ -23,7 +23,7 @@
         }
 
         setTimeout(function () {
-            const cacheFolder = 'app/' + version + '/client/assets/img/content/';
+            const cacheFolder = 'app/' + process.env.APP_VERSION + '/client/assets/img/content/';
 
             if (fs.existsSync(cacheFolder)) {//eslint-disable-line no-sync
                 fs.removeSync(cacheFolder);//eslint-disable-line no-sync

@@ -23,9 +23,9 @@
                     <div class="related-content-header">
                         <h3>${person.name}<br />in the FT headlines</h3>
                     </div>
-                    <div class="related-articles" if.bind="person.relatedContent">
+                    <div class="related-articles" if.bind="contentData">
                         <ul>
-                            <li repeat.for="article of person.relatedContent">
+                            <li repeat.for="article of contentData">
                                 <div class="article-details">
                                     <a href="${article.location.uri}" target="_blank" class="article-thumbnail" if.bind="article.imageUrl">
                                         <img src="${article.imageUrl}" alt="${article.title}" />
@@ -39,10 +39,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="spinner-small" if.bind="person.relatedContentLoading"></div>
-                    <div class="related-articles" if.bind="!person.relatedContent">
-                        Nothing to show...
-                    </div>
+                    <div class="spinner-small" if.bind="contentInProgress"></div>
                 </div>
             </div>
         </div>
