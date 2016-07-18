@@ -15,10 +15,11 @@ test:
 
 ## Customize deployment
 deployment:
-  release:
+  develop:
     branch: develop
     commands:
       - ./deployment/build_release.sh
+  release:
     branch: master
     commands:
       - ./deployment/deploy_to_heroku.sh
