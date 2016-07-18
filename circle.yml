@@ -18,8 +18,8 @@ deployment:
   develop:
     branch: develop
     commands:
-      - ./deployment/build_release.sh
+      - sh ./deployment/build_release.sh
   release:
     branch: master
     commands:
-      - ./deployment/deploy_to_heroku.sh
+      - sh ./deployment/deploy_to_heroku.sh
