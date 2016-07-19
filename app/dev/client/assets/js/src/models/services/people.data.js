@@ -99,7 +99,7 @@ class PeopleData {
                 uuid: uuid
             }
         }).then(response => {
-            if (response.length) {
+            if (response && response.length) {
                 response.forEach(connection => {
                     if (!this.people[connection.person.id]) {
                         this.people[connection.person.id] = connection.person;

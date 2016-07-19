@@ -4,7 +4,9 @@
     const CONFIG = require('../config').get(),
         request = require('request'),
         Article = require('../api/article'),
-        responder = require('../api/common/responder');
+        responder = require('../api/common/responder'),
+        contentCache = require('../api/common/content-cache'),
+        winston = require('../winston-logger');
 
     function fetch(uuid, clientResponse) {
 
@@ -18,7 +20,17 @@
             } else {
 
                 if (content && content.length) {
-                    Article.getAll(content, clientResponse);
+                    const contentFromCache = contentCache.get(uuid);
+                    if (contentFromCache) {
+                        responder.send(clientResponse, {
+                            status: 200,
+                            data: contentFromCache,
+                            description: 'content from cache'
+                        });
+                    } else {
+                        winston.logger.info('[people-in-articles] Content for ' + decodeURIComponent(uuid) + ' not cached, attempting to fetch...');
+                        Article.getAll(uuid, content, clientResponse);
+                    }
                 }
             }
         });

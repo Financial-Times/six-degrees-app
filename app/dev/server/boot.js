@@ -59,7 +59,7 @@
         });
 
         server.listen(CONFIG.PORT, function () {
-            winston.logger.info('Running server on port', CONFIG.PORT, 'in', CONFIG.VER, 'version...');
+            winston.logger.info('[boot] Running server on port', CONFIG.PORT, 'in', CONFIG.VER, 'version...');
         });
 
     }
