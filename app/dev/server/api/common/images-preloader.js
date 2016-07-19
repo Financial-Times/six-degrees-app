@@ -139,7 +139,7 @@
             winston.logger.info('[preloader] No ' + imageUrl + ' in preload buffer, updating...');
             preloadBuffer.push(imageUrl);
             if (!preloadingInterval) {
-                preloadingInterval = setInterval(handlePreload, 5000);
+                preloadingInterval = setInterval(handlePreload, 10000);
             }
         } else {
             winston.logger.info('[preloader] ' + imageUrl + ' already in preload buffer, aborting...');
