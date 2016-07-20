@@ -85,7 +85,7 @@
                                 } else {
                                     winston.logger.info(localServerImagePath + ' successfully copied to cache.');
                                     optimizedImages.push(localServerImagePath);
-                                    contentCache.updateImageUrl(originalImageUrl, localServerImagePath);
+                                    contentCache.updateImageUrl(originalImageUrl, localImageUrl);
                                 }
                                 optimizationInProgress = false;
                             });
