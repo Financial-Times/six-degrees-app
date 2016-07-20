@@ -66,11 +66,11 @@ class PeopleData {
         Content.update(JSON.parse(JSON.stringify(this.contentBuffer.images.concat(this.contentBuffer.noimages))));
     }
 
-    searchForContent() {
+    searchForContent(id, callback) {
         this.duoContent = false;
         Content.inProgress = true;
         Ajax.get({
-            url: 'api/articles/' + window.encodeURIComponent(this.activePerson.id)
+            url: 'api/articles/' + window.encodeURIComponent(id || this.activePerson.id)
         }).then(response => {
             Content.inProgress = false;
             response.forEach(article => {
@@ -78,29 +78,37 @@ class PeopleData {
                     this.addToContent(article);
                 }
             });
+            if (callback) {
+                callback();
+            }
         }).catch(error => {
             console.warn('error', error);
         });
 
     }
 
+    filter(nameOne, nameTwo) {
+        const existingContent = Content.get(),
+            filteredContent = [];
+
+        existingContent.forEach(article => {
+            if (article.body.indexOf(nameOne) !== -1 && article.body.indexOf(nameTwo) !== -1) {
+                filteredContent.push(article);
+            }
+        });
+
+        return filteredContent;
+    }
+
     filterContentForTwo(nameOne, nameTwo, uuidOne, uuidTwo) {
-        this.duoContent = nameOne + ' and ' + nameTwo;
-
         if (this.activePerson.id === uuidOne || this.activePerson.id === uuidTwo) {
-            console.warn('izi');
-            const existingContent = Content.get(), //gets already filtered in subsequent calls
-                filteredContent = [];
-
-            existingContent.forEach(article => {
-                if (article.body.indexOf(nameOne) !== -1 && article.body.indexOf(nameTwo) !== -1) {
-                    filteredContent.push(article);
-                }
-                Content.update(filteredContent);
-            });
+            Content.filter(this.filter(nameOne, nameTwo));
         } else {
-            console.warn('not izi');
+            this.searchForContent(uuidOne, () => {
+                Content.filter(this.filter(nameOne, nameTwo));
+            });
         }
+        this.duoContent = nameOne + ' and ' + nameTwo + ' together';
     }
 
     getMentionedMostly(uuid) {

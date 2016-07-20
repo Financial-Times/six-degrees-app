@@ -7,8 +7,16 @@ class Content {
         this.data = data;
     }
 
+    filter(data) {
+        this.filteredData = data;
+    }
+
     get() {
         return this.data;
+    }
+
+    getFiltered() {
+        return this.filteredData;
     }
 }
 

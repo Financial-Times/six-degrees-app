@@ -51,6 +51,10 @@ export class Connections {
             this.contentData = Content.get();
         });
 
+        this.observerLocator.getObserver(Content, 'filteredData').subscribe(() => {
+            this.filteredData = Content.getFiltered();
+        });
+
         this.observerLocator.getObserver(Content, 'inProgress').subscribe(() => {
             this.contentInProgress = Content.inProgress;
         });

@@ -28,7 +28,7 @@
                         </h3>
                     </div>
                     <div class="related-articles" if.bind="contentData">
-                        <ul>
+                        <ul if.bind="contentData && !filteredData">
                             <li repeat.for="article of contentData">
                                 <div class="article-details">
                                     <a href="${article.location.uri}" target="_blank" class="article-thumbnail" if.bind="article.imageUrl">
@@ -41,6 +41,21 @@
                                     </a>
                                 </div>
                             </li>
+                        </ul>
+                        <ul if.bind="filteredData">
+                            <li repeat.for="article of filteredData">
+                                <div class="article-details">
+                                    <a href="${article.location.uri}" target="_blank" class="article-thumbnail" if.bind="article.imageUrl">
+                                        <img src="${article.imageUrl}" alt="${article.title}" />
+                                    </a>
+                                    <a href="${article.location.uri}" target="_blank">
+                                        <span class="article-title">${article.title}</span>
+                                        <span class="article-byline" if.bind="article.byline">by ${article.byline}</span>
+                                        <span class="article-published" if.bind="article.published">${article.published}</span>
+                                    </a>
+                                </div>
+                            </li>
+                            <li if.bind="!filteredData.length">Not found...</li>
                         </ul>
                     </div>
                     <div class="spinner-small" if.bind="contentInProgress"></div>
