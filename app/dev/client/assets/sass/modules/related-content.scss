@@ -1,13 +1,17 @@
 .related-content {
     overflow: hidden;
     overflow-y: auto;
-    padding: 0 30px 24px 0;
-    margin-right: -30px;
+    padding: 0 40px 24px 0;
+    margin-right: -40px;
     .related-content-header {
         background: transparent url("https://next-geebee.ft.com/image/v1/images/raw/http%3a%2f%2fnext-geebee.ft.com%2fassets%2fbackgrounds%2ffront-page-section-header-v2.svg?source=next&format=svg&tint=000000,000000") repeat scroll 0 0;
         width: 100%;
         overflow: auto;
         margin: 24px 0 12px 0;
+
+        span {
+            display: block;
+        }
     }
 
     h3 {

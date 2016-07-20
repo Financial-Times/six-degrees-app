@@ -36,6 +36,10 @@ export class Connections {
             this.person = PeopleData.activePerson;
         });
 
+        this.observerLocator.getObserver(PeopleData, 'duoContent').subscribe((duoContent) => {
+            this.duoContent = duoContent;
+        });
+
         this.observerLocator.getObserver(GraphSettings, 'shareLinkState').subscribe((state) => {
             this.shareLinkState = state;
             if (state) {

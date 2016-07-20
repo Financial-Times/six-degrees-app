@@ -31,6 +31,8 @@ router-view {
    height: 75%;
    overflow: hidden;
    overflow-y: auto;
+   margin-right: -40px;
+   padding-right: 10px;
 
     .connections-module,
     .related-content {

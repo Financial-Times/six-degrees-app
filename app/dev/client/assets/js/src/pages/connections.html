@@ -21,7 +21,11 @@
             <div data-o-grid-colspan="12 M4 XL4">
                 <div class="related-content">
                     <div class="related-content-header">
-                        <h3>${person.name}<br />in the FT headlines</h3>
+                        <h3>
+                            <span if.bind="duoContent">${duoContent}</span>
+                            <span if.bind="!duoContent && person">${person.name}</span>
+                            in the FT headlines
+                        </h3>
                     </div>
                     <div class="related-articles" if.bind="contentData">
                         <ul>

@@ -44,6 +44,7 @@ class PeopleData {
                 title: item.title,
                 imageUrl: item.imageUrl,
                 byline: item.byline,
+                body: item.bodyXML,
                 published: moment(item.publishedDate).format('MMMM DD, YYYY'),
                 publishedTimestamp: moment(item.publishedDate).unix(),
                 location: {
@@ -66,18 +67,40 @@ class PeopleData {
     }
 
     searchForContent() {
+        this.duoContent = false;
         Content.inProgress = true;
         Ajax.get({
             url: 'api/articles/' + window.encodeURIComponent(this.activePerson.id)
         }).then(response => {
             Content.inProgress = false;
             response.forEach(article => {
-                this.addToContent(article);
+                if (typeof article === 'object') {
+                    this.addToContent(article);
+                }
             });
         }).catch(error => {
             console.warn('error', error);
         });
 
+    }
+
+    filterContentForTwo(nameOne, nameTwo, uuidOne, uuidTwo) {
+        this.duoContent = nameOne + ' and ' + nameTwo;
+
+        if (this.activePerson.id === uuidOne || this.activePerson.id === uuidTwo) {
+            console.warn('izi');
+            const existingContent = Content.get(), //gets already filtered in subsequent calls
+                filteredContent = [];
+
+            existingContent.forEach(article => {
+                if (article.body.indexOf(nameOne) !== -1 && article.body.indexOf(nameTwo) !== -1) {
+                    filteredContent.push(article);
+                }
+                Content.update(filteredContent);
+            });
+        } else {
+            console.warn('not izi');
+        }
     }
 
     getMentionedMostly(uuid) {

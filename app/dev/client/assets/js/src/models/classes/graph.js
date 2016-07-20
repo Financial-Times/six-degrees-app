@@ -19,6 +19,9 @@ export class Graph {
             element = document.getElementById('graph'),
             width = element.parentNode.offsetWidth,
             height = element.parentNode.offsetHeight,
+            tooltip = d3.select('body').append('div')
+                .attr('class', 'tooltip')
+                .style('opacity', 0),
             svg = d3.select('#graph')
                 .append('div')
                 .classed('svg-container', true)
@@ -63,11 +66,8 @@ export class Graph {
             }
         }
 
-        function abbreviateFullName(fullName) {
-            const arrayOfWords = fullName.split(' '),
-                max = arrayOfWords.length;
-
-            return arrayOfWords[0] + ' ' + arrayOfWords[max - 1];
+        function getConnectionTooltipContent(d) {
+            return '<span>Click at the link<br />to see articles with</span><i class="material-icons">play_arrow</i><em><strong>' + PeopleData.getAbbreviatedName(d.source.id) + '</strong>and<strong>' + PeopleData.getAbbreviatedName(d.target.id) + '</strong></em>';
         }
 
         function findNode(id) {
@@ -174,17 +174,35 @@ export class Graph {
                     return d.source.id + '-' + d.target.id;
                 })
                 .attr('stroke-width', function (d) {
-                    return d.value  / 2;
+                    return d.value;
+                }).on('mouseover', function (d) {
+                    const coordinates = d3.mouse(this),
+                        posX = coordinates[0],
+                        posY = coordinates[1];
+                    d3.select(this).attr('stroke-width', 16);
+
+                    tooltip.transition().duration(200)
+                        .style('opacity', 0.9);
+
+                    tooltip.html(getConnectionTooltipContent(d))
+                        .style('left', posX + 'px')
+                        .style('top', posY + 'px');
+
+                }).on('mouseout', function (d) {
+                    tooltip.transition().duration(0)
+                        .style('opacity', 0)
+                        .style('left', '-100px')
+                        .style('top', '-100px');
+                    d3.select(this).attr('stroke-width', d.value);
+                }).on('click', function (d) {
+                    d3.select('.duo-content').classed('duo-content', false);
+                    d3.select(this).classed('duo-content', true);
+                    PeopleData.filterContentForTwo(PeopleData.getAbbreviatedName(d.source.id), PeopleData.getAbbreviatedName(d.target.id), d.source.uuid, d.target.uuid);
                 });
 
             line.attr('class', function () {
                 return 'link';
             });
-
-            link.append('title')
-                .text(function (d) {
-                    return d.value;
-                });
 
             link.exit().remove();
 
@@ -208,7 +226,7 @@ export class Graph {
                     return index === 0 ? 25 : 20;
                 })
                 .on('click', function (nodeData) {
-
+                    d3.select('.duo-content').classed('duo-content', false);
                     svg.select('.nodes').selectAll('g.node circle').attr('r', 20);
                     svg.select('.nodes').selectAll('g.node-root').attr('class', 'node node-visited');
 
@@ -233,7 +251,7 @@ export class Graph {
                     PeopleData.setActiveByUuid(nodeData.uuid);
 
                     if (previousNodeId) {
-                        const name = abbreviateFullName(previousNodeId);
+                        const name = PeopleData.getAbbreviatedName(previousNodeId);
                         if (!BrowsingHistory.contains(name)) {
                             BrowsingHistory.add(name, previousNodeUuid);
                         }
@@ -293,7 +311,7 @@ export class Graph {
                 .attr('y', function () {
                     return '1.4em';
                 }).each(function (d) {
-                    const arrayOfWords = abbreviateFullName(d.id).split(' ');
+                    const arrayOfWords = PeopleData.getAbbreviatedName(d.id).split(' ');
 
                     d3.select(this).append('tspan')
                         .text(arrayOfWords[0])

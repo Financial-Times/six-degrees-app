@@ -225,8 +225,10 @@ graph-view {
     .link {
         stroke: $link-primary-color;
 
-        &.hover {
+        &.hover,
+        &:hover {
             stroke: $path-complimentary-color;
+            cursor: pointer;
         }
 
         &.marked {
@@ -245,6 +247,10 @@ graph-view {
         &.highlighted,
         &.highlighted.pale {
             stroke: $path-complimentary-color;
+        }
+
+        &.duo-content {
+            stroke: #416e92;
         }
     }
 }
@@ -332,6 +338,50 @@ graph-view {
             line-height: 32px;
             position: relative;
             top: -1px;
+        }
+    }
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 100;
+    top: -100px;
+    left: -100px;
+    text-align: center;
+    font-size: 12px;
+    background: white;
+    border-radius: 3px;
+
+    span {
+        display: block;
+        background: #cec6b9;
+        padding: 6px;
+        border-radius: 3px;
+    }
+
+    i {
+        position: absolute;
+        top: 26px;
+        left: 0;
+        right: 0;
+        display: block;
+        color: #cec6b9;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+    }
+
+    em {
+        display: block;
+        font-style: normal;
+        padding: 8px 6px 6px 6px;
+
+        strong {
+            font-weight: normal;
+            display: block;
+            font-size: 14px;
         }
     }
 }
