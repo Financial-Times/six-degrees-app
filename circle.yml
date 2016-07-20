@@ -7,10 +7,6 @@ checkout:
   post:
     - ./deployment/configure_github.sh
 
-dependencies:
-  pre:
-    - echo "machine api.heroku.com login tomasz.libich@ft.com password ${HEROKU_AUTH_TOKEN}" >> ${HOME}/.netrc;
-
 ## Customize test commands
 test:
   override:
