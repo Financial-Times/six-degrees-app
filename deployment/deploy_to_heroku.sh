@@ -1,1 +1,1 @@
-npm run deploy
+gulp client-build-release && npm run deploy
