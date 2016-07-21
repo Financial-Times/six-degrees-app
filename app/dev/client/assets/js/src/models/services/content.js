@@ -29,9 +29,15 @@ class Content {
         uuidOne = this.parseUuid(uuidOne);
         uuidTwo = this.parseUuid(uuidTwo);
 
-        const connectionsContent = this.connectionsData[uuidOne];
+        const connectionsContent = this.connectionsData[uuidOne] || this.connectionsData[uuidTwo];
 
-        this.filteredData = connectionsContent[uuidTwo] ? connectionsContent[uuidTwo] : [];
+        if (connectionsContent[uuidTwo]) {
+            this.filteredData = connectionsContent[uuidTwo];
+        } else if (connectionsContent[uuidOne]) {
+            this.filteredData = connectionsContent[uuidOne];
+        } else {
+            this.filteredData = [];
+        }
     }
 
     getFiltered() {
