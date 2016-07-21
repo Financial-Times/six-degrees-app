@@ -32,7 +32,7 @@
         peopleIds.forEach(uuid => {
             if (!cacheStorage.connections[todayDate][uuid]) {
                 winston.logger.info('Uuid ' + uuid + ' not found in cacheStorage, sending request...');
-                request(CONFIG.API_URL.SIX_DEGREES.HOST + 'connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&uuid=' + uuid, function (error, response, connectionsBody) {
+                request(CONFIG.API_URL.SIX_DEGREES.HOST + 'connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&contentLimit=20&uuid=' + uuid, function (error, response, connectionsBody) {
                     if (response && response.statusCode && response.statusCode === 200) {
                         cacheStorage.connections[todayDate][uuid] = connectionsBody;
                         winston.logger.info('Connections for ' + uuid + 'cached successfuly.');
@@ -82,7 +82,7 @@
             }, 2000);
 
 
-            request(CONFIG.API_URL.SIX_DEGREES.HOST + 'connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&uuid=' + uuid, function (error, response, body) {
+            request(CONFIG.API_URL.SIX_DEGREES.HOST + 'connectedPeople?minimumConnections=2&fromDate=' + fromDate + '&toDate=' + toDate + '&limit=50&contentLimit=20&uuid=' + uuid, function (error, response, body) {
                 if (!responseSent && response.statusCode === 200) {
                     cacheStorage.connections[todayDate] = cacheStorage.connections[todayDate] || {};
                     cacheStorage.connections[todayDate][uuid] = body;

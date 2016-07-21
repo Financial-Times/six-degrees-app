@@ -186,7 +186,7 @@ export class Graph {
 
                     tooltip.html(getConnectionTooltipContent(d))
                         .style('left', posX + 'px')
-                        .style('top', posY + 'px');
+                        .style('top', posY - 50 + 'px');
 
                 }).on('mouseout', function (d) {
                     tooltip.transition().duration(0)

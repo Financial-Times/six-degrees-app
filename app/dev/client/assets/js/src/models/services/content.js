@@ -17,26 +17,30 @@ class Content {
         return this.data;
     }
 
+    createConnectionsCache(uuid) {
+        uuid = this.parseUuid(uuid);
+        if (!this.connectionsData[uuid]) {
+            this.connectionsData[uuid] = {};
+        }
+    }
+
     updateConnectionsContent(uuid, connectionUuid, content) {
         uuid = this.parseUuid(uuid);
         connectionUuid = this.parseUuid(connectionUuid);
-        const currentConnectionsContent = this.connectionsData[uuid] || {};
-        currentConnectionsContent[connectionUuid] = content;
-        this.connectionsData[uuid] = currentConnectionsContent;
+        this.connectionsData[uuid][connectionUuid] = content;
     }
 
     filter(uuidOne, uuidTwo) {
         uuidOne = this.parseUuid(uuidOne);
         uuidTwo = this.parseUuid(uuidTwo);
 
-        const connectionsContent = this.connectionsData[uuidOne] || this.connectionsData[uuidTwo];
+        let connectionsContent = this.connectionsData[uuidOne];
 
-        if (connectionsContent[uuidTwo]) {
-            this.filteredData = connectionsContent[uuidTwo];
-        } else if (connectionsContent[uuidOne]) {
-            this.filteredData = connectionsContent[uuidOne];
-        } else {
-            this.filteredData = [];
+        this.filteredData = connectionsContent[uuidTwo] ? connectionsContent[uuidTwo] : [];
+
+        if (!this.filteredData.length && this.connectionsData[uuidTwo]) {
+            connectionsContent = this.connectionsData[uuidTwo];
+            this.filteredData = connectionsContent[uuidOne] ? connectionsContent[uuidOne] : [];
         }
     }
 

@@ -69,8 +69,6 @@
         const singleResult = fetchSingle(article);
 
         singleResult.then(result => {
-            console.log('SINGLE', result);
-
             clientResponse.send({
                 status: 200,
                 data: result
