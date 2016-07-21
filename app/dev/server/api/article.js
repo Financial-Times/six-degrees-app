@@ -65,52 +65,21 @@
 
     }
 
-    function get(articleid, clientResponse) {
-        request(CONFIG.API_URL.CONTENT + articleid.replace('http://www.ft.com/things/', '') + '?apiKey=' + CONFIG.AUTH.API_KEY.FT, function (err, res) {
-            if (err) {
-                responder.reject();
-            } else {
-                const body = jsonHandler.parse(res.body);
-                if (body && body.mainImage && body.mainImage.id) {
-                    const uuid = body.mainImage.id.replace('http', 'https').replace(process.env.FT_API_URL + 'content/', '');
+    function getSingle(article, clientResponse) {
+        const singleResult = fetchSingle(article);
 
-                    request({
-                        url: CONFIG.API_URL.CONTENT + uuid + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
-                    }, function (imagesError, imagesResponse, imagesBody) {
-                        imagesBody = jsonHandler.parse(imagesBody);
-                        if (imagesBody.members) {
-                            const memberUuid = imagesBody.members[0].id.replace('http', 'https').replace(process.env.FT_API_URL + 'content/', '');
-                            request({
-                                url: CONFIG.API_URL.CONTENT + memberUuid + '?apiKey=' + CONFIG.AUTH.API_KEY.FT
-                            }, function (imageError, imageResponse, imageBody) {
-                                imageBody = jsonHandler.parse(imageBody);
-                                body.binaryUrl = imageBody.binaryUrl;
-                                body.imageUrl = body.binaryUrl;
-                                clientResponse.send({
-                                    status: 200,
-                                    data: body
-                                });
-                                imagesPreloader.updatePreloadBuffer(body.imageUrl);
-                            });
-                        } else {
-                            clientResponse.send({
-                                status: 200,
-                                data: body
-                            });
-                        }
-                    });
-                } else {
-                    clientResponse.send({
-                        status: 200,
-                        data: body
-                    });
-                }
-            }
+        singleResult.then(result => {
+            console.log('SINGLE', result);
+
+            clientResponse.send({
+                status: 200,
+                data: result
+            });
         });
     }
 
     module.exports = {
         getAll: getAll,
-        get: get
+        getSingle: getSingle
     };
 }());

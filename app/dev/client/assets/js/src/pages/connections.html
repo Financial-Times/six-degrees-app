@@ -21,6 +21,9 @@
             <div data-o-grid-colspan="12 M4 XL4">
                 <div class="related-content">
                     <div class="related-content-header">
+                        <em if.bind="duoContent" class="duo-content-reset-link">
+                            <a href="#" class="material-icons" click.delegate="resetContent()" title="restore">settings_backup_restore</a>
+                        </em>
                         <h3>
                             <span if.bind="duoContent">${duoContent}</span>
                             <span if.bind="!duoContent && person">${person.name}</span>
@@ -45,17 +48,17 @@
                         <ul if.bind="filteredData">
                             <li repeat.for="article of filteredData">
                                 <div class="article-details">
-                                    <a href="${article.location.uri}" target="_blank" class="article-thumbnail" if.bind="article.imageUrl">
+                                    <a href="${article.webUrl}" target="_blank" class="article-thumbnail" if.bind="article.imageUrl">
                                         <img src="${article.imageUrl}" alt="${article.title}" />
                                     </a>
-                                    <a href="${article.location.uri}" target="_blank">
+                                    <a href="${article.webUrl}" target="_blank">
                                         <span class="article-title">${article.title}</span>
                                         <span class="article-byline" if.bind="article.byline">by ${article.byline}</span>
                                         <span class="article-published" if.bind="article.published">${article.published}</span>
                                     </a>
                                 </div>
                             </li>
-                            <li if.bind="!filteredData.length">Not found...</li>
+                            <li if.bind="!filteredData.length" class="not-found">Not found...</li>
                         </ul>
                     </div>
                     <div class="spinner-small" if.bind="contentInProgress"></div>

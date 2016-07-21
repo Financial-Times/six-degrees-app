@@ -37,7 +37,9 @@
                 Person.getImage(params[1], clientResponse);
                 break;
             case 'content':
-                Article.get(params[1], clientResponse);
+                Article.getSingle({
+                    id: params[1]
+                }, clientResponse);
                 break;
             case 'uuid':
                 User.getSession(params[1], clientResponse);

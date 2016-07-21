@@ -65,6 +65,11 @@ export class Connections {
         this.connectionsUuid = params.id;
     }
 
+    resetContent() {
+        Content.clearFiltered();
+        PeopleData.duoContent = null;
+    }
+
     changePerson(event, id) {
         event.preventDefault();
         event.stopPropagation();

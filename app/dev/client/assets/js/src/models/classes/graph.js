@@ -484,5 +484,9 @@ export class Graph {
             }
 
         };
+
+        this.clearDuoLink = function () {
+            d3.select('.duo-content').classed('duo-content', false);
+        };
     }
 }

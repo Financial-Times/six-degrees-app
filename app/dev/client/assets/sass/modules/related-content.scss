@@ -1,17 +1,21 @@
 .related-content {
     overflow: hidden;
     overflow-y: auto;
-    padding: 0 40px 24px 0;
+    padding: 0 70px 24px 0;
     margin-right: -40px;
     .related-content-header {
+        position: relative;
         background: transparent url("https://next-geebee.ft.com/image/v1/images/raw/http%3a%2f%2fnext-geebee.ft.com%2fassets%2fbackgrounds%2ffront-page-section-header-v2.svg?source=next&format=svg&tint=000000,000000") repeat scroll 0 0;
         width: 100%;
         overflow: auto;
         margin: 24px 0 12px 0;
-
         span {
             display: block;
         }
+    }
+
+    .related-articles {
+        margin-top: 6px;
     }
 
     h3 {
@@ -21,6 +25,8 @@
         float: left;
         margin: 0 0 0 12px;
         padding: 0 12px;
+        position: relative;
+        z-index: 1;
     }
 
     ul {
@@ -139,4 +145,30 @@
         float: right;
         margin-top: 12px;
     }
+}
+
+.duo-content-reset-link {
+    display: block;
+    font-size: 12px;
+    font-style: normal;
+    overflow: auto;
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    bottom: -5px;
+
+    a {
+        display: inline-block;
+        text-decoration: none;
+        margin: 0;
+        color: #27757b;
+
+        &:hover {
+            color: #2bbbbf;
+        }
+    }
+}
+
+.not-found {
+    padding: 12px;
 }

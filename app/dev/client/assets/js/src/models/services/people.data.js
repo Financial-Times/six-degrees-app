@@ -87,27 +87,8 @@ class PeopleData {
 
     }
 
-    filter(nameOne, nameTwo) {
-        const existingContent = Content.get(),
-            filteredContent = [];
-
-        existingContent.forEach(article => {
-            if (article.body.indexOf(nameOne) !== -1 && article.body.indexOf(nameTwo) !== -1) {
-                filteredContent.push(article);
-            }
-        });
-
-        return filteredContent;
-    }
-
     filterContentForTwo(nameOne, nameTwo, uuidOne, uuidTwo) {
-        if (this.activePerson.id === uuidOne || this.activePerson.id === uuidTwo) {
-            Content.filter(this.filter(nameOne, nameTwo));
-        } else {
-            this.searchForContent(uuidOne, () => {
-                Content.filter(this.filter(nameOne, nameTwo));
-            });
-        }
+        Content.filter(uuidOne, uuidTwo);
         this.duoContent = nameOne + ' and ' + nameTwo + ' together';
     }
 
@@ -135,6 +116,20 @@ class PeopleData {
                     if (!this.people[connection.person.id]) {
                         this.people[connection.person.id] = connection.person;
                         this.stored.push(connection.person);
+
+                        if (connection.content) {
+                            connection.content.forEach((article, index) => {
+                                Ajax.get({
+                                    url: 'api/content/' + article.id
+                                }).then(res => {
+
+                                    article.published = moment(res.data.publishedDate).format('MMMM DD, YYYY');
+                                    connection.content[index] = Object.assign({}, article, res.data);
+
+                                    Content.updateConnectionsContent(uuid, connection.person.id, connection.content);
+                                });
+                            });
+                        }
                     }
                 });
                 this.stored.forEach((person) => {
@@ -167,6 +162,7 @@ class PeopleData {
     }
 
     updateActivePerson(index) {
+        Content.clearFiltered();
         this.activePerson = this.stored[index];
         this.contentBuffer = {
             images: [],

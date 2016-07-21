@@ -122,6 +122,12 @@ export class GraphView {
             self.targetPerson = targetPerson;
         });
 
+        self.observerLocator.getObserver(PeopleData, 'duoContent').subscribe(() => {
+            if (!PeopleData.duoContent && self.graph) {
+                self.graph.clearDuoLink();
+            }
+        });
+
         if (PeopleData.activePerson && !self.pending) {
             self.getGraphData();
         }
