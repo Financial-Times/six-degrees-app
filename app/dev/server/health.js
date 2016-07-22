@@ -3,7 +3,7 @@
 
     const CONFIG = require('./config').get(),
         MODULE_CONFIG = {
-            CHECKS_TIMEOUT: 10000,
+            CHECKS_TIMEOUT: 300000,
             CHECKS_IN_PROGRESS: false
         },
         request = require('request'),
