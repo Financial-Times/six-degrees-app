@@ -102,7 +102,7 @@
         }
 
         if (!result.length) {
-            result = moment() + ' not yet performed';
+            result = moment() + ' not yet performed, just deployed';
         }
 
         return result;
