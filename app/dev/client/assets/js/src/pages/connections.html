@@ -20,10 +20,10 @@
             </div>
             <div data-o-grid-colspan="12 M4 XL4">
                 <div class="related-content">
-                    <div class="related-content-header">
-                        <em if.bind="duoContent" class="duo-content-reset-link">
+                    <div class="related-content-header" if.bind="duoContent || person">
+                        <!--<em if.bind="duoContent" class="duo-content-reset-link">
                             <a href="#" class="material-icons" click.delegate="resetContent()" title="restore">settings_backup_restore</a>
-                        </em>
+                        </em>-->
                         <h3>
                             <span if.bind="duoContent">${duoContent}</span>
                             <span if.bind="!duoContent && person">${person.name}</span>

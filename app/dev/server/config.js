@@ -43,7 +43,9 @@
                 }
             },
             PORT: process.env.PORT || 8080,
-            APP: 'FTSixDegrees',
+            SYSTEM_CODE: 'ft-upp-six-degrees',
+            APP: 'FT UPP Six Degrees',
+            DESCRIPTION: 'A prototype FT Universal Publishing Platform front-end app that allows to discover connections between people from FT articles in a given period of time.',
             VER: process.env.APP_VERSION,
             APP_PATH: 'app/' + process.env.APP_VERSION + '/client/',
             MONITOR_PATH: 'app/' + process.env.APP_VERSION + '/server/view/monitor/',

@@ -24,8 +24,8 @@ class PeopleData {
             return 0;
         }
 
-        item.title = item.title.length > 65 ? item.title.substring(0, 65) + '...' : item.title;
-        item.byline = item.byline.length > 70 ? item.byline.substring(0, 70) + '...' : item.byline;
+        item.title = item.title && item.title.length > 65 ? item.title.substring(0, 65) + '...' : item.title;
+        item.byline = item.byline && item.byline.length > 70 ? item.byline.substring(0, 70) + '...' : item.byline;
 
         this.contentBuffer.images.forEach(article => {
             if (article.title === item.title) {
@@ -89,7 +89,7 @@ class PeopleData {
 
     filterContentForTwo(nameOne, nameTwo, uuidOne, uuidTwo) {
         Content.filter(uuidOne, uuidTwo);
-        this.duoContent = nameOne + ' and ' + nameTwo + ' together';
+        this.duoContent = nameOne + ' and ' + nameTwo;
     }
 
     getMentionedMostly(uuid) {

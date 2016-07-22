@@ -9,6 +9,7 @@
         logger = require('./logger'),
         winston = require('./winston-logger'),
         api = require('./api'),
+        health = require('./health'),
         cors = require('./cors'),
         authS3O = require('s3o-middleware'),
         server = express();
@@ -44,6 +45,7 @@
         }));
         server.use('/', express.static(CONFIG.APP_PATH));
         server.use('/monitor/', express.static(CONFIG.MONITOR_PATH));
+        server.get('/__health', health.check);
     }
 
     function start(version) {
