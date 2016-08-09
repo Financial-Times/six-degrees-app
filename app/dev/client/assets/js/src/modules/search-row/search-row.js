@@ -109,7 +109,6 @@ export class SearchRow {
                     });
 
                     peopleFiltered = peopleFiltered.concat(peopleFirstMatch).concat(peopleNoFirstMatch);
-
                     self.people = peopleFiltered;
 
                     if (self.people.length) {
@@ -118,6 +117,8 @@ export class SearchRow {
                     } else {
                         self.notFound = true;
                     }
+                } else {
+                    self.notFound = true;
                 }
             }
 
