@@ -121,3 +121,29 @@ search-row {
         }
     }
 }
+
+.search-spinner {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: transparent url('../img/components/spinner-small.gif') no-repeat center center;
+    background-size: contain;
+    z-index: 30;
+    position: absolute;
+    right: 6px;
+    top: 6px;
+}
+
+.search-server-issue,
+.search-not-found {
+    display: block;
+    z-index: 30;
+    position: absolute;
+    right: 6px;
+    top: 0;
+    line-height: 32px;
+}
+
+.search-not-found {
+    color: #eda45e;
+}

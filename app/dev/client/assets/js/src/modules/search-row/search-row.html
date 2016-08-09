@@ -3,6 +3,9 @@
 
         <form submit.trigger="submit()">
             <div class="iftt-search-row-field" id="search-input">
+                <span class="search-spinner" if.bind="searchPending"></span>
+                <span class="search-server-issue o-forms-errortext" if.bind="!searchPending && searchServerIssue">Oops, search temporary unavailable...</span>
+                <span class="search-not-found o-forms-errortext" if.bind="!searchPending && notFound">Not found...</span>
                 <input type="text" placeholder="Search for someone..." value.bind="searchPhrase" oninput.bind="handleInput" onkeydown.bind="handleKey" />
                 <ul class="iftt-search-hints" id="search-hints" onkeydown.bind="handleKey" if.bind="people.length">
                     <li repeat.for="person of people">

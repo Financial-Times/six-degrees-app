@@ -49,19 +49,27 @@
     function getAll(uuid, content, clientResponse) {
         content = jsonHandler.parse(content);
 
-        const actions = content.map(fetchSingle),
-            results = Promise.all(actions);
+        const actions = content && content.map ? content.map(fetchSingle) : [],
+            results = actions.length ? Promise.all(actions) : null;
 
-        results.then(data => {
+        if (results) {
+            results.then(data => {
+                responder.send(clientResponse, {
+                    status: 200,
+                    data: data,
+                    description: 'new content'
+                });
+                contentCache.add(uuid, data);
+            }).catch(function () {
+                responder.rejectBadGateway(clientResponse);
+            });
+        } else {
             responder.send(clientResponse, {
                 status: 200,
-                data: data,
+                data: [],
                 description: 'new content'
             });
-            contentCache.add(uuid, data);
-        }).catch(function () {
-            responder.rejectBadGateway();
-        });
+        }
 
     }
 

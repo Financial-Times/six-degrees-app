@@ -58,9 +58,9 @@
                                     </a>
                                 </div>
                             </li>
-                            <li if.bind="!filteredData.length" class="not-found">Not found...</li>
                         </ul>
                     </div>
+                    <div if.bind="!filteredData.length && !contentData.length" class="not-found">Not found...</div>
                     <div class="spinner-small" if.bind="contentInProgress"></div>
                 </div>
             </div>

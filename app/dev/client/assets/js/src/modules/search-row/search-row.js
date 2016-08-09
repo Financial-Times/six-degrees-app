@@ -15,6 +15,8 @@ export class SearchRow {
         this.people = [];
         this.activeIndex = -1;
         this.inputField = null;
+        this.searchPending = false;
+        this.searchServerIssue = false;
 
         this.handleKey = event => {
             const people = this.people || [];
@@ -51,6 +53,9 @@ export class SearchRow {
             function parse(response) {
                 const people = [];
 
+                self.searchPending = false;
+                self.searchServerIssue = false;
+
                 if (response.length) {
                     response.forEach(person => {
                         const source = person._source; //eslint-disable-line no-underscore-dangle
@@ -67,47 +72,69 @@ export class SearchRow {
                     });
                 }
 
-                people.forEach(person => {
-                    const aliases = [];
-                    if (person.aliases && person.aliases.length) {
-                        person.aliases.forEach((alias) => {
-                            if (alias !== person.name) {
-                                aliases.push(alias);
-                            }
-                        });
-                        person.aliases = aliases;
-                    }
-                });
+                if (people && people.length) {
+                    people.forEach(person => {
+                        const aliases = [];
+                        if (person.aliases && person.aliases.length) {
+                            person.aliases.forEach((alias) => {
+                                if (alias !== person.name) {
+                                    aliases.push(alias);
+                                }
+                            });
+                            person.aliases = aliases;
+                        }
+                    });
 
-                people.forEach(person => {
-                    if (person.salutation && isNotRegularSalutation(person.salutation)) {
-                        person.salutation = null;
-                    }
-                });
-
+                    people.forEach(person => {
+                        if (person.salutation && isNotRegularSalutation(person.salutation)) {
+                            person.salutation = null;
+                        }
+                    });
+                }
                 return people;
             }
 
             function update(people) {
                 if (people && people.length) {
-                    const peopleFiltered = [];
+                    const peopleFirstMatch = [],
+                        peopleNoFirstMatch = [];
+                    let peopleFiltered = [];
 
                     people.forEach((person) => {
                         if (person.name.indexOf(self.searchPhrase) === 0) {
-                            peopleFiltered.push(person);
+                            peopleFirstMatch.push(person);
+                        } else {
+                            peopleNoFirstMatch.push(person);
                         }
                     });
+
+                    peopleFiltered = peopleFiltered.concat(peopleFirstMatch).concat(peopleNoFirstMatch);
+
                     self.people = peopleFiltered;
 
-                    document.getElementById('search-row').className += ' active';
+                    if (self.people.length) {
+                        self.notFound = false;
+                        document.getElementById('search-row').className += ' active';
+                    } else {
+                        self.notFound = true;
+                    }
                 }
             }
 
             if (value && value.length > 2) {
+                self.searchPending = true;
                 Search.findPeople({
                     'queryString': value
-                }).then(parse).then(update);
+                })
+                    .then(parse)
+                    .then(update)
+                    .catch(error => {
+                        self.searchPending = false;
+                        self.searchServerIssue = true;
+                        console.warn('Search error', error);
+                    });
             } else {
+                self.searchPending = false;
                 self.people = null;
             }
         };
@@ -115,13 +142,14 @@ export class SearchRow {
 
     submit(event) {
         this.people = [];
+        this.searchPending = true;
 
         if (event) {
             event.preventDefault();
             event.stopPropagation();
         }
 
-        if (this.searchPhrase) {
+        if (this.searchPhrase && !this.searchServerIssue) {
             PeopleData.acceptedSearchPerson(this.searchPhrase);
             this.inputField.blur();
 
@@ -129,11 +157,11 @@ export class SearchRow {
                 this.elasticSearchPerson = person;
             });
 
-            console.warn('this.searchPhrase', this.searchPhrase);
-
             Search.findPerson({
                 'queryString': this.searchPhrase
             }).then(response => {
+                this.searchPending = false;
+                this.searchServerIssue = false;
                 this.response = response.length ? response : [];
 
                 if (this.response.length) {
@@ -149,7 +177,7 @@ export class SearchRow {
 
                     PeopleData.storeMentioned(this.response);
                     PeopleData.setActiveByName(this.response[0].prefLabel);
-                    this.theRouter.navigate('connections');
+                    this.theRouter.navigate('connections/' + this.response[0]._id); //eslint-disable-line no-underscore-dangle
                 }
             });
 
