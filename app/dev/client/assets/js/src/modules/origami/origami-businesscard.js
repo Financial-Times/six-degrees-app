@@ -4,7 +4,7 @@ export class OrigamiBusinesscard {
         this.lastName = 'Kellaway';
         this.email = 'lucy.kellaway@ft.com';
         this.ftComment = 'http://www.ft.com/comment/lucy-kellaway';
-        this.imageUrl = 'http://image.webservices.ft.com/v1/images/raw/fthead:lucy-kellaway?source=docs&format=png&width=60';
+        this.imageUrl = 'https://www.ft.com/__origami/service/image/v2/images/raw/fthead:lucy-kellaway?source=docs&format=png&width=60';
         this.twitterUrl = '//twitter.com/LucyKellaway';
         this.twitterId = '@LucyKellaway';
         this.age = '54';
